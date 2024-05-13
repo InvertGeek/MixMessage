@@ -10,6 +10,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -98,16 +101,19 @@ class MainActivity : MixActivity() {
                         .fillMaxSize()
                         .pointerInput(Unit) {
                             detectTransformGestures { _, pan, zoom, _ ->
-//                                debug("pan: $pan, zoom: $zoom")
                                 if (zoom > 1 && !scaled && START_BLANK_SCREEN) {
                                     scaled = true
                                     showToast("解锁成功")
                                 }
                             }
                         },
-//                    color = MaterialTheme.colorScheme.background
-                ) {
-                    if (!START_BLANK_SCREEN || scaled) {
+
+                    ) {
+                    AnimatedVisibility(
+                        visible = !START_BLANK_SCREEN || scaled,
+                        enter = slideInVertically(),
+                        exit = slideOutVertically()
+                    ) {
                         MainPage()
                     }
                 }

@@ -126,6 +126,7 @@ fun LockSettings() {
         )
         OutlinedTextField(value = LOCK_TIMEOUT.toString(), onValueChange = {
             LOCK_TIMEOUT = it.toLongOrNull()?.coerceAtLeast(10) ?: 10
+            ENABLE_AUTO_LOCK = false
         }, label = {
             Text(text = "自动锁定时间(秒)")
         },

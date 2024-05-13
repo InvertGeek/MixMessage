@@ -1,0 +1,77 @@
+package com.donut.mixmessage
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application
+import android.os.Looper
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.util.common.copyToClipboard
+import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+
+
+val appScope by lazy { MainScope() }
+
+lateinit var kv: MMKV
+
+private lateinit var innerApp: Application
+
+@SuppressLint("StaticFieldLeak")
+lateinit var currentActivity: Activity
+val app: Application
+    get() = innerApp
+
+class App : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            Log.e(
+                "error",
+                "发生错误: ${e.message} ${e.stackTraceToString()}"
+            )
+            if (Looper.myLooper() == null) {
+                return@setDefaultUncaughtExceptionHandler
+            }
+
+            MaterialDialogBuilder("发生错误").apply {
+                setContent {
+                    Column(
+                        modifier = Modifier
+                            .heightIn(0.dp, 400.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = e.message ?: "未知错误",
+                            color = Color.Red,
+                            fontSize = 20.sp
+                        )
+                        Text(text = e.stackTraceToString())
+                    }
+                }
+                setPositiveButton("复制错误信息") {
+                    e.stackTraceToString().copyToClipboard()
+                }
+                setNegativeButton("关闭") {
+                    closeDialog()
+                }
+                show()
+            }
+        }
+        innerApp = this
+        MMKV.initialize(this)
+        kv = MMKV.defaultMMKV()
+    }
+}

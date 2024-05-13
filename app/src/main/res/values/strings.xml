@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MixMessage</string>
+    <string name="auto_decode_desc">
+        点击,长按或复制加密的信息时尝试解密,
+        如果解密成功自动弹出信息编码窗口,
+        支持识别当前窗口中的输入框和按钮一键发送信息
+        (如果不起作用,请在当前应用中手动发送一条消息后再试)
+        建议将省电策略改成无限制并授权自启动权限
+    </string>
+</resources>

@@ -35,6 +35,7 @@ import com.donut.mixmessage.ui.component.NavComponent
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.objects.MixActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -45,6 +46,7 @@ class MainActivity : MixActivity() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Activity
+
     }
 
     // 检查悬浮窗权限

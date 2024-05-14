@@ -3,7 +3,9 @@ package com.donut.mixmessage.util.common
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.provider.Settings
 import android.util.Log
+import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.app
 import java.security.MessageDigest
 
@@ -69,5 +71,28 @@ fun readClipBoardText(): String {
 
 fun debug(text: String, tag: String = "test") {
     Log.d(tag, text)
+}
+
+fun catchError(tag: String = "", block: () -> Unit) {
+    try {
+        block()
+    } catch (e: Exception) {
+        showError(e,tag)
+    }
+}
+
+fun showError(e: Exception, tag: String = "") {
+    Log.e(
+        "error",
+        "${tag}发生错误: ${e.message} ${e.stackTraceToString()}"
+    )
+}
+
+fun isAccessibilityServiceEnabled(): Boolean {
+    val accessibilityService = Settings.Secure.getString(
+        app.contentResolver,
+        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+    )
+    return accessibilityService?.contains(app.packageName) == true
 }
 

@@ -7,6 +7,8 @@ import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.showToast
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +54,7 @@ fun ViewNode.setText(text: String) {
 
 fun inputAndSendText(text: String) {
 
-    if (MixAccessibilityService.context?.isEnabled() != true) {
+    if (IS_ACS_ENABLED.isFalse()) {
         return showToast("请先开启无障碍服务")
     }
 

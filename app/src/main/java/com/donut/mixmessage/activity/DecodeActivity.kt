@@ -1,7 +1,5 @@
 package com.donut.mixmessage.activity
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
@@ -69,19 +67,22 @@ class DecodeActivity : MixActivity() {
     companion object {
         var decodeText: CoderResult? by mutableStateOf(null)
         var LAST_FORCE_CLOSE = 0L
-
-        @SuppressLint("StaticFieldLeak")
-        var context: Activity? = null
+        var IS_ACTIVE by mutableStateOf(false)
     }
 
     override fun onPause() {
         super.onPause()
+        IS_ACTIVE = false
         finish()
+    }
+
+    override fun onResume() {
+        IS_ACTIVE = true
+        super.onResume()
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        context = this
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);

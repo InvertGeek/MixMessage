@@ -23,6 +23,7 @@ import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.app
 import com.donut.mixmessage.kv
 import com.donut.mixmessage.service.DIALOG_OPEN_IDENTIFIER
+import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.service.MixAccessibilityService
 import com.donut.mixmessage.service.SCAN_BUTTON_WHEN_CLICK
 import com.donut.mixmessage.service.SEARCH_BUTTON_TIMEOUT
@@ -39,6 +40,8 @@ import com.donut.mixmessage.ui.component.encoder.setEnableCopyWhenRefresh
 import com.donut.mixmessage.ui.theme.LightColorScheme
 import com.donut.mixmessage.util.common.LogoUtil
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.ENCODERS
@@ -190,12 +193,12 @@ fun Settings() {
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
             Text(
-                text = if (MixAccessibilityService.context?.isEnabled() == true) "已开启" else "未开启",
+                text = if (IS_ACS_ENABLED) "已开启" else "未开启",
                 color = LightColorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
-        if (MixAccessibilityService.context?.isEnabled() != true) {
+        if (!IS_ACS_ENABLED) {
             Text(
                 text = """
                 请开启无障碍权限才能让本软件功能正常运作

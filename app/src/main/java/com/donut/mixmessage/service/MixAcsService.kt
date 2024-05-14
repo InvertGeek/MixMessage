@@ -18,7 +18,10 @@ import com.donut.mixmessage.ui.component.routes.password.startLock
 import com.donut.mixmessage.ui.component.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.debug
+import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.removeBrace
+import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.hjq.window.EasyWindow
 import kotlinx.coroutines.delay
@@ -26,7 +29,7 @@ import kotlinx.coroutines.launch
 
 
 var SCAN_BUTTON_WHEN_CLICK by cachedMutableOf(true, "auto_scan_buttons_click")
-
+var IS_ACS_ENABLED by mutableStateOf(isAccessibilityServiceEnabled())
 
 fun setScanButtonWhenClick(value: Boolean) {
     SCAN_BUTTON_WHEN_CLICK = value
@@ -43,11 +46,18 @@ class MixAccessibilityService : AccessibilityApi() {
 
     }
 
+    override fun onDestroy() {
+        IS_ACS_ENABLED = false
+        super.onDestroy()
+    }
+
 
     override fun onServiceConnected() {
-        context = this
-        super.onServiceConnected()
-        requireBaseAccessibility()
+        IS_ACS_ENABLED = true
+        init(
+            app,
+            MixAccessibilityService::class.java
+        )
         EasyWindow.with(app)
             .setTag("invisible_float")
             .setWidth(0)
@@ -58,11 +68,10 @@ class MixAccessibilityService : AccessibilityApi() {
             startFloat()
         }
         loopTask()
+        super.onServiceConnected()
     }
 
     companion object {
-
-        var context: MixAccessibilityService? by mutableStateOf(null)
 
         var ENABLE_SINGLE_CLICK by mutableStateOf(
             kv.decodeBool(
@@ -92,7 +101,7 @@ class MixAccessibilityService : AccessibilityApi() {
         if (event.packageName == app.packageName) {
             return
         }
-        if (DecodeActivity.context?.isDestroyed == false) {
+        if (DecodeActivity.IS_ACTIVE) {
             return
         }
         val type = event.eventType
@@ -138,8 +147,12 @@ class MixAccessibilityService : AccessibilityApi() {
 
     private fun loopTask() {
         appScope.launch {
-            startLock()
-            delay(1000 * 10)
+            try {
+                startLock()
+                delay(1000 * 10)
+            } catch (e: Exception) {
+                showError(e)
+            }
             loopTask()
         }
     }

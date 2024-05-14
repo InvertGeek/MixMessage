@@ -1,26 +1,20 @@
 package com.donut.mixmessage.util.objects
 
-import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
-import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
+import cn.vove7.andro_accessibility_api.AccessibilityApi
 import com.donut.mixmessage.currentActivity
+import com.donut.mixmessage.util.common.catchError
+import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 
 open class MixActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        currentActivity = this
-        super.onCreate(savedInstanceState, persistentState)
-    }
-
     override fun onResume() {
         currentActivity = this
+        if (isAccessibilityServiceEnabled()) {
+            catchError {
+                AccessibilityApi.requireBaseAccessibility()
+            }
+        }
         super.onResume()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        currentActivity = this
-        super.onCreate(savedInstanceState)
     }
 }

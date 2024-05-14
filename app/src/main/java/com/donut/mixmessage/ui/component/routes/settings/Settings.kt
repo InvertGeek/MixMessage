@@ -38,6 +38,7 @@ import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.copyWhenRefresh
 import com.donut.mixmessage.ui.component.encoder.setEnableCopyWhenRefresh
 import com.donut.mixmessage.ui.theme.LightColorScheme
+import com.donut.mixmessage.util.common.ENABLE_HAPTIC_FEEDBACK
 import com.donut.mixmessage.util.common.LogoUtil
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
@@ -78,21 +79,18 @@ fun AutoDecodeSetting() {
         text = "单击文字触发:",
         onCheckedChangeListener = {
             MixAccessibilityService.ENABLE_SINGLE_CLICK = it
-            kv.encode("AUTO_DECODE_ENABLE_SINGLE_CLICK", it)
         })
     CommonSwitch(
         checked = MixAccessibilityService.ENABLE_LONG_CLICK,
         text = "长按文字触发:",
         onCheckedChangeListener = {
             MixAccessibilityService.ENABLE_LONG_CLICK = it
-            kv.encode("AUTO_DECODE_ENABLE_LONG_CLICK", it)
         })
     CommonSwitch(
         checked = MixAccessibilityService.ENABLE_SELECT_TEXT,
         text = "选择文字触发:",
         onCheckedChangeListener = {
             MixAccessibilityService.ENABLE_SELECT_TEXT = it
-            kv.encode("AUTO_DECODE_ENABLE_SELECT_TEXT", it)
         }, "其他情况: 例如微信公众号文章中的文字(点击或长按),并不是选择复制的文字"
     )
 }
@@ -145,7 +143,6 @@ fun Settings() {
                 return@CommonSwitch
             }
             enableFloat = it
-            kv.encode("enable_float", it)
             if (!it) {
                 return@CommonSwitch stopFloat()
             }
@@ -287,7 +284,6 @@ fun Settings() {
             text = "一键发送时使用自动前缀(空位加密):",
             onCheckedChangeListener = {
                 useDefaultPrefix = it
-                kv.encode("use_default_prefix", it)
             },
             "关闭则每次手动输入前缀"
         )
@@ -299,7 +295,6 @@ fun Settings() {
                     showToast("使用双指放大解锁")
                 }
                 START_BLANK_SCREEN = it
-                kv.encode("start_blank_screen", it)
             },
             "开启后APP启动显示白屏(双指放大解锁)"
         )
@@ -333,6 +328,14 @@ fun Settings() {
                 Text(text = "设置")
             }
         }
+        CommonSwitch(
+            checked = ENABLE_HAPTIC_FEEDBACK,
+            text = "触觉反馈:",
+            onCheckedChangeListener = {
+               ENABLE_HAPTIC_FEEDBACK = it
+            },
+            "点击等操作时提供触觉反馈"
+        )
     }
     SettingBox {
         Text(text = "统计信息", fontSize = 20.sp, fontWeight = FontWeight.Bold)

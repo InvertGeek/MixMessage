@@ -26,10 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.ClearableTextField
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
-import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.encode.decodeText
+import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 var inputText by mutableStateOf(TextFieldValue())
 
@@ -77,6 +78,7 @@ fun DecodeResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) 
 
     Button(
         onClick = {
+            performHapticFeedBack()
             decodeResultText.copyToClipboard()
             showToast("复制结果成功")
         },
@@ -87,7 +89,6 @@ fun DecodeResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) 
 
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DecodeComponent() {
 
@@ -96,7 +97,7 @@ fun DecodeComponent() {
         ClearableTextField(
             value = inputText,
             onValueChange = { newValue ->
-                    inputText = newValue
+                inputText = newValue
             },
             maxLines = 5,
             modifier = Modifier.fillMaxWidth(),
@@ -116,6 +117,7 @@ fun DecodeComponent() {
         OutlinedButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
+                performHapticFeedBack()
                 inputText = TextFieldValue(readClipBoardText())
             }) {
             Text(text = "解码剪贴板")

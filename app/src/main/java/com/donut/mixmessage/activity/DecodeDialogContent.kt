@@ -19,10 +19,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
@@ -33,6 +35,7 @@ import com.donut.mixmessage.ui.component.encoder.EncodeInputComponent
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
@@ -66,6 +69,9 @@ fun openShiftPrefixSelectDialog(callback: (String) -> Unit) {
 fun DecodeTextDialog(decodeResult: CoderResult) {
 
     DialogContainer {
+        LaunchedEffect(true) {
+            performHapticFeedBack()
+        }
         if (!decodeResult.isFail) {
             AssistChip(
                 modifier = Modifier.fillMaxWidth(),
@@ -103,6 +109,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
         ) { encodeResult ->
             Button(
                 onClick = {
+                    performHapticFeedBack()
                     if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
                         openShiftPrefixSelectDialog {
                             inputAndSendText(it + encodeResult.text)
@@ -123,6 +130,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
 
                 OutlinedButton(
                     onClick = {
+                        performHapticFeedBack()
                         DecodeActivity.LAST_FORCE_CLOSE = System.currentTimeMillis()
                         encoderText = TextFieldValue()
                         showToast("3秒内不会再显示此窗口")
@@ -137,6 +145,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                 }
                 ElevatedButton(
                     onClick = {
+                        performHapticFeedBack()
                         encoderText = TextFieldValue()
                         currentActivity.finish()
                     },

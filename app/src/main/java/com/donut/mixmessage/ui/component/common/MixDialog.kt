@@ -4,13 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.donut.mixmessage.util.common.addComposeView
+import com.donut.mixmessage.util.common.performHapticFeedBack
 
 class MaterialDialogBuilder(private var title: String) {
     private var content = @Composable {}
@@ -67,37 +63,28 @@ fun showAlertDialog(
     dismissButton: (@Composable () -> Unit)? = null,
     neutralButton: @Composable () -> Unit = {},
 ): () -> Unit {
-    var closeDialog: () -> Unit = {}
-    addComposeView {
-        var showDialog by remember {
-            mutableStateOf(true)
-        }
-        closeDialog = {
-            showDialog = false
-        }
+    performHapticFeedBack()
+    return addComposeView { removeView ->
         val mixedDismissButton = @Composable {
             neutralButton()
             (dismissButton ?: {
                 TextButton(onClick = {
-                    showDialog = false
+                    removeView()
                 }) {
                     Text(text = "关闭")
                 }
             })()
         }
-        if (showDialog) {
-            AlertDialog(
-                title = {
-                    Text(text = title, fontWeight = FontWeight.Bold)
-                },
-                onDismissRequest = {
-                    showDialog = false
-                },
-                text = content,
-                confirmButton = confirmButton,
-                dismissButton = mixedDismissButton
-            )
-        }
+        AlertDialog(
+            title = {
+                Text(text = title, fontWeight = FontWeight.Bold)
+            },
+            onDismissRequest = {
+                removeView()
+            },
+            text = content,
+            confirmButton = confirmButton,
+            dismissButton = mixedDismissButton
+        )
     }
-    return closeDialog
 }

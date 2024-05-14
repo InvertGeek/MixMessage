@@ -35,6 +35,7 @@ import com.donut.mixmessage.ui.component.NavComponent
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.objects.MixActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -82,6 +83,7 @@ class MainActivity : MixActivity(MAIN_ID) {
                             detectTransformGestures { _, pan, zoom, _ ->
                                 if (zoom > 1 && !scaled && START_BLANK_SCREEN) {
                                     scaled = true
+                                    performHapticFeedBack()
                                     showToast("解锁成功")
                                 }
                             }

@@ -1,18 +1,7 @@
 package com.donut.mixmessage.util.encode.encoders;
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import com.donut.mixmessage.currentActivity
-import com.donut.mixmessage.kv
-import com.donut.mixmessage.service.inputAndSendText
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.encode.encoders.bean.AlphabetCoder
-import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import kotlin.random.Random
 
 
@@ -38,18 +27,14 @@ object ZeroWidthEncoder : AlphabetCoder(
 ) {
 
     override val name = "空位编码"
-    var encodeResultPrefix by mutableStateOf(
-        kv.decodeString(
-            "zero_width_encode_result_prefix",
-        ) ?: "x%r%r%r"
-    )
+
+    var encodeResultPrefix by cachedMutableOf("x%r%r%r", "zero_width_encode_result_prefix")
 
     fun setShiftEncodeResultPrefix(prefix: String) {
-        kv.encode("zero_width_encode_result_prefix", prefix)
         encodeResultPrefix = prefix
     }
 
-    override fun generatePrefix(): String{
+    override fun generatePrefix(): String {
         return encodeResultPrefix.replace(Regex("%r")) {
             Random.nextInt(10).toString()
         }.replace(Regex("%e")) {

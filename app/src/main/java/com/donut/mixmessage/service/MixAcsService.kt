@@ -13,13 +13,11 @@ import com.donut.mixmessage.activity.DecodeActivity
 import com.donut.mixmessage.activity.openDecodeDialog
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
-import com.donut.mixmessage.kv
 import com.donut.mixmessage.ui.component.routes.password.startLock
 import com.donut.mixmessage.ui.component.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
-import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.removeBrace
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
@@ -73,24 +71,9 @@ class MixAccessibilityService : AccessibilityApi() {
 
     companion object {
 
-        var ENABLE_SINGLE_CLICK by mutableStateOf(
-            kv.decodeBool(
-                "AUTO_DECODE_ENABLE_SINGLE_CLICK",
-                true
-            )
-        )
-        var ENABLE_LONG_CLICK by mutableStateOf(
-            kv.decodeBool(
-                "AUTO_DECODE_ENABLE_LONG_CLICK",
-                true
-            )
-        )
-        var ENABLE_SELECT_TEXT by mutableStateOf(
-            kv.decodeBool(
-                "AUTO_DECODE_ENABLE_SELECT_TEXT",
-                false
-            )
-        )
+        var ENABLE_SINGLE_CLICK by cachedMutableOf(true, "AUTO_DECODE_ENABLE_SINGLE_CLICK")
+        var ENABLE_LONG_CLICK by cachedMutableOf(true, "AUTO_DECODE_ENABLE_LONG_CLICK")
+        var ENABLE_SELECT_TEXT by cachedMutableOf(false, "AUTO_DECODE_ENABLE_SELECT_TEXT")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.theme.LightColorScheme
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.truncate
 
 @Composable
@@ -62,7 +63,10 @@ fun CommonSwitch(
         Text(text = text, modifier = Modifier.align(Alignment.CenterVertically))
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChangeListener,
+            onCheckedChange = {
+                performHapticFeedBack()
+                onCheckedChangeListener(it)
+            },
         )
         Text(
             text = description,
@@ -105,6 +109,7 @@ fun ClearableTextField(
                 tint = LightColorScheme.primary,
                 modifier = Modifier
                     .clickable {
+                        performHapticFeedBack()
                         onValueChange(TextFieldValue())
                     }
                     .padding(4.dp)
@@ -125,6 +130,7 @@ fun SingleSelectItemList(items: List<String>, currentOption: String, onSelect: (
             FilterChip(
                 label = { Text(text = currentItem.truncate(13)) },
                 onClick = {
+                    performHapticFeedBack()
                     onSelect(currentItem)
                 },
                 selected = selected,

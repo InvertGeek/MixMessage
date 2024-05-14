@@ -39,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.donut.mixmessage.ui.component.routes.HomePage
 import com.donut.mixmessage.ui.component.routes.password.Passwords
 import com.donut.mixmessage.ui.component.routes.settings.Settings
+import com.donut.mixmessage.util.common.performHapticFeedBack
 
 
 fun NavGraphBuilder.navPage(name: String, content: @Composable () -> Unit) {
@@ -109,8 +110,8 @@ fun NavComponent() {
                                 .weight(1f)
                                 .clip(RoundedCornerShape(15.dp))
                                 .clickable {
+                                    performHapticFeedBack()
                                     navController.navigate(jumpTo) {
-
                                     }
                                 }
                                 .background(

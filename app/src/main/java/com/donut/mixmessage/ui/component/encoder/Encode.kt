@@ -25,6 +25,7 @@ import com.donut.mixmessage.ui.component.routes.password.showPasswordsDialog
 import com.donut.mixmessage.ui.component.routes.settings.selectDefaultEncoder
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
@@ -51,12 +52,16 @@ fun EncodeButton(
     useTextButton: Boolean = false,
     onClick: () -> Unit
 ) {
+    val clickAction = {
+        performHapticFeedBack()
+        onClick()
+    }
     if (useTextButton) {
-        TextButton(onClick = onClick, modifier = modifier) {
+        TextButton(onClick = clickAction, modifier = modifier) {
             Text(text = text)
         }
     } else {
-        Button(onClick = onClick, modifier = modifier) {
+        Button(onClick = clickAction, modifier = modifier) {
             Text(text = text)
         }
     }

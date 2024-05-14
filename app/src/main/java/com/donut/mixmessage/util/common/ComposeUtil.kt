@@ -1,6 +1,5 @@
 package com.donut.mixmessage.util.common
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
@@ -51,12 +50,12 @@ fun performHapticFeedBack(cd: Long = 400L) {
     }
 
     lastHapticFeedBackTime = System.currentTimeMillis()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val view = ComposeView(currentActivity)
-        addContentView(view).also {
-            view.performHapticFeedback(HapticFeedbackConstants.GESTURE_START)
-            it()
-        }
+
+    val view = ComposeView(currentActivity)
+    addContentView(view).also {
+        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+        it()
     }
+
 }
 

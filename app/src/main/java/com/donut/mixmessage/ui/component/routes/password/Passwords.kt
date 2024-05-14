@@ -242,7 +242,7 @@ fun Passwords() {
             fontSize = 14.sp,
             color = Color(0xFFAAAAAA)
         )
-        FlowRow(horizontalArrangement = Arrangement.SpaceAround) {
+        FlowRow(horizontalArrangement = Arrangement.SpaceBetween) {
             Button(
                 onClick = {
                     showPasswordsDialog()

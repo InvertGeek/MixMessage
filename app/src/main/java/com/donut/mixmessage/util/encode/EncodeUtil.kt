@@ -25,7 +25,6 @@ var PASSWORDS by cachedMutableOf(setOf("123"), "encoder_passwords")
 
 var DEFAULT_ENCODER by cachedMutableOf(ShiftEncoder.name, "default_encoder")
 
-
 var DEFAULT_PASSWORD by cachedMutableOf("123", "default_password")
 
 var USE_RANDOM_PASSWORD by cachedMutableOf(false, "use_random_password")

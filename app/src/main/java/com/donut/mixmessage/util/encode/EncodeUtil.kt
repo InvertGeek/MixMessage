@@ -2,7 +2,6 @@ package com.donut.mixmessage.util.encode
 
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
-import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
@@ -144,7 +143,7 @@ fun encodeText(text: String): CoderResult {
         encoder = ENCODERS.random()
     }
     val password = if (USE_RANDOM_PASSWORD) {
-        PASSWORDS.random()
+        PASSWORDS.filter { !it.contentEquals("123") }.randomOrNull() ?: "123"
     } else {
         DEFAULT_PASSWORD
     }

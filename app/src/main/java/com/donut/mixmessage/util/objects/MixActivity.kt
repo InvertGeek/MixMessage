@@ -1,20 +1,98 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.donut.mixmessage.util.objects
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalContext
 import cn.vove7.andro_accessibility_api.AccessibilityApi
-import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.util.common.catchError
-import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 
-open class MixActivity : ComponentActivity() {
+open class MixActivity(private val id: String) : ComponentActivity() {
+
+    var isActive = false;
+    companion object {
+        const val MAIN_ID = "main"
+        val referenceCache = mutableMapOf<String, MixActivity>()
+        fun getContext(id: String) = referenceCache[id]
+
+        fun getMainContext() = getContext(MAIN_ID)
+
+        fun firstActiveActivity() = referenceCache.values.firstOrNull { it.isActive }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        referenceCache.remove(id)
+    }
+
+    override fun onPause() {
+        isActive = false
+        super.onPause()
+    }
+
 
     override fun onResume() {
-        currentActivity = this
+        isActive = true
+        referenceCache[id] = this
         if (isAccessibilityServiceEnabled()) {
             catchError {
                 AccessibilityApi.requireBaseAccessibility()
             }
         }
         super.onResume()
+    }
+
+    fun checkOverlayPermission() {
+        if (!Settings.canDrawOverlays(this)) {
+            val intent =
+                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            startActivity(intent)
+        }
+    }
+
+    // 检查无障碍权限
+    fun checkAccessibilityPermission() {
+        if (!isAccessibilityServiceEnabled()) {
+            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+            startActivity(intent)
+        }
+    }
+
+    // 检查无障碍服务是否已启用
+
+    fun isAccessibilityServiceEnabled(): Boolean {
+        val accessibilityService = Settings.Secure.getString(
+            contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        return accessibilityService?.contains(packageName) == true
+    }
+
+    @Composable
+    fun LockScreenOrientation(orientation: Int) {
+        val context = LocalContext.current
+        DisposableEffect(Unit) {
+            val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+            val originalOrientation = activity.requestedOrientation
+            activity.requestedOrientation = orientation
+            onDispose {
+                // restore original orientation when view disappears
+                activity.requestedOrientation = originalOrientation
+            }
+        }
+    }
+
+    fun Context.findActivity(): Activity? = when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
     }
 }

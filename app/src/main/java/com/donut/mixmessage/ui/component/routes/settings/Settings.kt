@@ -56,6 +56,7 @@ import com.donut.mixmessage.util.encode.resetStaticCount
 import com.donut.mixmessage.util.encode.setDefaultEncoder
 import com.donut.mixmessage.util.encode.setUseRandomEncoder
 import com.donut.mixmessage.util.encode.setUseRandomPassword
+import com.donut.mixmessage.util.objects.MixActivity
 
 
 var enableFloat by cachedMutableOf(false, "enable_float")
@@ -317,7 +318,7 @@ fun Settings() {
                         SingleSelectItemList(
                             items = LogoUtil.Logo.entries.map { it.label },
                             currentOption = LogoUtil.Logo.entries.firstOrNull {
-                                it.packageName == MainActivity.context.componentName?.className
+                                it.packageName == MixActivity.getMainContext()!!.componentName?.className
                             }?.label ?: ""
                         ) { option ->
                             LogoUtil.changeLogo(LogoUtil.Logo.entries.firstOrNull {

@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import com.donut.mixmessage.MainActivity
+import com.donut.mixmessage.util.objects.MixActivity
 
 class LogoUtil {
     enum class Logo(val packageName: String, val label: String) {
@@ -24,13 +25,14 @@ class LogoUtil {
 
         fun changeLogo(logo: Logo) {
             val name = logo.packageName
-            val currentComponentName = MainActivity.context.componentName
+            val context = MixActivity.getMainContext()!!
+            val currentComponentName = context.componentName
             if (name.contentEquals(currentComponentName?.className)) {
                 return
             }
-            val pm = MainActivity.context.packageManager
+            val pm = context.packageManager
             pm.setComponentEnabledSetting(
-                ComponentName(MainActivity.context, name),
+                ComponentName(context, name),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
             )
             pm.setComponentEnabledSetting(
@@ -42,7 +44,8 @@ class LogoUtil {
 
         private fun reStartApp(pm: PackageManager) {
             val am =
-                MainActivity.context.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
+                MixActivity.getMainContext()!!
+                    .getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_HOME)
             intent.addCategory(Intent.CATEGORY_DEFAULT)

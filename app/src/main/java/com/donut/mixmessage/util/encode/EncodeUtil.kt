@@ -1,5 +1,6 @@
 package com.donut.mixmessage.util.encode
 
+import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.readClipBoardText
@@ -10,6 +11,7 @@ import com.donut.mixmessage.util.encode.encoders.SCVEncoder
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+import com.donut.mixmessage.util.objects.MixActivity
 
 val ENCODERS = listOf(
     ShiftEncoder,

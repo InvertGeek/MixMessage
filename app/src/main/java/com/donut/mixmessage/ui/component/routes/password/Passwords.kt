@@ -93,6 +93,7 @@ fun tryUnlock(password: String) {
 }
 
 fun ignoreLock() {
+    ENABLE_AUTO_LOCK = false
     LOCK_CACHE = ""
     LOCK_PASSWORD = ""
     showToast("已忽略锁定")

@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
-import com.donut.mixmessage.LockScreenOrientation
 import com.donut.mixmessage.app
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonColumn
@@ -62,7 +61,7 @@ fun DialogContainer(content: @Composable () -> Unit) {
     }
 }
 
-class DecodeActivity : MixActivity() {
+class DecodeActivity : MixActivity("decode") {
 
     companion object {
         var decodeText: CoderResult? by mutableStateOf(null)

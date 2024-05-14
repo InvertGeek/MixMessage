@@ -1,6 +1,5 @@
 package com.donut.mixmessage
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Looper
@@ -16,10 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.objects.MixActivity
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 
 val appScope by lazy { MainScope() }
@@ -28,8 +26,10 @@ lateinit var kv: MMKV
 
 private lateinit var innerApp: Application
 
-@SuppressLint("StaticFieldLeak")
-lateinit var currentActivity: Activity
+
+val currentActivity: Activity
+    get() = MixActivity.firstActiveActivity()!!
+
 val app: Application
     get() = innerApp
 

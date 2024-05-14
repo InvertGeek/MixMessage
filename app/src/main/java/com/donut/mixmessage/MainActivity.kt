@@ -35,45 +35,13 @@ import com.donut.mixmessage.ui.component.NavComponent
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
-import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.objects.MixActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
+import java.lang.ref.WeakReference
 
 
-class MainActivity : MixActivity() {
-
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Activity
-
-    }
-
-    // 检查悬浮窗权限
-    private fun checkOverlayPermission() {
-        if (!Settings.canDrawOverlays(this)) {
-            val intent =
-                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            startActivity(intent)
-        }
-    }
-
-    // 检查无障碍权限
-    private fun checkAccessibilityPermission() {
-        if (!isAccessibilityServiceEnabled()) {
-            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            startActivity(intent)
-        }
-    }
-
-    // 检查无障碍服务是否已启用
-    private fun isAccessibilityServiceEnabled(): Boolean {
-        val accessibilityService = Settings.Secure.getString(
-            contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        )
-        return accessibilityService?.contains(packageName) == true
-    }
+class MainActivity : MixActivity(MAIN_ID) {
 
     override fun onResume() {
         checkOverlayPermission()
@@ -81,16 +49,25 @@ class MainActivity : MixActivity() {
         super.onResume()
     }
 
+    @Composable
+    fun MainPage() {
+
+        LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
+        CommonColumn(
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            NavComponent()
+
+        }
+    }
+
 
     // 处理权限请求结果
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        context = this
-        AccessibilityApi.init(
-            this,
-            MixAccessibilityService::class.java
-        )
 
         setContent {
             var scaled by remember {
@@ -121,41 +98,6 @@ class MainActivity : MixActivity() {
                 }
             }
         }
-
-    }
-}
-
-@Composable
-fun LockScreenOrientation(orientation: Int) {
-    val context = LocalContext.current
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = orientation
-        onDispose {
-            // restore original orientation when view disappears
-            activity.requestedOrientation = originalOrientation
-        }
-    }
-}
-
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-@OptIn(DelicateCoroutinesApi::class, ExperimentalLayoutApi::class)
-@Composable
-fun MainPage() {
-
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-
-    CommonColumn(
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        NavComponent()
 
     }
 }

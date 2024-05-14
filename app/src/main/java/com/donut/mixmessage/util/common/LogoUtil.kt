@@ -8,13 +8,16 @@ import android.content.pm.PackageManager
 import com.donut.mixmessage.MainActivity
 
 class LogoUtil {
-    enum class Logo(val packageName: String,val label: String) {
-        TIKTOK("com.donut.mixmessage.tiktok","抖音"),
-        DEFAULT("com.donut.mixmessage.MainActivity","默认"),
-        BILIBILI("com.donut.mixmessage.bilibili","哔哩哔哩"),
-        CALCULATOR("com.donut.mixmessage.calculator","计算器"),
-        WECHAT("com.donut.mixmessage.wechat","微信"),
-        QQ("com.donut.mixmessage.qq","QQ"),
+    enum class Logo(val packageName: String, val label: String) {
+        TIKTOK("com.donut.mixmessage.tiktok", "抖音"),
+        DEFAULT("com.donut.mixmessage.MainActivity", "默认"),
+        BILIBILI("com.donut.mixmessage.bilibili", "哔哩哔哩"),
+        CALCULATOR("com.donut.mixmessage.calculator", "计算器"),
+        WECHAT("com.donut.mixmessage.wechat", "微信"),
+        QQ("com.donut.mixmessage.qq", "QQ"),
+        CLOCK("com.donut.mixmessage.clock", "时钟"),
+        CALENDAR("com.donut.mixmessage.calendar", "日历"),
+        RADIO("com.donut.mixmessage.radio", "收音机"),
     }
 
     companion object {

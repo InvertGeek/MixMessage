@@ -115,6 +115,42 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+        <activity-alias
+            android:name="com.donut.mixmessage.radio"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/radio"
+            android:label="收音机"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name="com.donut.mixmessage.clock"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/clock"
+            android:label="时钟"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name="com.donut.mixmessage.calendar"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/calendar"
+            android:label="日历"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
     </application>
 
 </manifest>

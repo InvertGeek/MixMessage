@@ -22,12 +22,11 @@ import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.app
 import com.donut.mixmessage.kv
-import com.donut.mixmessage.service.AUTO_SCAN_BUTTONS
 import com.donut.mixmessage.service.DIALOG_OPEN_IDENTIFIER
 import com.donut.mixmessage.service.MixAccessibilityService
 import com.donut.mixmessage.service.SCAN_BUTTON_WHEN_CLICK
+import com.donut.mixmessage.service.SEARCH_BUTTON_TIMEOUT
 import com.donut.mixmessage.service.SEND_BUTTON_IDENTIFIER
-import com.donut.mixmessage.service.setAutoScanButtons
 import com.donut.mixmessage.service.setScanButtonWhenClick
 import com.donut.mixmessage.service.setSendButtonIdentifier
 import com.donut.mixmessage.service.startFloat
@@ -212,14 +211,6 @@ fun Settings() {
     SettingBox {
         Text(text = "一键发送设置", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         CommonSwitch(
-            checked = AUTO_SCAN_BUTTONS,
-            text = "自动扫描发送按钮:",
-            onCheckedChangeListener = {
-                setAutoScanButtons(it)
-            },
-            "启用后将会自动扫描并识别当前界面中的发送按钮和输入框"
-        )
-        CommonSwitch(
             checked = SCAN_BUTTON_WHEN_CLICK,
             text = "点击发送和输入自动更新:",
             onCheckedChangeListener = {
@@ -248,6 +239,17 @@ fun Settings() {
                 .fillMaxWidth()
                 .padding(0.dp, 10.dp),
             label = { Text("快捷窗口关键词,使用空格分割,点击此关键词直接弹出快捷窗口") }
+        )
+        OutlinedTextField(
+            value = SEARCH_BUTTON_TIMEOUT.toString(),
+            onValueChange = { newValue ->
+                SEARCH_BUTTON_TIMEOUT = (newValue.toLongOrNull() ?: 100).coerceAtLeast(100)
+            },
+            maxLines = 1,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 10.dp),
+            label = { Text("搜索按钮超时时间(毫秒)") }
         )
     }
     SettingBox {

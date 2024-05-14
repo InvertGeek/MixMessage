@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.PopUpActivity"
+            android:name=".activity.DecodeActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:theme="@style/MixMessageDialog" />

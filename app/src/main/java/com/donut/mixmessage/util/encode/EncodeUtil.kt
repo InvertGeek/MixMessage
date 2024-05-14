@@ -41,12 +41,12 @@ var ENCODE_COUNT by cachedMutableOf(0L, "static_encode_count")
 fun increaseSuccessDecodeCount() {
     SUCCESS_DECODE_COUNT++
     LAST_DECODE = System.currentTimeMillis()
-    debug("success decode count: $SUCCESS_DECODE_COUNT")
+//    debug("success decode count: $SUCCESS_DECODE_COUNT")
 }
 
 fun increaseEncodeCount() {
     ENCODE_COUNT++
-    debug("encode count: $ENCODE_COUNT")
+//    debug("encode count: $ENCODE_COUNT")
 }
 
 fun resetStaticCount() {

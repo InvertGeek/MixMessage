@@ -23,6 +23,7 @@ import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.routes.settings.SettingBox
 import com.donut.mixmessage.ui.theme.LightColorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.calculateMD5
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
 import com.donut.mixmessage.util.encode.LAST_DECODE
@@ -126,18 +127,19 @@ fun LockSettings() {
         )
         OutlinedTextField(value = LOCK_TIMEOUT.toString(), onValueChange = {
             LOCK_TIMEOUT = it.toLongOrNull()?.coerceAtLeast(10) ?: 10
-            ENABLE_AUTO_LOCK = false
         }, label = {
             Text(text = "自动锁定时间(秒)")
         },
+            enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(value = LOCK_PASSWORD, onValueChange = {
             ENABLE_AUTO_LOCK = false
             LOCK_PASSWORD = it
         }, label = {
-            Text(text = "解锁密码")
+            Text(text = "解锁密码${if (ENABLE_AUTO_LOCK) "(已哈希)" else ""}")
         },
+            enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )
         CommonSwitch(
@@ -155,6 +157,7 @@ fun LockSettings() {
                         setPositiveButton("确认") {
                             ENABLE_AUTO_LOCK = true
                             LAST_DECODE = System.currentTimeMillis()
+                            LOCK_PASSWORD = LOCK_PASSWORD.calculateMD5(100)
                             closeDialog()
                             showToast("已启用自动锁定")
                         }
@@ -162,6 +165,7 @@ fun LockSettings() {
                     }
                     return@CommonSwitch
                 }
+                LOCK_PASSWORD = ""
                 ENABLE_AUTO_LOCK = false
             },
             "请牢记密码,锁定后会清除,丢失无法找回"
@@ -199,7 +203,7 @@ fun Unlock() {
                 }, modifier = Modifier.fillMaxWidth())
             }
             setPositiveButton("确认") {
-                tryUnlock(inputValue)
+                tryUnlock(inputValue.calculateMD5(100))
                 closeDialog()
             }
             show()

@@ -146,6 +146,3 @@ fun SingleSelectItemList(items: List<String>, currentOption: String, onSelect: (
         }
     }
 }
-
-
-

@@ -1,15 +1,11 @@
 package com.donut.mixmessage.util.common
 
-import android.app.ActivityManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.donut.mixmessage.app
-import com.donut.mixmessage.kv
+import java.security.MessageDigest
 
 fun String.copyToClipboard(showToast: Boolean = true) {
     val clipboard = getClipBoard()
@@ -26,6 +22,20 @@ fun String.removeBrace(): String {
 }
 
 
+tailrec fun String.calculateMD5(round: Int = 1): String {
+    val md = MessageDigest.getInstance("MD5")
+    md.update(this.toByteArray())
+    val digest = md.digest()
+    val sb = StringBuilder()
+    for (b in digest) {
+        sb.append(String.format("%02x", b))
+    }
+    if (round > 1) {
+        return sb.toString().calculateMD5(round - 1)
+    }
+    return sb.toString()
+}
+
 fun String.truncate(maxLength: Int): String {
     return if (this.length > maxLength) {
         this.substring(0, maxLength) + "..."
@@ -37,6 +47,14 @@ fun String.truncate(maxLength: Int): String {
 fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {
     return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 }
+
+fun <T> T?.isNull() = this == null
+
+fun <T> T?.isNotNull() = this != null
+
+fun Boolean?.isTrue() = this == true
+
+fun Boolean?.isFalse() = this == false
 
 
 fun readClipBoardText(): String {

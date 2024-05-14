@@ -7,10 +7,9 @@ import androidx.compose.runtime.setValue
 import cn.vove7.andro_accessibility_api.AccessibilityApi
 import cn.vove7.auto.core.AppScope
 import cn.vove7.auto.core.viewfinder.AcsNode
-import cn.vove7.auto.core.viewfinder.SmartFinder
 import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.R
-import com.donut.mixmessage.activity.PopUpActivity
+import com.donut.mixmessage.activity.DecodeActivity
 import com.donut.mixmessage.activity.openDecodeDialog
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
@@ -22,18 +21,12 @@ import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.removeBrace
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.hjq.window.EasyWindow
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-var AUTO_SCAN_BUTTONS by cachedMutableOf(true, "auto_scan_buttons")
-
 var SCAN_BUTTON_WHEN_CLICK by cachedMutableOf(true, "auto_scan_buttons_click")
 
-fun setAutoScanButtons(value: Boolean) {
-    AUTO_SCAN_BUTTONS = value
-}
 
 fun setScanButtonWhenClick(value: Boolean) {
     SCAN_BUTTON_WHEN_CLICK = value
@@ -64,7 +57,7 @@ class MixAccessibilityService : AccessibilityApi() {
         if (enableFloat) {
             startFloat()
         }
-        updateButtons()
+        loopTask()
     }
 
     companion object {
@@ -99,7 +92,7 @@ class MixAccessibilityService : AccessibilityApi() {
         if (event.packageName == app.packageName) {
             return
         }
-        if (PopUpActivity.context?.isDestroyed == false) {
+        if (DecodeActivity.context?.isDestroyed == false) {
             return
         }
         val type = event.eventType
@@ -130,7 +123,7 @@ class MixAccessibilityService : AccessibilityApi() {
             debug("long click text: $text")
             shouldOpen = true
         }
-        if (type == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
+        if (type == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && ENABLE_SELECT_TEXT) {
             debug("select text: $text")
             shouldOpen = true
         }
@@ -143,33 +136,11 @@ class MixAccessibilityService : AccessibilityApi() {
     }
 
 
-    private fun updateButtons() {
-        appScope.run {
+    private fun loopTask() {
+        appScope.launch {
             startLock()
-        }
-        appScope.launch(Dispatchers.IO) {
-            if (AUTO_SCAN_BUTTONS) {
-                val tmpButtonCache = mutableListOf<ViewNode>()
-                val tmpEdiTextCache = mutableListOf<ViewNode>()
-
-                SmartFinder().otherAppNodes().where {
-                    val viewNode = ViewNode(it)
-                    if (it.checkButtonText()) {
-                        tmpButtonCache.add(viewNode)
-                        return@where true
-                    }
-                    if (it.isEditable) {
-                        tmpEdiTextCache.add(viewNode)
-                        return@where true
-                    }
-                    false
-                }.findAll()
-
-                INPUT_EDITABLE_CACHE = tmpEdiTextCache.findSendInput() ?: INPUT_EDITABLE_CACHE
-                SEND_BUTTON_CACHE = tmpButtonCache.findSendButton() ?: SEND_BUTTON_CACHE
-            }
-            delay(400)
-            updateButtons()
+            delay(1000 * 10)
+            loopTask()
         }
     }
 

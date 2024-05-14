@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -112,7 +113,7 @@ fun DecodeComponent() {
 
         DecodeResultComponent(decodeResult = decodeResult)
 
-        Button(
+        OutlinedButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 inputText = TextFieldValue(readClipBoardText())

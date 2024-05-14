@@ -31,6 +31,7 @@ import com.donut.mixmessage.app
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.objects.MixActivity
@@ -63,10 +64,11 @@ fun DialogContainer(content: @Composable () -> Unit) {
     }
 }
 
-class PopUpActivity : MixActivity() {
+class DecodeActivity : MixActivity() {
 
     companion object {
         var decodeText: CoderResult? by mutableStateOf(null)
+        var LAST_FORCE_CLOSE = 0L
 
         @SuppressLint("StaticFieldLeak")
         var context: Activity? = null
@@ -96,12 +98,15 @@ class PopUpActivity : MixActivity() {
 
 
 fun openDecodeDialog(text: String = "", result: CoderResult? = null) {
-    val decodeResult = decodeText(text)
-    if (decodeResult.isFail && result == null) {
+    if (System.currentTimeMillis() - DecodeActivity.LAST_FORCE_CLOSE < 3000) {
         return
     }
-    PopUpActivity.decodeText = decodeResult
-    val intent = Intent(app, PopUpActivity::class.java)
+    val decodeResult = decodeText(text)
+    if (decodeResult.isFail && result.isNull()) {
+        return
+    }
+    DecodeActivity.decodeText = decodeResult
+    val intent = Intent(app, DecodeActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
     ContextCompat.startActivity(app, intent, null)
 }

@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,7 +29,6 @@ import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.isNull
-import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.objects.MixActivity
@@ -111,4 +109,5 @@ fun openDecodeDialog(text: String = "", result: CoderResult? = null) {
     val intent = Intent(app, DecodeActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
     ContextCompat.startActivity(app, intent, null)
+
 }

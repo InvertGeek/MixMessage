@@ -17,20 +17,27 @@ import com.donut.mixmessage.util.common.catchError
 
 open class MixActivity(private val id: String) : ComponentActivity() {
 
+    init {
+        referenceCache[id] = mutableSetOf()
+    }
+
     var isActive = false;
+
     companion object {
         const val MAIN_ID = "main"
-        val referenceCache = mutableMapOf<String, MixActivity>()
-        fun getContext(id: String) = referenceCache[id]
+        val referenceCache = mutableMapOf<String, MutableSet<MixActivity>>()
+        fun getContext(id: String) = referenceCache[id]?.firstOrNull { it.isActive }
 
         fun getMainContext() = getContext(MAIN_ID)
 
-        fun firstActiveActivity() = referenceCache.values.firstOrNull { it.isActive }
+        fun firstActiveActivity(): MixActivity? {
+            return referenceCache.values.flatten().firstOrNull { it.isActive }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        referenceCache.remove(id)
+        referenceCache[id]?.remove(this)
     }
 
     override fun onPause() {
@@ -41,7 +48,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
 
     override fun onResume() {
         isActive = true
-        referenceCache[id] = this
+        referenceCache[id]?.add(this)
         if (isAccessibilityServiceEnabled()) {
             catchError {
                 AccessibilityApi.requireBaseAccessibility()

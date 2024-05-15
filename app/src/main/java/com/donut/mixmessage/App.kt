@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.objects.MixActivity
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
@@ -28,7 +29,12 @@ private lateinit var innerApp: Application
 
 
 val currentActivity: Activity
-    get() = MixActivity.firstActiveActivity()!!
+    get(){
+        MixActivity.referenceCache.forEach{
+            debug("activity", it.key)
+        }
+        return MixActivity.firstActiveActivity()!!
+    }
 
 val app: Application
     get() = innerApp

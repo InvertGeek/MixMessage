@@ -24,8 +24,8 @@ val LightColorScheme = lightColorScheme(
 //    tertiaryContainer = Color(0xFFF0004E),
 //    primaryContainer = Color(0xFFF0004E),
     secondaryContainer = Color(0x3662B5E8),
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    background = Color(0xFFE6DFEB),
+    surface = Color(0xFFE6DFEB),
     outline = Color(0xA624A0ED),
     onPrimary = Color.White,
     onSecondary = Color.White,
@@ -54,8 +54,8 @@ fun MixMessageTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = colorScheme.surface.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
         }
     }
 

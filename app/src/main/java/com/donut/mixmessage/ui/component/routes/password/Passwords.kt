@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
+import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.routes.settings.SettingBox
 import com.donut.mixmessage.ui.theme.LightColorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -228,13 +229,11 @@ fun Unlock() {
     }
 }
 
-
 @OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun Passwords() {
+val Passwords = MixNavPage("passwords", gap = 20.dp) {
     if (LOCK_CACHE.isNotEmpty()) {
         Unlock()
-        return
+        return@MixNavPage
     }
     SettingBox {
         Text(text = "密钥列表", fontSize = 20.sp, fontWeight = FontWeight.Bold)

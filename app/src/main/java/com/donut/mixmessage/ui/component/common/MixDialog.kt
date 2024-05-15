@@ -23,6 +23,10 @@ class MaterialDialogBuilder(private var title: String) {
         close()
     }
 
+    fun setDefaultNegative(text: String = "取消") {
+        setNegativeButton(text) { closeDialog() }
+    }
+
     @Composable
     private fun BuildButton(text: String, callBack: (close: () -> Unit) -> Unit) {
         return TextButton(onClick = {

@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.provider.Settings
 import android.util.Log
-import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.app
 import java.security.MessageDigest
 
@@ -50,13 +49,35 @@ fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {
     return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 }
 
-fun <T> T?.isNull() = this == null
+typealias UnitBlock = () -> Unit
 
-fun <T> T?.isNotNull() = this != null
+inline fun <T> T?.isNull(block: UnitBlock = {}): Boolean {
+    if (this == null) {
+        block()
+    }
+    return this == null
+}
 
-fun Boolean?.isTrue() = this == true
+inline fun <T> T?.isNotNull(block: UnitBlock = {}): Boolean {
+    if (this != null) {
+        block()
+    }
+    return this != null
+}
 
-fun Boolean?.isFalse() = this == false
+inline fun Boolean?.isTrue(block: UnitBlock = {}): Boolean {
+    if (this == true) {
+        block()
+    }
+    return this == true
+}
+
+inline fun Boolean?.isFalse(block: UnitBlock = {}): Boolean {
+    if (this == false) {
+        block()
+    }
+    return this == false
+}
 
 
 fun readClipBoardText(): String {
@@ -77,7 +98,7 @@ fun catchError(tag: String = "", block: () -> Unit) {
     try {
         block()
     } catch (e: Exception) {
-        showError(e,tag)
+        showError(e, tag)
     }
 }
 

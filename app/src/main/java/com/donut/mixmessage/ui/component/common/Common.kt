@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -55,25 +56,33 @@ fun CommonSwitch(
     description: String = ""
 ) {
 
-    FlowRow(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Text(text = text, modifier = Modifier.align(Alignment.CenterVertically))
-        Switch(
-            checked = checked,
-            onCheckedChange = {
-                performHapticFeedBack()
-                onCheckedChangeListener(it)
-            },
-        )
-        Text(
-            text = description,
-            modifier = Modifier.align(Alignment.CenterVertically),
-            color = Color(0xFF9E9E9E),
-            fontSize = 14.sp
-        )
+    Column {
+        HorizontalDivider()
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth(),
+//                .padding(10.dp, 0.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(text = text, modifier = Modifier.align(Alignment.CenterVertically))
+            Switch(
+                checked = checked,
+                onCheckedChange = {
+                    performHapticFeedBack()
+                    onCheckedChangeListener(it)
+                },
+            )
+        }
+        if (description.isNotEmpty()) {
+            Text(
+                text = description,
+                modifier = Modifier
+                    .fillMaxWidth(),
+//                    .padding(10.dp, 0.dp),
+                color = Color(0xFF9E9E9E),
+                fontSize = 14.sp
+            )
+        }
     }
 }
 

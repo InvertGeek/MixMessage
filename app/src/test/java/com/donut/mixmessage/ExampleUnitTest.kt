@@ -1,13 +1,6 @@
 package com.donut.mixmessage
 
-import com.donut.mixmessage.util.common.calculateMD5
-import com.donut.mixmessage.util.common.genRandomString
-import com.donut.mixmessage.util.common.getCurrentDate
 import org.junit.Test
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import kotlin.time.measureTime
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -19,6 +12,11 @@ class ExampleUnitTest {
     fun addition_isCorrect() {
         // 获取当前日期
 
-        println("当前日期: ${getCurrentDate()}")
+        for (symbol in 0x13000..0x1342f) {
+//            println(symbol)
+            //转换unicode
+            println(Character.toChars(symbol).joinToString(""))
+        }
+
     }
 }

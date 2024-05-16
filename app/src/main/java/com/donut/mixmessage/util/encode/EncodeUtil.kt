@@ -6,6 +6,7 @@ import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
+import com.donut.mixmessage.util.encode.encoders.EgyptEncoder
 import com.donut.mixmessage.util.encode.encoders.EmojiEncoder
 import com.donut.mixmessage.util.encode.encoders.SCVEncoder
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
@@ -18,7 +19,8 @@ val ENCODERS = listOf(
     BuddhaEncoder,
     SCVEncoder,
     EmojiEncoder,
-    AlphaNumEncoder
+    AlphaNumEncoder,
+    EgyptEncoder
 )
 
 

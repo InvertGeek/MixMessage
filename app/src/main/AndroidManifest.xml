@@ -41,10 +41,13 @@
 
         <activity
             android:name=".MainActivity"
+            android:configChanges="uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
-            android:theme="@style/Theme.MixMessage">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MixMessage"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,11 +56,14 @@
         </activity>
         <activity
             android:name=".activity.DecodeActivity"
+            android:configChanges="uiMode"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:hardwareAccelerated="true"
             android:exported="true"
-            android:theme="@style/MixMessageDialog" />
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/MixMessageDialog"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <activity-alias
             android:name="com.donut.mixmessage.tiktok"

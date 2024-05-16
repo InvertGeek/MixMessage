@@ -2,6 +2,7 @@ package com.donut.mixmessage.activity
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,12 +25,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.service.inputAndSendText
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.encoder.DecodeResultComponent
 import com.donut.mixmessage.ui.component.encoder.EncodeInputComponent
 import com.donut.mixmessage.ui.component.encoder.encoderText
@@ -43,7 +45,7 @@ import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 
 fun openShiftPrefixSelectDialog(callback: (String) -> Unit) {
-    MaterialDialogBuilder("消息前缀").apply {
+    MixDialogBuilder("消息前缀").apply {
         var prefix by mutableStateOf("")
         setContent {
             OutlinedTextField(
@@ -76,10 +78,17 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
             AssistChip(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    MaterialDialogBuilder("原文").apply {
+                    MixDialogBuilder("原文").apply {
                         setContent {
-                            SelectionContainer {
-                                Text(text = decodeResult.originText)
+                            Column {
+                                SelectionContainer {
+                                    Text(text = decodeResult.originText)
+                                }
+                                Text(
+                                    text = "使用的密钥: ${decodeResult.password}",
+                                    fontSize = 10.sp,
+                                    color = Color.Gray
+                                )
                             }
                         }
                         setPositiveButton("一键复制") {

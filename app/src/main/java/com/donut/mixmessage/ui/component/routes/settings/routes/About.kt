@@ -16,11 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.currentActivity
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.routes.settings.SettingBox
-import com.donut.mixmessage.ui.theme.LightColorScheme
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.encode.ENCODE_COUNT
 import com.donut.mixmessage.util.encode.SUCCESS_DECODE_COUNT
 import com.donut.mixmessage.util.encode.resetStaticCount
@@ -28,9 +28,9 @@ import com.donut.mixmessage.util.encode.resetStaticCount
 
 @OptIn(ExperimentalLayoutApi::class)
 val AboutPage = MixNavPage(
-    "settings_about",
     gap = 10.dp,
     displayNavBar = false,
+    useTransition = true,
 ) {
     NavTitle(title = "关于", showBackIcon = true)
     SettingBox {
@@ -46,7 +46,7 @@ val AboutPage = MixNavPage(
             )
             Text(
                 text = "$ENCODE_COUNT",
-                color = LightColorScheme.primary,
+                color = colorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
@@ -61,12 +61,12 @@ val AboutPage = MixNavPage(
             )
             Text(
                 text = "$SUCCESS_DECODE_COUNT",
-                color = LightColorScheme.primary,
+                color = colorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
         OutlinedButton(onClick = {
-            MaterialDialogBuilder("确定重置统计?").apply {
+            MixDialogBuilder("确定重置统计?").apply {
                 setPositiveButton("确定") {
                     resetStaticCount()
                     it()
@@ -82,7 +82,7 @@ val AboutPage = MixNavPage(
             append("项目地址: https://gitlab.com/invertgeek1/MixMessage")
         },
         onClick = {
-            MaterialDialogBuilder("确定打开?").apply {
+            MixDialogBuilder("确定打开?").apply {
                 setPositiveButton("确定") {
                     val intent =
                         Intent(

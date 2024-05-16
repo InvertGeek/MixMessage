@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.donut.mixmessage.util.common.addComposeView
 import com.donut.mixmessage.util.common.performHapticFeedBack
 
-class MaterialDialogBuilder(private var title: String) {
+class MixDialogBuilder(private var title: String) {
     private var content = @Composable {}
     private var positiveButton = @Composable {}
     private var negativeButton = @Composable {}
@@ -48,9 +48,15 @@ class MaterialDialogBuilder(private var title: String) {
         }
     }
 
-    fun setNeutralButton(text: String, callBack: (close: () -> Unit) -> Unit) {
+    fun setBottomContent(text: String, callBack: (close: () -> Unit) -> Unit) {
         neutralButton = {
             BuildButton(text = text, callBack)
+        }
+    }
+
+    fun setBottomContent(content: @Composable () -> Unit) {
+        neutralButton = {
+            content()
         }
     }
 

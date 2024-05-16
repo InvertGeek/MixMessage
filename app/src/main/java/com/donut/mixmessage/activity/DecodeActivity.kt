@@ -86,7 +86,6 @@ class DecodeActivity : MixActivity("decode") {
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         setContent {
-            LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             MixMessageTheme {
                 // A surface container using the 'background' color from the theme
                 decodeText?.let { DecodeTextDialog(it) }

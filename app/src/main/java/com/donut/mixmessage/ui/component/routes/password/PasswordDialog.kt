@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
@@ -18,7 +18,7 @@ import com.donut.mixmessage.util.encode.setDefaultPassword
 
 fun openCommonConfirmDialog(actionText: String, onConfirm: () -> Unit) {
 
-    MaterialDialogBuilder("提示").apply {
+    MixDialogBuilder("提示").apply {
         setContent {
             Text(text = "确定${actionText}吗？")
         }
@@ -35,7 +35,7 @@ fun openCommonConfirmDialog(actionText: String, onConfirm: () -> Unit) {
 
 
 fun openPasswordDialog(passwordText: String) {
-    MaterialDialogBuilder("查看密钥").apply {
+    MixDialogBuilder("查看密钥").apply {
         setContent {
             SelectionContainer {
                 Text(text = passwordText)
@@ -45,7 +45,7 @@ fun openPasswordDialog(passwordText: String) {
             it()
             passwordText.copyToClipboard()
         }
-        setNeutralButton("设为默认加密密钥") {
+        setBottomContent("设为默认加密密钥") {
             setDefaultPassword(passwordText)
             showToast("设置成功")
             it()
@@ -67,7 +67,7 @@ fun openPasswordDialog(passwordText: String) {
 
 
 fun openAddPasswordDialog() {
-    MaterialDialogBuilder("添加密钥").apply {
+    MixDialogBuilder("添加密钥").apply {
         var passValue by mutableStateOf(TextFieldValue())
         setContent {
             OutlinedTextField(value = passValue, onValueChange = {

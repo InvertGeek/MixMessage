@@ -7,28 +7,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.CommonSwitch
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.routes.settings.SettingBox
-import com.donut.mixmessage.ui.theme.LightColorScheme
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.calculateMD5
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
 import com.donut.mixmessage.util.encode.LAST_DECODE
 import com.donut.mixmessage.util.encode.PASSWORDS
+import com.donut.mixmessage.util.encode.USE_TIME_LOCK
 import com.donut.mixmessage.util.encode.addPassword
 import com.donut.mixmessage.util.encode.clearAllPassword
 import com.donut.mixmessage.util.encode.exportAllPassword
@@ -103,14 +107,56 @@ fun ignoreLock() {
 
 @OptIn(ExperimentalLayoutApi::class)
 fun showPasswordsDialog() {
-    MaterialDialogBuilder("密钥列表").apply {
-        setPositiveButton("添加密钥") {
-            openAddPasswordDialog()
-        }
+    MixDialogBuilder("密钥列表").apply {
         setContent {
             val passList = PASSWORDS.toList().reversed()
             SingleSelectItemList(passList, DEFAULT_PASSWORD) {
                 openPasswordDialog(it)
+            }
+        }
+        setBottomContent {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                FlowRow(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(text = "时间锁: ", modifier = Modifier.align(Alignment.CenterVertically))
+                    Switch(
+                        checked = USE_TIME_LOCK,
+                        onCheckedChange = {
+                            if (it) {
+                                MixDialogBuilder("确定开启?").apply {
+                                    setContent {
+                                        Text(
+                                            text = """
+                                            开启后当天加密的内容只会在当天自动解密成功,
+                                            会在当前密钥后方添加当前日期后再进行加密,
+                                            解密时会自动在所有密钥后方添加日期尝试解密(默认)
+                                        """.trimIndent().replace("\n", " ")
+                                        )
+                                    }
+                                    setDefaultNegative()
+                                    setPositiveButton("确定") {
+                                        performHapticFeedBack()
+                                        USE_TIME_LOCK = true
+                                        closeDialog()
+                                    }
+                                    show()
+                                }
+                                return@Switch
+                            }
+                            performHapticFeedBack()
+                            USE_TIME_LOCK = false
+                        },
+                    )
+                }
+                Button(onClick = { openAddPasswordDialog() }) {
+                    Text(text = "添加密钥")
+                }
             }
         }
         show()
@@ -147,33 +193,33 @@ fun LockSettings() {
         CommonSwitch(
             checked = ENABLE_AUTO_LOCK,
             text = "启用自动锁定:",
-            onCheckedChangeListener = { enabled ->
-                if (enabled) {
-                    if (LOCK_PASSWORD.isEmpty()) {
-                        return@CommonSwitch showToast("解锁密码不能为空")
-                    }
-                    MaterialDialogBuilder("是否确认启用?").apply {
-                        setContent {
-                            Text(text = "请确认已经牢记当前密码,锁定后会清除,丢失无法找回")
-                        }
-                        setPositiveButton("确认") {
-                            ENABLE_AUTO_LOCK = true
-                            LAST_DECODE = System.currentTimeMillis()
-                            LOCK_PASSWORD = LOCK_PASSWORD.calculateMD5(100)
-                            closeDialog()
-                            showToast("已启用自动锁定")
-                        }
-                        show()
-                    }
-                    return@CommonSwitch
+            description = "请牢记密码,锁定后会清除,丢失无法找回"
+
+        ) { enabled ->
+            if (enabled) {
+                if (LOCK_PASSWORD.isEmpty()) {
+                    return@CommonSwitch showToast("解锁密码不能为空")
                 }
-                LOCK_PASSWORD = ""
-                ENABLE_AUTO_LOCK = false
-            },
-            "请牢记密码,锁定后会清除,丢失无法找回"
-        )
+                MixDialogBuilder("是否确认启用?").apply {
+                    setContent {
+                        Text(text = "请确认已经牢记当前密码,锁定后会清除,丢失无法找回")
+                    }
+                    setPositiveButton("确认") {
+                        ENABLE_AUTO_LOCK = true
+                        LAST_DECODE = System.currentTimeMillis()
+                        LOCK_PASSWORD = LOCK_PASSWORD.calculateMD5(100)
+                        closeDialog()
+                        showToast("已启用自动锁定")
+                    }
+                    show()
+                }
+                return@CommonSwitch
+            }
+            LOCK_PASSWORD = ""
+            ENABLE_AUTO_LOCK = false
+        }
         Button(onClick = {
-            MaterialDialogBuilder("确认锁定?").apply {
+            MixDialogBuilder("确认锁定?").apply {
                 setPositiveButton("确认") {
                     if (LOCK_PASSWORD.isEmpty()) {
                         showToast("解锁密码不能为空")
@@ -196,7 +242,7 @@ fun Unlock() {
     Text(text = "密钥已被锁定", fontSize = 20.sp, fontWeight = FontWeight.Bold)
     Button(onClick = {
         var inputValue by mutableStateOf("")
-        MaterialDialogBuilder("输入密码").apply {
+        MixDialogBuilder("输入密码").apply {
             setContent {
                 OutlinedTextField(value = inputValue, onValueChange = {
                     inputValue = it
@@ -214,7 +260,7 @@ fun Unlock() {
         Text(text = "立即解锁")
     }
     Button(onClick = {
-        MaterialDialogBuilder("确定忽略锁定?").apply {
+        MixDialogBuilder("确定忽略锁定?").apply {
             setContent {
                 Text(text = "忽略后,密钥列表将会可以访问,但是所有已经加密的密钥无法还原")
             }
@@ -230,7 +276,7 @@ fun Unlock() {
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-val Passwords = MixNavPage("passwords", gap = 20.dp) {
+val Passwords = MixNavPage(gap = 20.dp) {
     if (LOCK_CACHE.isNotEmpty()) {
         Unlock()
         return@MixNavPage
@@ -287,7 +333,7 @@ val Passwords = MixNavPage("passwords", gap = 20.dp) {
         默认只会加密信息中的中文英文和数字,特殊字符不会进行加密
         如果需要请开启设置中的严格模式(不支持移位加密和随机结果)
         空位加密使用的是不可见字符(字符宽度为0)
-    """.trimIndent(), color = LightColorScheme.primary
+    """.trimIndent(), color = colorScheme.primary
         )
     }
     LockSettings()

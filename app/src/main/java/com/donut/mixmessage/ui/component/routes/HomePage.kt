@@ -7,7 +7,7 @@ import com.donut.mixmessage.ui.component.encoder.EncodeComponent
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 
 
-val Home = MixNavPage("home", gap = 20.dp){
+val Home = MixNavPage(gap = 20.dp){
     EncodeComponent()
     DecodeComponent()
 }

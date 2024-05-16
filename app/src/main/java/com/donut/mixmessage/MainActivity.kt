@@ -39,8 +39,6 @@ class MainActivity : MixActivity(MAIN_ID) {
     @Composable
     fun MainPage() {
 
-        LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-
         CommonColumn(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.fillMaxSize()

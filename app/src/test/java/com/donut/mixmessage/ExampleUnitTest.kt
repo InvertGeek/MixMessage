@@ -1,7 +1,12 @@
 package com.donut.mixmessage
 
 import com.donut.mixmessage.util.common.calculateMD5
+import com.donut.mixmessage.util.common.genRandomString
+import com.donut.mixmessage.util.common.getCurrentDate
 import org.junit.Test
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import kotlin.time.measureTime
 
 /**
@@ -12,10 +17,8 @@ import kotlin.time.measureTime
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-       measureTime {
-           "".calculateMD5(10000)
-       }.also {
-           println(it)
-       }
+        // 获取当前日期
+
+        println("当前日期: ${getCurrentDate()}")
     }
 }

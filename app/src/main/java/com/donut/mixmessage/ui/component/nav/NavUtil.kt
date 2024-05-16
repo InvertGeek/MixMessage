@@ -1,5 +1,8 @@
 package com.donut.mixmessage.ui.component.nav
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,18 +31,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.donut.mixmessage.util.common.genRandomString
 import com.donut.mixmessage.util.common.isNotNull
 import java.lang.ref.WeakReference
 
+@Suppress("MemberVisibilityCanBePrivate")
 class MixNavPage(
-    val name: String,
+    val name: String = genRandomString(),
     private val displayNavBar: Boolean = true,
     private val gap: Dp = 0.dp,
     val modifier: Modifier = Modifier,
-    val content: @Composable () -> Unit
+    val useTransition: Boolean = false,
+    val content: @Composable () -> Unit,
 ) {
 
-    operator fun invoke(builder: NavGraphBuilder){
+    operator fun invoke(builder: NavGraphBuilder) {
         register(builder)
     }
 
@@ -47,6 +53,8 @@ class MixNavPage(
         builder.apply {
             composable(
                 name,
+                enterTransition = { if (useTransition) slideInHorizontally(tween()) { it } else null },
+                exitTransition = { if (useTransition) slideOutHorizontally(tween()) { it } else null },
             ) {
 
                 if (getCurrentRoute().contentEquals(name)) {

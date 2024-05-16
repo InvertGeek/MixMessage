@@ -16,7 +16,7 @@ import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 
-val FastSend = MixNavPage("settings_fast_send", displayNavBar = false) {
+val FastSend = MixNavPage(displayNavBar = false,useTransition = true,) {
     NavTitle(title = "一键发送设置", showBackIcon = true)
     OutlinedTextField(
         value = SEND_BUTTON_IDENTIFIER,
@@ -32,11 +32,10 @@ val FastSend = MixNavPage("settings_fast_send", displayNavBar = false) {
     CommonSwitch(
         checked = SCAN_BUTTON_WHEN_CLICK,
         text = "点击发送和输入自动更新:",
-        onCheckedChangeListener = {
-            setScanButtonWhenClick(it)
-        },
-        "启用后点击任何发送字样的按钮和文字以及输入框，将会设置为一键发送使用的输入框"
-    )
+        "启用后点击任何发送字样的按钮和文字以及输入框，将会设置为一键发送使用的输入框",
+    ) {
+        setScanButtonWhenClick(it)
+    }
     OutlinedTextField(
         value = DIALOG_OPEN_IDENTIFIER,
         onValueChange = { newValue ->

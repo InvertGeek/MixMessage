@@ -7,6 +7,9 @@ import android.provider.Settings
 import android.util.Log
 import com.donut.mixmessage.app
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 fun String.copyToClipboard(showToast: Boolean = true) {
     val clipboard = getClipBoard()
@@ -72,6 +75,7 @@ inline fun Boolean?.isTrue(block: UnitBlock = {}): Boolean {
     return this == true
 }
 
+
 inline fun Boolean?.isFalse(block: UnitBlock = {}): Boolean {
     if (this == false) {
         block()
@@ -100,6 +104,21 @@ fun catchError(tag: String = "", block: () -> Unit) {
     } catch (e: Exception) {
         showError(e, tag)
     }
+}
+
+
+fun getCurrentDate(): String {
+    val currentDate = Date()
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    return formatter.format(currentDate)
+}
+
+fun genRandomString(length: Int = 32): String {
+    val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+    return (1..length)
+        .map { kotlin.random.Random.nextInt(0, charPool.size) }
+        .map(charPool::get)
+        .joinToString("")
 }
 
 fun showError(e: Exception, tag: String = "") {

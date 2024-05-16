@@ -1,8 +1,8 @@
 package com.donut.mixmessage.util.encode
 
-import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
@@ -11,7 +11,6 @@ import com.donut.mixmessage.util.encode.encoders.SCVEncoder
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
-import com.donut.mixmessage.util.objects.MixActivity
 
 val ENCODERS = listOf(
     ShiftEncoder,
@@ -37,6 +36,8 @@ var LAST_DECODE = System.currentTimeMillis()
 var SUCCESS_DECODE_COUNT by cachedMutableOf(0L, "static_success_decode_count")
 
 var ENCODE_COUNT by cachedMutableOf(0L, "static_encode_count")
+
+var USE_TIME_LOCK by cachedMutableOf(false, "use_time_lock_encode")
 
 fun increaseSuccessDecodeCount() {
     SUCCESS_DECODE_COUNT++
@@ -127,6 +128,9 @@ fun decodeText(text: String): CoderResult {
         if (coder.isEnabled() && result.isFail) {
             return@any PASSWORDS.any {
                 result = coder.decode(text, it)
+                if (result.isFail) {
+                    result = coder.decode(text, it + getCurrentDate())
+                }
                 !result.isFail
             }
         }
@@ -143,11 +147,12 @@ fun encodeText(text: String): CoderResult {
     if (USE_RANDOM_ENCODER) {
         encoder = ENCODERS.random()
     }
-    val password = if (USE_RANDOM_PASSWORD) {
+    var password = if (USE_RANDOM_PASSWORD) {
         PASSWORDS.filter { !it.contentEquals("123") }.randomOrNull() ?: "123"
     } else {
         DEFAULT_PASSWORD
     }
+    if (USE_TIME_LOCK) password += getCurrentDate()
     return encoder.encode(
         text.trim(), password
     ).also {

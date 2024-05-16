@@ -1,5 +1,6 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
+import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 
@@ -24,6 +25,7 @@ data class CoderResult(
                     长度: ${text.length}
                     原始长度: ${if (this.isFail) 0 else originText.length}
                     ${if (isStrict) "严格编码" else ""}
+                    ${if (password.endsWith(getCurrentDate())) "时间锁" else ""}
                 """.trimIndent().replace("\n", " ")
 
     fun textWithPrefix() = if (text.isEmpty()) text else "$prefix$text"

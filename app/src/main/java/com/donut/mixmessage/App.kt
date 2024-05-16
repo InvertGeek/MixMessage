@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.objects.MixActivity
@@ -52,7 +52,7 @@ class App : Application() {
                 return@setDefaultUncaughtExceptionHandler
             }
 
-            MaterialDialogBuilder("发生错误").apply {
+            MixDialogBuilder("发生错误").apply {
                 setContent {
                     Column(
                         modifier = Modifier

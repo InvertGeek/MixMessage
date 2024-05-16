@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.donut.mixmessage.ui.theme.LightColorScheme
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.truncate
 
@@ -52,12 +52,15 @@ fun CommonColumn(
 fun CommonSwitch(
     checked: Boolean,
     text: String,
-    onCheckedChangeListener: (Boolean) -> Unit,
-    description: String = ""
+    description: String = "",
+    useDivider: Boolean = true,
+    onCheckedChangeListener: (Boolean) -> Unit = {},
 ) {
 
     Column {
-        HorizontalDivider()
+        if (useDivider) {
+            HorizontalDivider()
+        }
         FlowRow(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -115,7 +118,7 @@ fun ClearableTextField(
             Icon(
                 Icons.Filled.Clear,
                 contentDescription = "Clear text",
-                tint = LightColorScheme.primary,
+                tint = colorScheme.primary,
                 modifier = Modifier
                     .clickable {
                         performHapticFeedBack()

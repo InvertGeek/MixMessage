@@ -30,6 +30,7 @@ import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
+import com.donut.mixmessage.util.encode.USE_TIME_LOCK
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
@@ -88,8 +89,11 @@ fun EncodeInputComponent(
     )
 
     LaunchedEffect(
-        encoderText, DEFAULT_ENCODER, ZeroWidthEncoder.encodeResultPrefix,
-        DEFAULT_PASSWORD
+        encoderText,
+        DEFAULT_ENCODER,
+        ZeroWidthEncoder.encodeResultPrefix,
+        DEFAULT_PASSWORD,
+        USE_TIME_LOCK
     ) {
         encodeResult = encodeText(encoderText.text)
     }

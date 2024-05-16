@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.service.startFloat
 import com.donut.mixmessage.service.stopFloat
 import com.donut.mixmessage.ui.component.common.CommonSwitch
-import com.donut.mixmessage.ui.component.common.MaterialDialogBuilder
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.copyWhenRefresh
 import com.donut.mixmessage.ui.component.encoder.setEnableCopyWhenRefresh
@@ -37,7 +38,10 @@ import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.nav.getNavController
 import com.donut.mixmessage.ui.component.routes.settings.routes.AboutPage
-import com.donut.mixmessage.ui.theme.LightColorScheme
+import com.donut.mixmessage.ui.component.routes.settings.routes.AutoDecode
+import com.donut.mixmessage.ui.component.routes.settings.routes.FastSend
+import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
@@ -59,7 +63,7 @@ var START_BLANK_SCREEN by cachedMutableOf(false, "start_blank_screen")
 
 
 fun selectDefaultEncoder() {
-    MaterialDialogBuilder("默认加密方法").apply {
+    MixDialogBuilder("默认加密方法").apply {
         setContent {
             SingleSelectItemList(
                 items = ENCODERS.map { it.name },
@@ -103,7 +107,7 @@ fun SettingItem(
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-val Settings = MixNavPage("settings_main"){
+val Settings = MixNavPage("settings_main") {
     NavTitle(title = "设置")
     CommonSwitch(checked = enableFloat, text = "悬浮窗开关:", onCheckedChangeListener = {
         if (!android.provider.Settings.canDrawOverlays(app) && it) {
@@ -120,35 +124,31 @@ val Settings = MixNavPage("settings_main"){
     CommonSwitch(
         checked = USE_RANDOM_PASSWORD,
         text = "启用随机密码:",
-        onCheckedChangeListener = {
-            setUseRandomPassword(it)
-        },
-        "启用后加密时将随机选择已有的密钥"
-    )
+        "启用后加密时将随机选择已有的密钥",
+    ) {
+        setUseRandomPassword(it)
+    }
     CommonSwitch(
         checked = USE_RANDOM_ENCODER,
         text = "启用随机编码:",
-        onCheckedChangeListener = {
-            setUseRandomEncoder(it)
-        },
-        "启用后加密时将使用随机编码方法"
-    )
+        "启用后加密时将使用随机编码方法",
+    ) {
+        setUseRandomEncoder(it)
+    }
     CommonSwitch(
         checked = USE_STRICT_ENCODE,
         text = "启用严格编码:",
-        onCheckedChangeListener = {
-            setUseStrictEncode(it)
-        },
-        "启用后将会加密所有字符内容(包括特殊字符),只支持除移位加密以外的算法"
-    )
+        "启用后将会加密所有字符内容(包括特殊字符),只支持除移位加密以外的算法",
+    ) {
+        setUseStrictEncode(it)
+    }
     CommonSwitch(
         checked = copyWhenRefresh,
         text = "刷新时自动复制:",
-        onCheckedChangeListener = {
-            setEnableCopyWhenRefresh(it)
-        },
-        "启用后刷新加密结果后自动复制新内容"
-    )
+        "启用后刷新加密结果后自动复制新内容",
+    ) {
+        setEnableCopyWhenRefresh(it)
+    }
     SettingBox(
         modifier = Modifier.padding(0.dp, 10.dp)
     ) {
@@ -163,7 +163,7 @@ val Settings = MixNavPage("settings_main"){
             )
             Text(
                 text = if (IS_ACS_ENABLED) "已开启" else "未开启",
-                color = LightColorScheme.primary,
+                color = colorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
@@ -179,16 +179,37 @@ val Settings = MixNavPage("settings_main"){
 
     val controller = getNavController()
     SettingItem(title = "自动解码设置") {
-        controller.navigate("settings_decode")
+        controller.navigate(AutoDecode.name)
     }
     SettingItem(title = "一键发送设置") {
-        controller.navigate("settings_fast_send")
+        controller.navigate(FastSend.name)
     }
     SettingItem(title = "其他设置") {
-        controller.navigate("settings_other")
+        controller.navigate(OtherPage.name)
     }
     SettingItem(title = "关于") {
         controller.navigate(AboutPage.name)
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun SettingButton(text: String, buttonText: String = "设置", onClick: () -> Unit) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        HorizontalDivider()
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth().padding(0.dp,5.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = text,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+            OutlinedButton(onClick = onClick) {
+                Text(text = buttonText)
+            }
+        }
     }
 }
 

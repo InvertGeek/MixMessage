@@ -1,6 +1,5 @@
 package com.donut.mixmessage
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -19,8 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.donut.mixmessage.ui.component.nav.NavComponent
 import com.donut.mixmessage.ui.component.common.CommonColumn
+import com.donut.mixmessage.ui.component.nav.NavComponent
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.performHapticFeedBack
@@ -76,8 +75,8 @@ class MainActivity : MixActivity(MAIN_ID) {
                     ) {
                     AnimatedVisibility(
                         visible = !START_BLANK_SCREEN || scaled,
-                        enter = slideInVertically{-it},
-                        exit = slideOutVertically{-it}
+                        enter = slideInVertically { -it },
+                        exit = slideOutVertically { -it }
                     ) {
                         MainPage()
                     }

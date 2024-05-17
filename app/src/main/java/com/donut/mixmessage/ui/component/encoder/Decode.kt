@@ -2,7 +2,6 @@ package com.donut.mixmessage.ui.component.encoder
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -13,7 +12,6 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,8 +29,6 @@ import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
-
-var inputText by mutableStateOf(TextFieldValue())
 
 @Composable
 fun DecodeResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) {
@@ -92,6 +88,10 @@ fun DecodeResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) 
 @Composable
 fun DecodeComponent() {
 
+    var inputText by remember {
+        mutableStateOf(TextFieldValue())
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "解码", fontSize = 20.sp, fontWeight = FontWeight.Bold) // 指定字体大小为 20sp)
         ClearableTextField(
@@ -104,12 +104,8 @@ fun DecodeComponent() {
             label = { Text("输入内容") }
         )
 
-        var decodeResult by remember {
+        val decodeResult by remember(inputText.text) {
             mutableStateOf(decodeText(inputText.text))
-        }
-
-        LaunchedEffect(key1 = inputText.text) {
-            decodeResult = decodeText(inputText.text)
         }
 
         DecodeResultComponent(decodeResult = decodeResult)

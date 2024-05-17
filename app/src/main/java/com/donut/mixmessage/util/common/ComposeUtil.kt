@@ -4,6 +4,7 @@ import android.view.HapticFeedbackConstants
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.ComposeView
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.MixMessageTheme

@@ -5,7 +5,6 @@ import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
-import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.util.objects.MixActivity
 
 class LogoUtil {

@@ -10,13 +10,7 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        // 获取当前日期
 
-        for (symbol in 0x13000..0x1342f) {
-//            println(symbol)
-            //转换unicode
-            println(Character.toChars(symbol).joinToString(""))
-        }
 
     }
 }

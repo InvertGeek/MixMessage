@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -37,8 +38,6 @@ import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 
 var encoderText by mutableStateOf(TextFieldValue())
-
-var encodeResult by mutableStateOf(encodeText(encoderText.text))
 
 var copyWhenRefresh by cachedMutableOf(true, "copy_when_refresh")
 
@@ -76,6 +75,17 @@ fun EncodeInputComponent(
     useTextButton: Boolean = false,
     extra: @Composable ((CoderResult) -> Unit)? = null,
 ) {
+
+    var encodeResult by remember(
+        encoderText,
+        DEFAULT_ENCODER,
+        ZeroWidthEncoder.encodeResultPrefix,
+        DEFAULT_PASSWORD,
+        USE_TIME_LOCK
+    ) {
+        mutableStateOf(encodeText(encoderText.text))
+    }
+
     val maxLines = if (noScroll) Int.MAX_VALUE else 5
 
     ClearableTextField(
@@ -88,16 +98,6 @@ fun EncodeInputComponent(
         label = { Text("输入内容") }
     )
 
-    LaunchedEffect(
-        encoderText,
-        DEFAULT_ENCODER,
-        ZeroWidthEncoder.encodeResultPrefix,
-        DEFAULT_PASSWORD,
-        USE_TIME_LOCK
-    ) {
-        encodeResult = encodeText(encoderText.text)
-    }
-
     TextField(
         value = TextFieldValue(encodeResult.textWithPrefix()),
         onValueChange = {},
@@ -108,7 +108,6 @@ fun EncodeInputComponent(
         supportingText = {
             Text(text = encodeResult.getInfo())
         }
-//            label = { Text("结果") }
     )
     FlowRow(
         modifier = Modifier
@@ -149,12 +148,8 @@ fun EncodeInputComponent(
 }
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EncodeComponent() {
-    // 创建两个可变状态来保存输入框中的文本内容
-//    var encodeText by remember { mutableStateOf(TextFieldValue()) }
-
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "编码", fontSize = 20.sp, fontWeight = FontWeight.Bold) // 指定字体大小为 20sp)
         EncodeInputComponent() {

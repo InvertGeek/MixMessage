@@ -16,7 +16,7 @@ import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 
-val FastSend = MixNavPage(displayNavBar = false,useTransition = true,) {
+val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
     NavTitle(title = "一键发送设置", showBackIcon = true)
     OutlinedTextField(
         value = SEND_BUTTON_IDENTIFIER,

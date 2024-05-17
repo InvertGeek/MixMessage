@@ -1,9 +1,5 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.donut.mixmessage.kv
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.encode.basen.Alphabet
 import com.donut.mixmessage.util.encode.basen.BigIntBaseN
@@ -12,7 +8,7 @@ import com.donut.mixmessage.util.encode.xxtea.XXTEA
 
 
 //var USE_STRICT_ENCODE by mutableStateOf(kv.decodeBool("use_strict_encode", false))
-var USE_STRICT_ENCODE by cachedMutableOf(false,"use_strict_encode")
+var USE_STRICT_ENCODE by cachedMutableOf(false, "use_strict_encode")
 
 fun setUseStrictEncode(value: Boolean) {
     USE_STRICT_ENCODE = value

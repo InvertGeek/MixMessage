@@ -11,7 +11,6 @@ class Alphabet private constructor(val key: String) {
         }
 
 
-
         fun fromString(key: String): Alphabet {
             val filtered = key.groupingBy { it }.eachCount()
                 .filter {

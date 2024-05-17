@@ -1,6 +1,5 @@
 package com.donut.mixmessage.ui.component.routes.settings.routes
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,7 +22,6 @@ import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.objects.MixActivity
 
-@OptIn(ExperimentalLayoutApi::class)
 val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "其他设置", showBackIcon = true)
     OutlinedTextField(

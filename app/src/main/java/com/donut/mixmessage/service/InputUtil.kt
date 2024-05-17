@@ -7,7 +7,6 @@ import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.util.common.cachedMutableOf
-import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.showToast

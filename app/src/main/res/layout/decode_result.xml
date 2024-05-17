@@ -9,10 +9,10 @@
         android:layout_height="wrap_content"
         android:background="#F5A9A9"
         android:orientation="vertical">
-<!--        <androidx.compose.ui.platform.ComposeView-->
-<!--            android:id="@+id/result_compose_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content" />-->
+        <!--        <androidx.compose.ui.platform.ComposeView-->
+        <!--            android:id="@+id/result_compose_view"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content" />-->
 
 
         <TextView

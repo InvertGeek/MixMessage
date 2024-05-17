@@ -141,7 +141,6 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                     onClick = {
                         performHapticFeedBack()
                         DecodeActivity.LAST_FORCE_CLOSE = System.currentTimeMillis()
-                        encoderText = TextFieldValue()
                         showToast("3秒内不会再显示此窗口")
                         currentActivity.finish()
                     },

@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -42,7 +42,7 @@ class MixNavPage(
     private val gap: Dp = 0.dp,
     val modifier: Modifier = Modifier,
     val useTransition: Boolean = false,
-    val content: @Composable () -> Unit,
+    val content: @Composable (NavBackStackEntry) -> Unit,
 ) {
 
     operator fun invoke(builder: NavGraphBuilder) {
@@ -68,37 +68,9 @@ class MixNavPage(
                         .padding(8.dp),
                     verticalArrangement = Arrangement.spacedBy(gap),
                 ) {
-                    content()
+                    content(it)
                 }
             }
-        }
-    }
-}
-
-fun NavGraphBuilder.navPage(
-    name: String,
-    displayNavBar: Boolean = true,
-    modifier: Modifier = Modifier,
-    gap: Dp = 0.dp,
-    content: @Composable () -> Unit
-) {
-    composable(
-        name,
-//        enterTransition = { slideInHorizontally(tween()) { it } },
-    ) {
-
-        if (getCurrentRoute().contentEquals(name)) {
-            showNavBar = displayNavBar
-        }
-
-        Column(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(gap),
-        ) {
-            content()
         }
     }
 }
@@ -106,7 +78,6 @@ fun NavGraphBuilder.navPage(
 var navControllerCache = WeakReference<NavHostController>(null)
 var showNavBar by mutableStateOf(true)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavTitle(showBackIcon: Boolean = false, title: String) {
     val controller = getNavController()

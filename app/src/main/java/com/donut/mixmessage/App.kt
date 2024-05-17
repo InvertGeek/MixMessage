@@ -29,8 +29,8 @@ private lateinit var innerApp: Application
 
 
 val currentActivity: Activity
-    get(){
-        MixActivity.referenceCache.forEach{
+    get() {
+        MixActivity.referenceCache.forEach {
             debug("activity", it.key)
         }
         return MixActivity.firstActiveActivity()!!

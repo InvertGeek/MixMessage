@@ -107,7 +107,7 @@ fun SettingItem(
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-val Settings = MixNavPage("settings_main") {
+val Settings = MixNavPage {
     NavTitle(title = "设置")
     CommonSwitch(checked = enableFloat, text = "悬浮窗开关:", onCheckedChangeListener = {
         if (!android.provider.Settings.canDrawOverlays(app) && it) {
@@ -199,7 +199,8 @@ fun SettingButton(text: String, buttonText: String = "设置", onClick: () -> Un
         HorizontalDivider()
         FlowRow(
             modifier = Modifier
-                .fillMaxWidth().padding(0.dp,5.dp),
+                .fillMaxWidth()
+                .padding(0.dp, 5.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(

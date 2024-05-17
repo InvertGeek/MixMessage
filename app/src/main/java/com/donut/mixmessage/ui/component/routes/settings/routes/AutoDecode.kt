@@ -10,7 +10,8 @@ import com.donut.mixmessage.ui.component.nav.NavTitle
 
 val AutoDecode = MixNavPage(
     displayNavBar = false,
-    useTransition = true,) {
+    useTransition = true,
+) {
     NavTitle(title = "自动解码设置", showBackIcon = true)
     Text(
         text = "推荐使用长按,部分界面单击无法识别到文字",

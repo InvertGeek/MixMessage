@@ -1,9 +1,5 @@
 package com.donut.mixmessage.util.encode.basen
 
-import com.donut.mixmessage.util.encode.basen.Alphabet
-import com.donut.mixmessage.util.encode.basen.BaseN
-import com.donut.mixmessage.util.encode.basen.CodecDirection
-
 class LoopBaseN(override val alphabet: Alphabet) : BaseN() {
 
     override fun repackDigits(

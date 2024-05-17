@@ -151,9 +151,7 @@ fun SingleSelectItemList(items: List<String>, currentOption: String, onSelect: (
                         Icon(
                             Icons.Outlined.Done,
                             contentDescription = "selected",
-                            tint = Color(
-                                0xFF24a0ed
-                            )
+                            tint = colorScheme.primary
                         )
                     }
                 } else {

@@ -70,7 +70,7 @@ enum class Theme(
                 DEFAULT.night(it)
             }
         },
-        "动态(需要安卓13+)"
+        "跟随壁纸(需要安卓13+)"
     )
 }
 

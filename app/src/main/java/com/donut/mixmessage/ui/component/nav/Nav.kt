@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.donut.mixmessage.ui.component.routes.Home
 import com.donut.mixmessage.ui.component.routes.password.Passwords
 import com.donut.mixmessage.ui.component.routes.settings.Settings
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.OnDispose
 import com.donut.mixmessage.util.common.performHapticFeedBack
 
@@ -44,7 +45,7 @@ fun NavComponent() {
                 exit = slideOutVertically { it }
             ) {
                 NavigationBar(
-                    containerColor = Color(0xADB6D0D9)
+//                    containerColor = colorScheme.secondary
                 ) {
                     @Composable
                     fun NavButton(text: String, icon: ImageVector, jumpTo: String) {

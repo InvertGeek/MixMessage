@@ -220,9 +220,9 @@ fun SettingBox(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth(),
-        border = BorderStroke(2.dp, Color(0xFF036BBD)),
+        border = BorderStroke(2.dp, colorScheme.primary),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0x00ADE4FF),
+            containerColor = Color.Transparent,
         ),
     ) {
         Column(

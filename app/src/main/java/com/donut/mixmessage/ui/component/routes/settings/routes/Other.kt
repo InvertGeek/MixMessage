@@ -61,14 +61,13 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
         MixDialogBuilder("APP伪装").apply {
             setContent {
                 SingleSelectItemList(
-                    items = LogoUtil.Logo.entries.map { it.label },
+                    items = LogoUtil.Logo.entries.toList(),
+                    getLabel = { it.label },
                     currentOption = LogoUtil.Logo.entries.firstOrNull {
                         it.packageName == MixActivity.getMainContext()!!.componentName?.className
-                    }?.label ?: ""
+                    } ?: LogoUtil.Logo.DEFAULT
                 ) { option ->
-                    LogoUtil.changeLogo(LogoUtil.Logo.entries.firstOrNull {
-                        it.label == option
-                    } ?: LogoUtil.Logo.DEFAULT)
+                    LogoUtil.changeLogo(option)
                     closeDialog()
                 }
             }
@@ -79,13 +78,13 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
         MixDialogBuilder("颜色主题").apply {
             setContent {
                 SingleSelectItemList(
-                    items = Theme.entries.map { it.label },
+                    items = Theme.entries,
+                    getLabel = {it.name},
                     currentOption = Theme.entries.firstOrNull {
                         it.name == currentTheme
-                    }?.label ?: ""
+                    } ?: Theme.DEFAULT
                 ) { option ->
-                    currentTheme =
-                        Theme.entries.firstOrNull { it.label == option }?.name ?: Theme.DEFAULT.name
+                    currentTheme = option.name
                     closeDialog()
                 }
             }

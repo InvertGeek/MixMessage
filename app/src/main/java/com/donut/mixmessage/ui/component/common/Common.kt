@@ -131,7 +131,26 @@ fun ClearableTextField(
 }
 
 @Composable
-fun SingleSelectItemList(items: List<String>, currentOption: String, onSelect: (String) -> Unit) {
+fun SingleSelectItemList(
+    items: List<String>,
+    currentOption: String,
+    onSelect: (String) -> Unit,
+) {
+    SingleSelectItemList(
+        items = items,
+        currentOption = currentOption,
+        getLabel = { it },
+        onSelect = onSelect
+    )
+}
+
+@Composable
+fun <T> SingleSelectItemList(
+    items: List<T>,
+    currentOption: T,
+    getLabel: (option: T) -> String,
+    onSelect: (option: T) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier
             .heightIn(0.dp, 400.dp),
@@ -140,7 +159,7 @@ fun SingleSelectItemList(items: List<String>, currentOption: String, onSelect: (
             val currentItem = items[item]
             val selected = currentOption == currentItem
             FilterChip(
-                label = { Text(text = currentItem.truncate(13)) },
+                label = { Text(text = getLabel(currentItem).truncate(13)) },
                 onClick = {
                     performHapticFeedBack()
                     onSelect(currentItem)

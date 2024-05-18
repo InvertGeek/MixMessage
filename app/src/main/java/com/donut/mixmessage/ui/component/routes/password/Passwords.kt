@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import com.donut.mixmessage.ui.component.routes.settings.SettingBox
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.calculateMD5
+import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
@@ -166,18 +168,23 @@ fun showPasswordsDialog() {
 @Composable
 fun LockSettings() {
     SettingBox {
-
+        var lockTime by remember {
+            mutableStateOf("")
+        }
         Text(text = "密钥锁定设置", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Text(
             text = "超过一定时间没有使用解密功能，自动加密所有密钥(需要开启无障碍)",
             fontSize = 14.sp,
             color = Color(0xFFAAAAAA)
         )
-        OutlinedTextField(value = LOCK_TIMEOUT.toString(), onValueChange = {
-            LOCK_TIMEOUT = it.toLongOrNull()?.coerceAtLeast(10) ?: 10
-        }, label = {
-            Text(text = "自动锁定时间(秒)")
-        },
+        OutlinedTextField(
+            value = if (ENABLE_AUTO_LOCK) LOCK_TIMEOUT.toString() else lockTime,
+            onValueChange = {
+                lockTime = it
+            },
+            label = {
+                Text(text = "自动锁定时间(秒)")
+            },
             enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )
@@ -200,11 +207,16 @@ fun LockSettings() {
                 if (LOCK_PASSWORD.isEmpty()) {
                     return@CommonSwitch showToast("解锁密码不能为空")
                 }
+                if (lockTime.toLongOrNull().isNull()) {
+                    showToast("请输入正确的时间")
+                    return@CommonSwitch
+                }
                 MixDialogBuilder("是否确认启用?").apply {
                     setContent {
                         Text(text = "请确认已经牢记当前密码,锁定后会清除,丢失无法找回")
                     }
                     setPositiveButton("确认") {
+                        LOCK_TIMEOUT = lockTime.toLong().coerceAtLeast(10)
                         ENABLE_AUTO_LOCK = true
                         LAST_DECODE = System.currentTimeMillis()
                         LOCK_PASSWORD = LOCK_PASSWORD.calculateMD5(100)

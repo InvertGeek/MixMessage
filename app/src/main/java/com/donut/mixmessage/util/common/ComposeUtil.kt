@@ -1,6 +1,7 @@
 package com.donut.mixmessage.util.common
 
 import android.view.HapticFeedbackConstants
+import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -9,7 +10,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 
-fun addContentView(view: ComposeView): () -> Unit {
+fun addContentView(view: View): () -> Unit {
     currentActivity.addContentView(
         view,
         ViewGroup.LayoutParams(
@@ -22,7 +23,7 @@ fun addContentView(view: ComposeView): () -> Unit {
     }
 }
 
-fun ComposeView.removeView() {
+fun View.removeView() {
     (this.parent as ViewGroup).removeView(this)
 }
 

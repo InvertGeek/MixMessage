@@ -1,6 +1,7 @@
 package com.donut.mixmessage.ui.component.common
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -55,7 +56,7 @@ class MixDialogBuilder(private var title: String) {
         }
     }
 
-    fun setBottomContent(text: String, callBack: (close: () -> Unit) -> Unit) {
+    fun setNeutralButton(text: String, callBack: (close: () -> Unit) -> Unit) {
         neutralButton = {
             BuildButton(text = text, callBack)
         }
@@ -97,7 +98,7 @@ fun showAlertDialog(
                 .systemBarsPadding()
                 .heightIn(0.dp, 600.dp),
             title = {
-                Text(text = title, fontWeight = FontWeight.Bold)
+                Text(text = title, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth())
             },
             onDismissRequest = {
                 removeView()

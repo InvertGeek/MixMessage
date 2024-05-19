@@ -10,6 +10,8 @@ import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 fun String.copyToClipboard(showToast: Boolean = true) {
     val clipboard = getClipBoard()
@@ -47,6 +49,12 @@ fun String.truncate(maxLength: Int): String {
         this
     }
 }
+
+@OptIn(ExperimentalEncodingApi::class)
+fun ByteArray.toBase64() = Base64.encode(this)
+
+@OptIn(ExperimentalEncodingApi::class)
+fun String.decodeBase64() = Base64.decode(this)
 
 fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {
     return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -121,7 +129,7 @@ fun genRandomString(length: Int = 32): String {
         .joinToString("")
 }
 
-fun showError(e: Exception, tag: String = "") {
+fun showError(e: Throwable, tag: String = "") {
     Log.e(
         "error",
         "${tag}发生错误: ${e.message} ${e.stackTraceToString()}"

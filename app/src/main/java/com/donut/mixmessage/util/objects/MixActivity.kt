@@ -70,19 +70,11 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         }
     }
 
-    // 检查无障碍服务是否已启用
-
     fun isAccessibilityServiceEnabled(): Boolean {
         val accessibilityService = Settings.Secure.getString(
             contentResolver,
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         )
         return accessibilityService?.contains(packageName) == true
-    }
-
-    fun Context.findActivity(): Activity? = when (this) {
-        is Activity -> this
-        is ContextWrapper -> baseContext.findActivity()
-        else -> null
     }
 }

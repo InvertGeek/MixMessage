@@ -45,7 +45,7 @@ fun openPasswordDialog(passwordText: String) {
             it()
             passwordText.copyToClipboard()
         }
-        setBottomContent("设为默认加密密钥") {
+        setNeutralButton("设为默认加密密钥") {
             setDefaultPassword(passwordText)
             showToast("设置成功")
             it()

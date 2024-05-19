@@ -12,8 +12,8 @@ android {
         applicationId = "com.donut.mixmessage"
         minSdk = 24
         targetSdk = 34
-        versionCode = 24
-        versionName = "1.0.14.4"
+        versionCode = 25
+        versionName = "1.0.14.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -66,9 +66,7 @@ android {
 
 dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    val navVersion = "2.7.7"
-
-    implementation("androidx.navigation:navigation-compose:$navVersion")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.github.getActivity:EasyWindow:10.6")
     implementation("com.google.firebase:firebase-analytics:22.0.0")
     implementation("com.tencent:mmkv:1.3.5")

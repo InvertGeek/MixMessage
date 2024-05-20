@@ -18,7 +18,10 @@ import com.donut.mixmessage.ui.component.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
-import com.donut.mixmessage.util.common.removeBrace
+import com.donut.mixmessage.util.common.isEqual
+import com.donut.mixmessage.util.common.isNotNullAnd
+import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.common.removeBrackets
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.hjq.window.EasyWindow
@@ -70,7 +73,6 @@ class MixAccessibilityService : AccessibilityApi() {
     }
 
     companion object {
-
         var ENABLE_SINGLE_CLICK by cachedMutableOf(true, "AUTO_DECODE_ENABLE_SINGLE_CLICK")
         var ENABLE_LONG_CLICK by cachedMutableOf(true, "AUTO_DECODE_ENABLE_LONG_CLICK")
         var ENABLE_SELECT_TEXT by cachedMutableOf(false, "AUTO_DECODE_ENABLE_SELECT_TEXT")
@@ -89,42 +91,33 @@ class MixAccessibilityService : AccessibilityApi() {
         }
         val type = event.eventType
         val source = event.source
-        val text = source?.text ?: event.text.toString().removeBrace()
+        val text = source?.text ?: event.text.toString().removeBrackets()
         var shouldOpen = false
-        if (type == AccessibilityEvent.TYPE_VIEW_CLICKED) {
-            if (checkDialogOpenTextValue(text.toString())) {
+        type.isEqual(AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            checkDialogOpenTextValue(text.toString()).isTrue {
                 return openDecodeDialog(result = CoderResult.Failed)
             }
-            if (source != null && SCAN_BUTTON_WHEN_CLICK) {
-                if (source.isEditable) {
-//                    debug("update input")
-                    INPUT_EDITABLE_CACHE = ViewNode(source)
-                }
-                if (AcsNode.wrap(source).checkButtonText()) {
-//                    debug("update button")
-                    SEND_BUTTON_CACHE = ViewNode(source)
-                }
+            source.isNotNullAnd(SCAN_BUTTON_WHEN_CLICK) {
+                it.isEditable.isTrue { INPUT_EDITABLE_CACHE = ViewNode(it) }
+                AcsNode.wrap(it).checkButtonText()
+                    .isTrue { SEND_BUTTON_CACHE = ViewNode(it) }
             }
-            if (ENABLE_SINGLE_CLICK) {
-//                debug("text: $text")
-                shouldOpen = true
-            }
+            shouldOpen = ENABLE_SINGLE_CLICK
         }
-//        Log.e("test", "onAccessibilityEvent: ${event?.eventType} ${event?.action} ${event?.text}")
-        if (type == AccessibilityEvent.TYPE_VIEW_LONG_CLICKED && ENABLE_LONG_CLICK) {
-            debug("long click text: $text")
-            shouldOpen = true
+        type.isEqual(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED) {
+            shouldOpen = ENABLE_LONG_CLICK
         }
-        if (type == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && ENABLE_SELECT_TEXT) {
-            debug("select text: $text")
-            shouldOpen = true
+        type.isEqual(AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
+            shouldOpen = ENABLE_SELECT_TEXT
         }
 
         if (text.trim().isEmpty() || source?.isEditable == true) {
             return
         }
 
-        if (shouldOpen) openDecodeDialog(text.toString())
+        shouldOpen.isTrue {
+            openDecodeDialog(text.toString())
+        }
     }
 
 

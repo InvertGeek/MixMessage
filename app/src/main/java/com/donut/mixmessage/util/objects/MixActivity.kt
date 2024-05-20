@@ -2,15 +2,14 @@
 
 package com.donut.mixmessage.util.objects
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import cn.vove7.andro_accessibility_api.AccessibilityApi
 import com.donut.mixmessage.util.common.catchError
+import com.donut.mixmessage.util.common.isFalse
+import com.donut.mixmessage.util.common.isTrue
 
 open class MixActivity(private val id: String) : ComponentActivity() {
 
@@ -46,7 +45,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
     override fun onResume() {
         isActive = true
         referenceCache[id]?.add(this)
-        if (isAccessibilityServiceEnabled()) {
+        isAccessibilityServiceEnabled().isTrue {
             catchError {
                 AccessibilityApi.requireBaseAccessibility()
             }
@@ -55,7 +54,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
     }
 
     fun checkOverlayPermission() {
-        if (!Settings.canDrawOverlays(this)) {
+        Settings.canDrawOverlays(this).isFalse {
             val intent =
                 Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
             startActivity(intent)
@@ -64,7 +63,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
 
     // 检查无障碍权限
     fun checkAccessibilityPermission() {
-        if (!isAccessibilityServiceEnabled()) {
+        isAccessibilityServiceEnabled().isFalse {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             startActivity(intent)
         }
@@ -75,6 +74,6 @@ open class MixActivity(private val id: String) : ComponentActivity() {
             contentResolver,
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         )
-        return accessibilityService?.contains(packageName) == true
+        return accessibilityService?.contains(packageName).isTrue()
     }
 }

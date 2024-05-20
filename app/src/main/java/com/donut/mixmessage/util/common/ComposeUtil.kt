@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.ComposeView
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.MixMessageTheme
@@ -24,7 +23,9 @@ fun addContentView(view: View): () -> Unit {
 }
 
 fun View.removeView() {
-    (this.parent as ViewGroup).removeView(this)
+    this.parent.isNotNull {
+        (it as ViewGroup).removeView(this)
+    }
 }
 
 @Composable

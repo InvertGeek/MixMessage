@@ -20,7 +20,7 @@ fun String.copyToClipboard(showToast: Boolean = true) {
     if (showToast) showToast("复制成功")
 }
 
-fun String.removeBrace(): String {
+fun String.removeBrackets(): String {
     if (this.startsWith("[") && this.endsWith("]")) {
         return this.substring(1, this.length - 1)
     }
@@ -61,35 +61,6 @@ fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {
 }
 
 typealias UnitBlock = () -> Unit
-
-inline fun <T> T?.isNull(block: UnitBlock = {}): Boolean {
-    if (this == null) {
-        block()
-    }
-    return this == null
-}
-
-inline fun <T> T?.isNotNull(block: UnitBlock = {}): Boolean {
-    if (this != null) {
-        block()
-    }
-    return this != null
-}
-
-inline fun Boolean?.isTrue(block: UnitBlock = {}): Boolean {
-    if (this == true) {
-        block()
-    }
-    return this == true
-}
-
-
-inline fun Boolean?.isFalse(block: UnitBlock = {}): Boolean {
-    if (this == false) {
-        block()
-    }
-    return this == false
-}
 
 
 fun readClipBoardText(): String {

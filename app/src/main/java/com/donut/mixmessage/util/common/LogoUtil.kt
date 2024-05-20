@@ -50,7 +50,7 @@ class LogoUtil {
             intent.addCategory(Intent.CATEGORY_DEFAULT)
             val resolveInfos = pm.queryIntentActivities(intent, 0)
             for (resolveInfo in resolveInfos) {
-                if (resolveInfo.activityInfo != null) {
+                resolveInfo.activityInfo.isNotNull {
                     am.killBackgroundProcesses(resolveInfo.activityInfo.packageName)
                 }
             }

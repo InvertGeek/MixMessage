@@ -28,6 +28,7 @@ import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.isNull
+import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.objects.MixActivity
@@ -63,7 +64,7 @@ fun DialogContainer(content: @Composable () -> Unit) {
 class DecodeActivity : MixActivity("decode") {
 
     companion object {
-        var decodeText: CoderResult? by mutableStateOf(null)
+        var decodeResult: CoderResult? by mutableStateOf(null)
         var LAST_FORCE_CLOSE = 0L
         var IS_ACTIVE by mutableStateOf(false)
     }
@@ -86,8 +87,7 @@ class DecodeActivity : MixActivity("decode") {
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         setContent {
             MixMessageTheme {
-                // A surface container using the 'background' color from the theme
-                decodeText?.let { DecodeTextDialog(it) }
+                decodeResult?.let { DecodeTextDialog(it) }
             }
         }
     }
@@ -99,13 +99,13 @@ fun openDecodeDialog(text: String = "", result: CoderResult? = null) {
     if (System.currentTimeMillis() - DecodeActivity.LAST_FORCE_CLOSE < 3000) {
         return
     }
-    val decodeResult = decodeText(text)
-    if (decodeResult.isFail && result.isNull()) {
-        return
+    val decodeResult = decodeText(text).also {
+        it.isFail.isTrueAnd(result.isNull()) {
+            return
+        }
     }
-    DecodeActivity.decodeText = decodeResult
+    DecodeActivity.decodeResult = result ?: decodeResult
     val intent = Intent(app, DecodeActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
     ContextCompat.startActivity(app, intent, null)
-
 }

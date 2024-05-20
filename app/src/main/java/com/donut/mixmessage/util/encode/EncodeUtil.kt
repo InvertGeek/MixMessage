@@ -3,6 +3,9 @@ package com.donut.mixmessage.util.encode
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.getCurrentDate
+import com.donut.mixmessage.util.common.isFalse
+import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
@@ -127,18 +130,18 @@ fun decodeText(text: String): CoderResult {
     }
 
     ENCODERS.any { coder ->
-        if (coder.isEnabled() && result.isFail) {
+        coder.isEnabled().isTrueAnd(result.isFail) {
             return@any PASSWORDS.any {
                 result = coder.decode(text, it)
-                if (result.isFail) {
+                result.isFail.isTrue {
                     result = coder.decode(text, it + getCurrentDate())
                 }
-                !result.isFail
+                result.isFail.isFalse()
             }
         }
         return@any false
     }
-    if (!result.isFail) {
+    result.isFail.isFalse {
         increaseSuccessDecodeCount()
     }
     return result
@@ -146,9 +149,7 @@ fun decodeText(text: String): CoderResult {
 
 fun encodeText(text: String): CoderResult {
     var encoder = ENCODERS.firstOrNull { it.name == DEFAULT_ENCODER } ?: ShiftEncoder
-    if (USE_RANDOM_ENCODER) {
-        encoder = ENCODERS.random()
-    }
+    USE_RANDOM_ENCODER.isTrue {encoder = ENCODERS.random()  }
     var password = if (USE_RANDOM_PASSWORD) {
         PASSWORDS.filter { !it.contentEquals("123") }.randomOrNull() ?: "123"
     } else {

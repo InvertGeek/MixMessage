@@ -1,5 +1,7 @@
 package com.donut.mixmessage.service
 
+import android.widget.Button
+import android.widget.EditText
 import cn.vove7.auto.core.viewfinder.AcsNode
 import cn.vove7.auto.core.viewfinder.ConditionGroup
 import cn.vove7.auto.core.viewfinder.SmartFinder
@@ -9,14 +11,12 @@ import com.donut.mixmessage.appScope
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
+import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-
-const val BUTTON_CLASS_NAME = "android.widget.Button"
-const val EDIT_TEXT_CLASS_NAME = "android.widget.EditText"
 
 var INPUT_EDITABLE_CACHE: ViewNode? = null
 var SEND_BUTTON_CACHE: ViewNode? = null
@@ -35,7 +35,7 @@ fun checkSendButtonTextValue(value: String) = checkSplitTextValue(value, SEND_BU
 fun checkSplitTextValue(value: String, identifier: String): Boolean {
     val matchValues = identifier.split(" ")
     for (matchValue in matchValues) {
-        if (value.replace(" ", "").contentEquals(matchValue, true)) {
+        value.replace(" ", "").contentEquals(matchValue, true).isTrue {
             return true
         }
     }
@@ -45,7 +45,7 @@ fun checkSplitTextValue(value: String, identifier: String): Boolean {
 fun checkDialogOpenTextValue(value: String) = checkSplitTextValue(value, DIALOG_OPEN_IDENTIFIER)
 
 fun ViewNode.setText(text: String) {
-    if (this.parent != null) {
+    this.parent.isNotNull {
         this.trySetText(text)
     }
 }
@@ -121,7 +121,7 @@ fun List<ViewNode>.findSendButton(): ViewNode? {
             var sortValue = 0;
             val conditions = listOf(
                 it.isClickable(),
-                it.className == BUTTON_CLASS_NAME,
+                it.className.contentEquals(Button::class.java.name),
                 it.node.checkButtonDesc(),
                 it.node.isEnabled
             )
@@ -142,7 +142,7 @@ fun List<ViewNode>.findSendInput(): ViewNode? {
         this.otherAppNodes().filter { it.node.isEditable }
             .sortedBy {
                 var sortValue = 0;
-                if (it.className == EDIT_TEXT_CLASS_NAME) {
+                if (it.className.contentEquals(EditText::class.java.name)) {
                     sortValue--
                 }
                 return@sortedBy sortValue

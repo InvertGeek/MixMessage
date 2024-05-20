@@ -16,12 +16,16 @@ import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.util.common.addComposeView
 import com.donut.mixmessage.util.common.performHapticFeedBack
 
-class MixDialogBuilder(private var title: String) {
+class MixDialogBuilder(private var title: String, private val tag: String = title) {
     private var content = @Composable {}
     private var positiveButton = @Composable {}
     private var negativeButton = @Composable {}
     private var neutralButton = @Composable {}
     private var close: () -> Unit = {}
+
+    companion object {
+        val dialogCache = mutableMapOf<String, () -> Unit>()
+    }
 
     fun setContent(content: @Composable () -> Unit) {
         this.content = content
@@ -70,6 +74,8 @@ class MixDialogBuilder(private var title: String) {
 
     fun show() {
         close = showAlertDialog(title, content, positiveButton, negativeButton, neutralButton)
+        dialogCache[tag]?.invoke()
+        dialogCache[tag] = close
     }
 }
 

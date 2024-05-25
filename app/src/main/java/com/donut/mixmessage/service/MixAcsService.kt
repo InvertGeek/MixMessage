@@ -9,14 +9,13 @@ import cn.vove7.auto.core.AppScope
 import cn.vove7.auto.core.viewfinder.AcsNode
 import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.R
-import com.donut.mixmessage.activity.DecodeActivity
-import com.donut.mixmessage.activity.openDecodeDialog
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
+import com.donut.mixmessage.decode.DecodeActivity
+import com.donut.mixmessage.decode.openDecodeDialog
 import com.donut.mixmessage.ui.component.routes.password.startLock
 import com.donut.mixmessage.ui.component.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
-import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 import com.donut.mixmessage.util.common.isEqual
 import com.donut.mixmessage.util.common.isNotNullAnd
@@ -27,6 +26,7 @@ import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.hjq.window.EasyWindow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 
 var SCAN_BUTTON_WHEN_CLICK by cachedMutableOf(true, "auto_scan_buttons_click")
@@ -50,15 +50,13 @@ class MixAccessibilityService : AccessibilityApi() {
     override fun onDestroy() {
         IS_ACS_ENABLED = false
         super.onDestroy()
+        exitProcess(0)
     }
 
 
     override fun onServiceConnected() {
         IS_ACS_ENABLED = true
-        init(
-            app,
-            MixAccessibilityService::class.java
-        )
+        EasyWindow.cancelByTag("invisible_float")
         EasyWindow.with(app)
             .setTag("invisible_float")
             .setWidth(0)
@@ -139,6 +137,7 @@ fun stopFloat() {
     EasyWindow.cancelByTag("mix_message_float")
 }
 
+
 fun startFloat() {
     stopFloat()
     EasyWindow.with(app)
@@ -147,9 +146,7 @@ fun startFloat() {
         .setWidth(150)
         .setHeight(150)
         .setVerticalWeight(100F)
-        .setOnClickListener(
-            R.id.float_decoder
-        ) { window, view ->
+        .setOnClickListener { _, _ ->
             openDecodeDialog(result = CoderResult.Failed)
         }
         .setDraggable().show()

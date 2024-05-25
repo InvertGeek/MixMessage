@@ -79,7 +79,7 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
             setContent {
                 SingleSelectItemList(
                     items = Theme.entries,
-                    getLabel = {it.label},
+                    getLabel = { it.label },
                     currentOption = Theme.entries.firstOrNull {
                         it.name == currentTheme
                     } ?: Theme.DEFAULT

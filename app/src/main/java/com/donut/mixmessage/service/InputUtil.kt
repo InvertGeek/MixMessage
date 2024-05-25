@@ -2,27 +2,34 @@ package com.donut.mixmessage.service
 
 import android.widget.Button
 import android.widget.EditText
+import androidx.compose.ui.text.input.TextFieldValue
 import cn.vove7.auto.core.viewfinder.AcsNode
 import cn.vove7.auto.core.viewfinder.ConditionGroup
 import cn.vove7.auto.core.viewfinder.SmartFinder
 import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
+import com.donut.mixmessage.decode.openDecodeDialog
+import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
+import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
+import com.donut.mixmessage.util.common.toInt
+import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
 var INPUT_EDITABLE_CACHE: ViewNode? = null
 var SEND_BUTTON_CACHE: ViewNode? = null
 
-var SEND_BUTTON_IDENTIFIER by cachedMutableOf("发送", "send_button_identifier")
-var DIALOG_OPEN_IDENTIFIER by cachedMutableOf("mix", "dialog_open_identifier")
+var SEND_BUTTON_IDENTIFIER by cachedMutableOf("发送 send", "send_button_identifier")
+var DIALOG_OPEN_IDENTIFIER by cachedMutableOf("mix mx", "dialog_open_identifier")
 var SEARCH_BUTTON_TIMEOUT by cachedMutableOf(1000L * 10, "search_button_timeout")
 
 
@@ -59,22 +66,36 @@ fun inputAndSendText(text: String) {
 
     appScope.launch(Dispatchers.IO) {
         delay(100)
-        findInput()?.let {
-            it.setText(text)
-            delay(50)
-            findSendButton()?.click()
+        val input = findInput()
+        input.isNull {
+            openDecodeDialog(result = CoderResult.Failed)
+            delay(200)
+            showToast("没有搜索到输入框")
+            return@launch
         }
+        input?.setText(text)
+        delay(50)
+        val button = findSendButton()
+        button.isNull {
+            openDecodeDialog(result = CoderResult.Failed)
+            delay(200)
+            showToast("没有搜索到发送按钮")
+            return@launch
+        }
+        withContext(Dispatchers.Main) {
+            encoderText = TextFieldValue()
+        }
+        button?.click()
     }
 }
 
 
 private suspend fun findSendButton(): ViewNode? {
-    if (SEND_BUTTON_CACHE?.parent.isNotNull()) {
+    SEND_BUTTON_CACHE?.parent.isNotNull {
         return SEND_BUTTON_CACHE
     }
     return withTimeoutOrNull(SEARCH_BUTTON_TIMEOUT) {
-        return@withTimeoutOrNull findViews()
-            .where { it.checkButtonText() }
+        findViews().where { it.checkButtonText() }
             .findAll().toList().findSendButton().also {
                 if (it != null) {
                     SEND_BUTTON_CACHE = it
@@ -84,11 +105,11 @@ private suspend fun findSendButton(): ViewNode? {
 }
 
 private suspend fun findInput(): ViewNode? {
-    if (INPUT_EDITABLE_CACHE?.parent.isNotNull()) {
+    INPUT_EDITABLE_CACHE?.parent.isNotNull {
         return INPUT_EDITABLE_CACHE
     }
     return withTimeoutOrNull(SEARCH_BUTTON_TIMEOUT) {
-        return@withTimeoutOrNull findViews().where { it.isEditable }
+        findViews().where { it.isEditable }
             .findAll().toList().findSendInput().also {
                 if (it != null) {
                     INPUT_EDITABLE_CACHE = it
@@ -116,40 +137,23 @@ fun ConditionGroup.otherAppNodes(): ConditionGroup {
 }
 
 fun List<ViewNode>.findSendButton(): ViewNode? {
-    val buttonList = this.otherAppNodes().filter { it.node.checkButtonText() }
-        .sortedBy {
-            var sortValue = 0;
-            val conditions = listOf(
-                it.isClickable(),
-                it.className.contentEquals(Button::class.java.name),
-                it.node.checkButtonDesc(),
-                it.node.isEnabled
-            )
-            for (condition in conditions) {
-                if (condition) {
-                    sortValue--
-                }
-            }
-            return@sortedBy sortValue
-        }
-
-//    Log.d("test", "buttons $buttonList")
-    return buttonList.firstOrNull() ?: SEND_BUTTON_CACHE
+    return this.otherAppNodes().filter { it.node.checkButtonText() }.maxByOrNull {
+        listOf(
+            it.isClickable(),
+            it.className.contentEquals(Button::class.java.name),
+            it.node.checkButtonDesc(),
+            it.node.isEnabled
+        ).sumOf { condition -> condition.toInt() }
+    }
 }
 
 fun List<ViewNode>.findSendInput(): ViewNode? {
-    val inputList =
-        this.otherAppNodes().filter { it.node.isEditable }
-            .sortedBy {
-                var sortValue = 0;
-                if (it.className.contentEquals(EditText::class.java.name)) {
-                    sortValue--
-                }
-                return@sortedBy sortValue
-            }
-    return inputList.firstOrNull() ?: INPUT_EDITABLE_CACHE
+    return this.otherAppNodes().filter { it.node.isEditable }.maxByOrNull {
+        it.className.contentEquals(EditText::class.java.name).toInt()
+    }
+
 }
 
 fun findViews(): ConditionGroup {
-    return SmartFinder().where { it.packageName != app.packageName }
+    return SmartFinder().otherAppNodes()
 }

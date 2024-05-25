@@ -16,12 +16,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.donut.mixmessage.ui.component.routes.Home
 import com.donut.mixmessage.ui.component.routes.password.Passwords
 import com.donut.mixmessage.ui.component.routes.settings.Settings
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.OnDispose
 import com.donut.mixmessage.util.common.performHapticFeedBack
 

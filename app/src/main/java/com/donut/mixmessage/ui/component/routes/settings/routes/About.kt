@@ -79,7 +79,7 @@ val AboutPage = MixNavPage(
     }
     ClickableText(
         text = buildAnnotatedString {
-            append("项目地址: https://gitlab.com/invertgeek1/MixMessage")
+            append("项目地址: https://gitlab.com/ivgeek/MixMessage")
         },
         onClick = {
             MixDialogBuilder("确定打开?").apply {
@@ -87,7 +87,7 @@ val AboutPage = MixNavPage(
                     val intent =
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://gitlab.com/invertgeek1/MixMessage")
+                            Uri.parse("https://gitlab.com/ivgeek/MixMessage")
                         )
                     currentActivity.startActivity(intent)
                 }

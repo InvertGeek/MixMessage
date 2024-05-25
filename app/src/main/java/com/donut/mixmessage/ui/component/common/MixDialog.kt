@@ -13,10 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.donut.mixmessage.util.common.addComposeView
 import com.donut.mixmessage.util.common.performHapticFeedBack
 
-class MixDialogBuilder(private var title: String, private val tag: String = title) {
+class MixDialogBuilder(
+    private var title: String,
+    private val tag: String = title,
+    private val properties: DialogProperties = DialogProperties()
+) {
     private var content = @Composable {}
     private var positiveButton = @Composable {}
     private var negativeButton = @Composable {}
@@ -73,7 +78,14 @@ class MixDialogBuilder(private var title: String, private val tag: String = titl
     }
 
     fun show() {
-        close = showAlertDialog(title, content, positiveButton, negativeButton, neutralButton)
+        close = showAlertDialog(
+            title,
+            content,
+            positiveButton,
+            negativeButton,
+            neutralButton,
+            properties
+        )
         dialogCache[tag]?.invoke()
         dialogCache[tag] = close
     }
@@ -86,6 +98,7 @@ fun showAlertDialog(
     confirmButton: @Composable () -> Unit = {},
     dismissButton: (@Composable () -> Unit)? = null,
     neutralButton: @Composable () -> Unit = {},
+    properties: DialogProperties = DialogProperties()
 ): () -> Unit {
     performHapticFeedBack()
     return addComposeView { removeView ->
@@ -103,6 +116,7 @@ fun showAlertDialog(
             modifier = Modifier
                 .systemBarsPadding()
                 .heightIn(0.dp, 600.dp),
+            properties = properties,
             title = {
                 Text(text = title, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth())
             },

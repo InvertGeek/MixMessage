@@ -1,4 +1,4 @@
-package com.donut.mixmessage.activity
+package com.donut.mixmessage.decode
 
 import android.content.Intent
 import android.graphics.Color
@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.ContextCompat
 import com.donut.mixmessage.app
 import com.donut.mixmessage.currentActivity
+import com.donut.mixmessage.decode.DecodeActivity.Companion.LAST_FORCE_CLOSE
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.isNull
@@ -32,6 +32,7 @@ import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.objects.MixActivity
+import com.donut.mixmessage.util.objects.MixFileSelector
 
 
 @Composable
@@ -46,7 +47,7 @@ fun DialogContainer(content: @Composable () -> Unit) {
         Card(
             modifier = Modifier
                 .systemBarsPadding()
-                .heightIn(0.dp, 600.dp)
+                .heightIn(200.dp, 600.dp)
         ) {
             CommonColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -67,12 +68,12 @@ class DecodeActivity : MixActivity("decode") {
         var decodeResult: CoderResult? by mutableStateOf(null)
         var LAST_FORCE_CLOSE = 0L
         var IS_ACTIVE by mutableStateOf(false)
+        lateinit var mixFileSelector: MixFileSelector
     }
 
     override fun onPause() {
         super.onPause()
         IS_ACTIVE = false
-        finish()
     }
 
     override fun onResume() {
@@ -80,14 +81,23 @@ class DecodeActivity : MixActivity("decode") {
         super.onResume()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mixFileSelector.unregister()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        mixFileSelector = MixFileSelector(this)
         super.onCreate(savedInstanceState)
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        decodeResult.isNull {
+            return
+        }
         setContent {
             MixMessageTheme {
-                decodeResult?.let { DecodeTextDialog(it) }
+                DecodeTextDialog(decodeResult!!)
             }
         }
     }
@@ -96,7 +106,7 @@ class DecodeActivity : MixActivity("decode") {
 
 
 fun openDecodeDialog(text: String = "", result: CoderResult? = null) {
-    if (System.currentTimeMillis() - DecodeActivity.LAST_FORCE_CLOSE < 3000) {
+    if (System.currentTimeMillis() - LAST_FORCE_CLOSE < 3000) {
         return
     }
     val decodeResult = decodeText(text).also {
@@ -107,5 +117,5 @@ fun openDecodeDialog(text: String = "", result: CoderResult? = null) {
     DecodeActivity.decodeResult = result ?: decodeResult
     val intent = Intent(app, DecodeActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-    ContextCompat.startActivity(app, intent, null)
+    app.startActivity(intent)
 }

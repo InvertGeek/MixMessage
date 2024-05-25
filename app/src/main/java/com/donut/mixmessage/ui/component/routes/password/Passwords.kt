@@ -27,7 +27,8 @@ import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.routes.settings.SettingBox
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
-import com.donut.mixmessage.util.common.calculateMD5
+import com.donut.mixmessage.util.common.hashToMD5String
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
@@ -37,10 +38,11 @@ import com.donut.mixmessage.util.encode.PASSWORDS
 import com.donut.mixmessage.util.encode.USE_TIME_LOCK
 import com.donut.mixmessage.util.encode.addPassword
 import com.donut.mixmessage.util.encode.clearAllPassword
+import com.donut.mixmessage.util.encode.decryptAESBase64
+import com.donut.mixmessage.util.encode.encryptAESBase64
 import com.donut.mixmessage.util.encode.exportAllPassword
 import com.donut.mixmessage.util.encode.importPasswords
 import com.donut.mixmessage.util.encode.removePassword
-import com.donut.mixmessage.util.encode.xxtea.XXTEA
 
 var LOCK_PASSWORD by cachedMutableOf("", "lock_password")
 
@@ -62,23 +64,23 @@ fun startLock(force: Boolean = false) {
         return
     }
 
-    DEFAULT_PASSWORD = XXTEA.encryptToBase64String(DEFAULT_PASSWORD, LOCK_PASSWORD)
+    DEFAULT_PASSWORD = encryptAESBase64(DEFAULT_PASSWORD, LOCK_PASSWORD)
 
     PASSWORDS.forEach {
         if (it.contentEquals("123")) {
             return@forEach
         }
         removePassword(it)
-        addPassword(XXTEA.encryptToBase64String(it, LOCK_PASSWORD))
+        addPassword(encryptAESBase64(it, LOCK_PASSWORD))
     }
 
-    LOCK_CACHE = XXTEA.encryptToBase64String(LOCK_PASSWORD, LOCK_PASSWORD)
+    LOCK_CACHE = encryptAESBase64(LOCK_PASSWORD, LOCK_PASSWORD)
     LOCK_PASSWORD = ""
     showToast("锁定成功")
 }
 
 fun tryUnlock(password: String) {
-    if (XXTEA.decryptBase64StringToString(LOCK_CACHE, password) != password) {
+    encryptAESBase64(password, password).contentEquals(LOCK_CACHE).isFalse {
         showToast("密码错误")
         return
     }
@@ -91,10 +93,10 @@ fun tryUnlock(password: String) {
             return@forEach
         }
         removePassword(it)
-        addPassword(XXTEA.decryptBase64StringToString(it, password))
+        addPassword(decryptAESBase64(it, password))
     }
 
-    DEFAULT_PASSWORD = XXTEA.decryptBase64StringToString(DEFAULT_PASSWORD, password)
+    DEFAULT_PASSWORD = decryptAESBase64(DEFAULT_PASSWORD, password)
 
     showToast("解锁成功")
 }
@@ -219,7 +221,7 @@ fun LockSettings() {
                         LOCK_TIMEOUT = lockTime.toLong().coerceAtLeast(10)
                         ENABLE_AUTO_LOCK = true
                         LAST_DECODE = System.currentTimeMillis()
-                        LOCK_PASSWORD = LOCK_PASSWORD.calculateMD5(100)
+                        LOCK_PASSWORD = LOCK_PASSWORD.hashToMD5String(100)
                         closeDialog()
                         showToast("已启用自动锁定")
                     }
@@ -231,6 +233,10 @@ fun LockSettings() {
             ENABLE_AUTO_LOCK = false
         }
         Button(onClick = {
+            ENABLE_AUTO_LOCK.isFalse {
+                showToast("请先开启自动锁定!")
+                return@Button
+            }
             MixDialogBuilder("确认锁定?").apply {
                 setPositiveButton("确认") {
                     if (LOCK_PASSWORD.isEmpty()) {
@@ -263,7 +269,7 @@ fun Unlock() {
                 }, modifier = Modifier.fillMaxWidth())
             }
             setPositiveButton("确认") {
-                tryUnlock(inputValue.calculateMD5(100))
+                tryUnlock(inputValue.hashToMD5String(100))
                 closeDialog()
             }
             show()

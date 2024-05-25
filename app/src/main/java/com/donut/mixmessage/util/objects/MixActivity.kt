@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import cn.vove7.andro_accessibility_api.AccessibilityApi
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
@@ -18,6 +17,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
     }
 
     var isActive = false;
+    var lastPause = System.currentTimeMillis()
 
     companion object {
         const val MAIN_ID = "main"
@@ -27,7 +27,9 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         fun getMainContext() = getContext(MAIN_ID)
 
         fun firstActiveActivity(): MixActivity? {
-            return referenceCache.values.flatten().firstOrNull { it.isActive }
+            return referenceCache.values.flatten().maxByOrNull {
+                if (it.isActive) Long.MAX_VALUE else it.lastPause
+            }
         }
     }
 
@@ -38,6 +40,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
 
     override fun onPause() {
         isActive = false
+        lastPause = System.currentTimeMillis()
         super.onPause()
     }
 
@@ -47,7 +50,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         referenceCache[id]?.add(this)
         isAccessibilityServiceEnabled().isTrue {
             catchError {
-                AccessibilityApi.requireBaseAccessibility()
+//                AccessibilityApi.requireBaseAccessibility()
             }
         }
         super.onResume()

@@ -1,11 +1,11 @@
-package com.donut.mixmessage.activity
+package com.donut.mixmessage.decode
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -14,7 +14,9 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -30,13 +32,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.currentActivity
+import com.donut.mixmessage.decode.image.FileContent
+import com.donut.mixmessage.decode.image.ImageContent
+import com.donut.mixmessage.decode.image.VideoContent
+import com.donut.mixmessage.decode.image.selectFile
 import com.donut.mixmessage.service.inputAndSendText
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.encoder.DecodeResultComponent
 import com.donut.mixmessage.ui.component.encoder.EncodeInputComponent
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
+import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.common.truncate
@@ -44,7 +52,7 @@ import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 
-fun openShiftPrefixSelectDialog(callback: (String) -> Unit) {
+fun openPrefixSelectDialog(callback: (String) -> Unit) {
     MixDialogBuilder("消息前缀").apply {
         var prefix by mutableStateOf("")
         setContent {
@@ -66,7 +74,56 @@ fun openShiftPrefixSelectDialog(callback: (String) -> Unit) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+fun sendResult(encodeResult: CoderResult) {
+    performHapticFeedBack()
+    if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
+        openPrefixSelectDialog {
+            inputAndSendText(it + encodeResult.text)
+            currentActivity.finish()
+        }
+        return
+    }
+    inputAndSendText(encodeResult.textWithPrefix())
+    currentActivity.finish()
+}
+
+@Composable
+fun DecodeResultContent(decodeResult: CoderResult) {
+    @Composable
+    fun Card(block: @Composable UnitBlock) {
+        ElevatedCard(
+            colors = CardDefaults.cardColors(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(200.dp)
+        ) {
+            block()
+        }
+    }
+    decodeResult.isImage { url, fileName ->
+        Card {
+            ImageContent(imageUrl = url, decodeResult.password, fileName)
+        }
+        return
+    }
+
+    decodeResult.isVideo { url, fileName ->
+        Card {
+            VideoContent(url, decodeResult.password, fileName)
+        }
+        return
+    }
+    decodeResult.isFile { url, fileName ->
+        Card {
+            FileContent(url, decodeResult.password, fileName)
+        }
+        return
+    }
+    DecodeResultComponent(decodeResult = decodeResult, noScroll = true)
+
+}
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DecodeTextDialog(decodeResult: CoderResult) {
 
@@ -85,7 +142,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                                     Text(text = decodeResult.originText)
                                 }
                                 Text(
-                                    text = "使用的密钥: ${decodeResult.password}",
+                                    text = decodeResult.getInfo(true),
                                     fontSize = 10.sp,
                                     color = Color.Gray
                                 )
@@ -109,31 +166,27 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                     )
                 }
             )
-            DecodeResultComponent(decodeResult = decodeResult, noScroll = true)
+
+            DecodeResultContent(decodeResult = decodeResult)
         }
         EncodeInputComponent(
             noScroll = true,
             showPasteButton = false,
             useTextButton = true
         ) { encodeResult ->
+            val hasText = encodeResult.textWithPrefix().isNotEmpty()
             Button(
                 onClick = {
-                    performHapticFeedBack()
-                    if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
-                        openShiftPrefixSelectDialog {
-                            inputAndSendText(it + encodeResult.text)
-                            currentActivity.finish()
-                        }
+                    hasText.isFalse {
+                        selectFile()
                         return@Button
                     }
-                    inputAndSendText(encodeResult.textWithPrefix())
-                    currentActivity.finish()
+                    sendResult(encodeResult)
                 },
                 elevation = ButtonDefaults.elevatedButtonElevation(),
-                enabled = encodeResult.textWithPrefix().isNotEmpty(),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = "一键发送")
+                Text(text = if (hasText) "一键发送" else "选择文件")
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
 

@@ -6,8 +6,11 @@ import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.ComposeView
+import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun addContentView(view: View): () -> Unit {
     currentActivity.addContentView(
@@ -18,7 +21,9 @@ fun addContentView(view: View): () -> Unit {
         )
     )
     return {
-        view.removeView()
+        appScope.launch(Dispatchers.Main) {
+            view.removeView()
+        }
     }
 }
 

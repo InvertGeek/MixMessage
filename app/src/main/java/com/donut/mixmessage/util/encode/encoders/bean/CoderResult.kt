@@ -1,6 +1,10 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
+import com.donut.mixmessage.util.common.decodeBase64
+import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.getCurrentDate
+import com.donut.mixmessage.util.common.ignoreError
+import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 
@@ -16,11 +20,41 @@ data class CoderResult(
 ) {
 
     companion object {
+        fun media(url: String, fileName: String, identifier: String = IMAGE_IDENTIFIER): String {
+            return "$identifier${url.encodeToBase64()}|${fileName.encodeToBase64()}"
+        }
+
         val Failed = CoderResult("", "", ShiftEncoder, "", isFail = true)
+        const val IMAGE_IDENTIFIER = "__image:"
+        const val VIDEO_IDENTIFIER = "__video:"
+        const val FILE_IDENTIFIER = "__file:"
     }
 
-    fun getInfo() = """
-                    使用的密钥: ${password.truncate(10)} 
+    inline fun isMedia(
+        identifier: String,
+        block: (url: String, filename: String) -> Unit = { _, _ -> }
+    ): Boolean {
+        val result = text.startsWith(identifier) && text.contains("|")
+
+        return result.isTrue {
+            ignoreError {
+                val (url, fileName) = text.substring(identifier.length).split("|")
+                block(url.decodeBase64().decodeToString(), fileName.decodeBase64().decodeToString())
+            }
+        }
+    }
+
+    inline fun isImage(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
+        isMedia(IMAGE_IDENTIFIER, block)
+
+    inline fun isVideo(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
+        isMedia(VIDEO_IDENTIFIER, block)
+
+    inline fun isFile(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
+        isMedia(FILE_IDENTIFIER, block)
+
+    fun getInfo(full: Boolean = false) = """
+                    使用的密钥: ${if (full) password else password.truncate(10)} 
                     加密方法: ${textCoder.name}
                     长度: ${text.length}
                     原始长度: ${if (this.isFail) 0 else originText.length}

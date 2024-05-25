@@ -76,16 +76,25 @@ object ShiftEncoder : TextCoder {
         }
     }
 
-    class XorRandom(seed: Int) {
-        private var x = seed
-
+    class XorRandom(var seed: Int) {
 
         fun nextInt(max: Int = Int.MAX_VALUE): Int {
-            x = x xor (x shl 13)
-            x = x xor (x shr 17)
-            x = x xor (x shl 5)
-            return abs(x) % max
+            seed = seed xor (seed shl 13)
+            seed = seed xor (seed shr 17)
+            seed = seed xor (seed shl 5)
+            return abs(seed) % max
         }
+
+    }
+
+    class EncRandom(val password: String) {
+        private val passSeedCache = password.runningFold(XorRandom(0)) { acc, c ->
+            XorRandom(XorRandom(acc.seed + c.code).nextInt())
+        }
+        private val passRandom = passSeedCache.last()
+
+        fun nextInt(max: Int = Int.MAX_VALUE) =
+            passSeedCache[passRandom.nextInt(passSeedCache.size)].nextInt(max)
     }
 
 
@@ -99,19 +108,16 @@ object ShiftEncoder : TextCoder {
         val seed = abs(count).coerceAtMost(Alphabet.getMaxShift())
 
         val fixedCount = if (reverse) -seed else seed
-        val passSeedCache = password.runningFold(0) { acc, c ->
-            XorRandom(acc + c.code).nextInt()
-        }
+
         val shiftRandom = XorRandom(seed)
-        val passRandom = XorRandom(passSeedCache.last())
+        val passRandom = EncRandom(password)
         return source.mapIndexed { index, c ->
             val charIndex = Alphabet.getCharIndex(c)
             //编码
             if (charIndex == -1) {
                 return@mapIndexed c.toString()
             }
-//            println("total $passTotalSeed")
-            val passSeed = passSeedCache[passRandom.nextInt(passSeedCache.size)]
+            val passSeed = passRandom.nextInt()
             val incShiftValue =
                 ((if (reverse) -index else index)) * (shiftRandom.nextInt() + passSeed)
             val shiftedChar =

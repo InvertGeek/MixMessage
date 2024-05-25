@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +34,7 @@ import com.donut.mixmessage.util.encode.USE_TIME_LOCK
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+import com.donut.mixmessage.util.encode.encoders.bean.USE_STRICT_ENCODE
 
 
 var encoderText by mutableStateOf(TextFieldValue())
@@ -79,6 +79,7 @@ fun EncodeInputComponent(
     var encodeResult by remember(
         encoderText,
         DEFAULT_ENCODER,
+        USE_STRICT_ENCODE,
         ZeroWidthEncoder.encodeResultPrefix,
         DEFAULT_PASSWORD,
         USE_TIME_LOCK

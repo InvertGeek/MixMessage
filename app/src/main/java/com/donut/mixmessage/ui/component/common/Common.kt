@@ -133,7 +133,7 @@ fun ClearableTextField(
 @Composable
 fun SingleSelectItemList(
     items: List<String>,
-    currentOption: String,
+    currentOption: String?,
     onSelect: (String) -> Unit,
 ) {
     SingleSelectItemList(
@@ -147,7 +147,7 @@ fun SingleSelectItemList(
 @Composable
 fun <T> SingleSelectItemList(
     items: List<T>,
-    currentOption: T,
+    currentOption: T?,
     getLabel: (option: T) -> String,
     onSelect: (option: T) -> Unit,
 ) {

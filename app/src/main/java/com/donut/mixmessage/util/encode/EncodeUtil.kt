@@ -114,8 +114,6 @@ fun importPasswords(): Int {
 }
 
 fun clearAllPassword() {
-//    PASSWORDS.clear()
-//    PASSWORDS.add("123")
     modifyPasswords {
         clear()
         add("123")
@@ -128,7 +126,6 @@ fun decodeText(text: String): CoderResult {
     if (text.trim().isEmpty()) {
         return result
     }
-
     ENCODERS.any { coder ->
         coder.isEnabled().isTrueAnd(result.isFail) {
             return@any PASSWORDS.any {
@@ -147,15 +144,22 @@ fun decodeText(text: String): CoderResult {
     return result
 }
 
-fun encodeText(text: String): CoderResult {
-    var encoder = ENCODERS.firstOrNull { it.name == DEFAULT_ENCODER } ?: ShiftEncoder
-    USE_RANDOM_ENCODER.isTrue {encoder = ENCODERS.random()  }
+fun getCurrentPassword(): String {
     var password = if (USE_RANDOM_PASSWORD) {
         PASSWORDS.filter { !it.contentEquals("123") }.randomOrNull() ?: "123"
     } else {
         DEFAULT_PASSWORD
     }
     if (USE_TIME_LOCK) password += getCurrentDate()
+    return password
+}
+
+fun encodeText(text: String, password: String = getCurrentPassword()): CoderResult {
+    if (text.trim().isEmpty()) {
+        return CoderResult.Failed
+    }
+    var encoder = ENCODERS.firstOrNull { it.name == DEFAULT_ENCODER } ?: ShiftEncoder
+    USE_RANDOM_ENCODER.isTrue { encoder = ENCODERS.random() }
     return encoder.encode(
         text.trim(), password
     ).also {

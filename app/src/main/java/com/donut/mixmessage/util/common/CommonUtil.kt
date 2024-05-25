@@ -3,9 +3,13 @@ package com.donut.mixmessage.util.common
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.provider.Settings
 import android.util.Log
 import com.donut.mixmessage.app
+import com.donut.mixmessage.currentActivity
+import java.net.URL
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,18 +32,45 @@ fun String.removeBrackets(): String {
 }
 
 
-tailrec fun String.calculateMD5(round: Int = 1): String {
-    val md = MessageDigest.getInstance("MD5")
-    md.update(this.toByteArray())
-    val digest = md.digest()
+tailrec fun String.hashToMD5String(round: Int = 1): String {
+    val digest = calculateHash("MD5")
     val sb = StringBuilder()
     for (b in digest) {
         sb.append(String.format("%02x", b))
     }
     if (round > 1) {
-        return sb.toString().calculateMD5(round - 1)
+        return sb.toString().hashToMD5String(round - 1)
     }
     return sb.toString()
+}
+
+fun String.hashMD5() = calculateHash("MD5")
+
+fun String.hashSHA256() = calculateHash("SHA-256")
+
+fun String.calculateHash(algorithm: String): ByteArray {
+    val md = MessageDigest.getInstance(algorithm)
+    md.update(this.toByteArray())
+    return md.digest()
+}
+
+inline fun String.isUrl(block: (URL) -> Unit = {}): Boolean {
+    val urlPattern =
+        Regex("^https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)\$")
+    val result = urlPattern.matches(this)
+    if (result) {
+        ignoreError {
+            block(URL(this))
+        }
+    }
+    return result
+}
+
+fun getUrlHost(url: String): String? {
+    url.isUrl {
+        return it.host
+    }
+    return null
 }
 
 fun String.truncate(maxLength: Int): String {
@@ -51,17 +82,28 @@ fun String.truncate(maxLength: Int): String {
 }
 
 @OptIn(ExperimentalEncodingApi::class)
-fun ByteArray.toBase64() = Base64.encode(this)
+fun ByteArray.encodeToBase64() = Base64.encode(this)
 
 @OptIn(ExperimentalEncodingApi::class)
 fun String.decodeBase64() = Base64.decode(this)
+
+fun String.encodeToBase64() = this.toByteArray().encodeToBase64()
 
 fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {
     return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 }
 
-typealias UnitBlock = () -> Unit
+fun Uri.getFileName(): String {
+    var fileName = ""
+    currentActivity.contentResolver.query(this, null, null, null, null)?.use {
+        val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        it.moveToFirst()
+        fileName = it.getString(nameIndex)
+    }
+    return fileName
+}
 
+typealias UnitBlock = () -> Unit
 
 fun readClipBoardText(): String {
     val clipboard = getClipBoard()
@@ -77,11 +119,19 @@ fun debug(text: String, tag: String = "test") {
     Log.d(tag, text)
 }
 
-fun catchError(tag: String = "", block: () -> Unit) {
+inline fun catchError(tag: String = "", block: () -> Unit) {
     try {
         block()
     } catch (e: Exception) {
         showError(e, tag)
+    }
+}
+
+inline fun ignoreError(tag: String = "", block: () -> Unit) {
+    try {
+        block()
+    } catch (_: Exception) {
+
     }
 }
 
@@ -90,6 +140,12 @@ fun getCurrentDate(): String {
     val currentDate = Date()
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     return formatter.format(currentDate)
+}
+
+fun getCurrentTime(): String {
+    val currentTime = Date()
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+    return formatter.format(currentTime)
 }
 
 fun genRandomString(length: Int = 32): String {

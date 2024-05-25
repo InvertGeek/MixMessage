@@ -1,10 +1,14 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isNotFalse
+import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.encode.basen.Alphabet
 import com.donut.mixmessage.util.encode.basen.BigIntBaseN
+import com.donut.mixmessage.util.encode.decryptAES
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
-import com.donut.mixmessage.util.encode.xxtea.XXTEA
+import com.donut.mixmessage.util.encode.encryptAES
 
 
 //var USE_STRICT_ENCODE by mutableStateOf(kv.decodeBool("use_strict_encode", false))
@@ -20,14 +24,17 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
     private val baseN = BigIntBaseN(alphabet)
 
     override fun encode(input: String, password: String): CoderResult {
+        input.trim().isEmpty().isTrue {
+            return CoderResult.Failed
+        }
         val encodeResultText: String = if (USE_STRICT_ENCODE) {
             baseN.encode(
-                input.run { XXTEA.encrypt(this, password) }
+                encryptAES(input.toByteArray(), password)
             )
         } else {
             baseN.encode(
-                input.run { ShiftEncoder.encode(this, password) }
-                    .text.toByteArray(Charsets.UTF_8)
+                ShiftEncoder.encode(input, password)
+                    .text.toByteArray()
             )
         }
         if (encodeResultText.trim().isEmpty()) {
@@ -48,19 +55,18 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
 
         fun decodeSecret(value: String): String {
             val bytes = baseN.decode(value)
-            val shiftDecodeResult = ShiftEncoder.decode(bytes.toString(Charsets.UTF_8), password)
-            if (shiftDecodeResult.isFail && isStrict != false) {
+            val shiftDecodeResult = ShiftEncoder.decode(bytes.decodeToString(), password)
+            shiftDecodeResult.isFail.isTrueAnd(isStrict.isNotFalse()) {
                 isStrict = true
-                return XXTEA.decryptToString(bytes, password) ?: ""
+                return decryptAES(bytes, password).decodeToString()
             }
-            if (isStrict == true) {
+            isStrict.isTrue {
                 return ""
             }
             isStrict = false
             return shiftDecodeResult.text
         }
 
-//        val decodeResultText = filtered.fold("") { a, b -> a + decodeSecret(b) }
         val decodeResultText = filtered.joinToString("\n") { decodeSecret(it) }.trim()
 
         if (decodeResultText.trim().isEmpty()) {

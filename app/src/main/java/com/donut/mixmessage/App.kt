@@ -1,8 +1,10 @@
 package com.donut.mixmessage
 
-import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.os.Build.VERSION.SDK_INT
 import android.os.Looper
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
@@ -12,12 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.vove7.andro_accessibility_api.AccessibilityApi
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.decode.SvgDecoder
+import coil.decode.VideoFrameDecoder
+import com.donut.mixmessage.service.MixAccessibilityService
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.objects.MixActivity
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
+import okhttp3.OkHttpClient
 
 
 val appScope by lazy { MainScope() }
@@ -27,7 +38,7 @@ lateinit var kv: MMKV
 private lateinit var innerApp: Application
 
 
-val currentActivity: Activity
+val currentActivity: ComponentActivity
     get() {
         return MixActivity.firstActiveActivity()!!
     }
@@ -35,10 +46,14 @@ val currentActivity: Activity
 val app: Application
     get() = innerApp
 
-class App : Application() {
+class App : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+        AccessibilityApi.init(
+            this,
+            MixAccessibilityService::class.java
+        )
         Thread.setDefaultUncaughtExceptionHandler { t, e ->
             showError(e)
             if (Looper.myLooper() == null) {
@@ -73,4 +88,30 @@ class App : Application() {
         MMKV.initialize(this)
         kv = MMKV.defaultMMKV()
     }
+
+    override fun newImageLoader(): ImageLoader {
+        return genImageLoader(this)
+    }
+}
+
+fun genImageLoader(
+    context: Context,
+    initializer: () -> OkHttpClient = { OkHttpClient() },
+    sourceListener: (ByteArray) -> Unit = {}
+): ImageLoader {
+    return ImageLoader.Builder(context).components {
+        add { result, _, _ ->
+            val source = result.source.source()
+            sourceListener(source.peek().readByteArray())
+            null
+        }
+        if (SDK_INT >= 28) {
+            add(ImageDecoderDecoder.Factory())
+        } else {
+            add(GifDecoder.Factory())
+        }
+        add(SvgDecoder.Factory())
+        add(VideoFrameDecoder.Factory())
+    }.okHttpClient(initializer)
+        .crossfade(true).build()
 }

@@ -7,6 +7,7 @@ import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.toInt
 import com.donut.mixmessage.util.encode.encryptAES
 import com.donut.mixmessage.util.encode.getCurrentPassword
+import com.donut.mixmessage.util.image.apis.FreeImageHost
 import com.donut.mixmessage.util.image.apis.bfs.BFS
 import com.donut.mixmessage.util.image.apis.imgbb.IMGBB
 import com.donut.mixmessage.util.image.apis.smms.SMMS
@@ -27,7 +28,8 @@ var CURRENT_IMAGE_API by cachedMutableOf(SMMS.name, "current_image_api")
 val IMAGE_APIS = listOf(
     SMMS,
     IMGBB,
-    BFS
+    BFS,
+    FreeImageHost
 )
 
 suspend fun startUploadImage(

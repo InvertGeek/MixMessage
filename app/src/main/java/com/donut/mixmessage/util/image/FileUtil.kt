@@ -70,9 +70,8 @@ fun createBlankBitmap(width: Int, height: Int): Bitmap {
 }
 
 
-
-fun ByteArray.toURI(name: String="file-cache.bin"): Uri {
-    val file = File(app.cacheDir,name)
+fun ByteArray.toURI(name: String = "file-cache.bin"): Uri {
+    val file = File(app.cacheDir, name)
     file.writeBytes(this)
     return file.toUri()
 }

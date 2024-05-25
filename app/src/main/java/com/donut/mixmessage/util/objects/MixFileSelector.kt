@@ -17,7 +17,7 @@ class MixFileSelector(activity: MixActivity) {
         }
     }
 
-    fun unregister(){
+    fun unregister() {
         fileSelector.unregister()
     }
 

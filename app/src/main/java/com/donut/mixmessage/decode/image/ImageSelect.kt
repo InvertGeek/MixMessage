@@ -27,7 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-fun selectFile(){
+fun selectFile() {
     MixDialogBuilder("文件类型").apply {
         setContent {
             SingleSelectItemList(listOf("图片", "视频", "文件"), null) {

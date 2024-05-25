@@ -18,6 +18,8 @@ import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.image.CURRENT_IMAGE_API
 import com.donut.mixmessage.util.image.IMAGE_APIS
 import com.donut.mixmessage.util.image.IMAGE_COMPRESS_RATE
+import com.donut.mixmessage.util.image.apis.FREEIMAGEHOST_KEY
+import com.donut.mixmessage.util.image.apis.FreeImageHost
 import com.donut.mixmessage.util.image.apis.bfs.BFS
 import com.donut.mixmessage.util.image.apis.bfs.BFS_COOKIE
 import com.donut.mixmessage.util.image.apis.imgbb.IMGBB
@@ -32,6 +34,38 @@ val ImagePage = MixNavPage(
     useTransition = true,
 ) {
     NavTitle(title = "图片上传设置", showBackIcon = true)
+    Column {
+        Text(
+            modifier = Modifier.padding(10.dp, 0.dp),
+            text = "图片压缩质量(动图不会压缩): $IMAGE_COMPRESS_RATE",
+            color = colorScheme.primary
+        )
+        Slider(
+            value = IMAGE_COMPRESS_RATE.toFloat() / 100f,
+            steps = 100,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = {
+                IMAGE_COMPRESS_RATE = (it * 100).toLong()
+            }
+        )
+    }
+    SettingButton(text = "图片API: $CURRENT_IMAGE_API") {
+        MixDialogBuilder("图片API").apply {
+            setContent {
+                SingleSelectItemList(
+                    items = IMAGE_APIS,
+                    getLabel = { it.name },
+                    currentOption = IMAGE_APIS.firstOrNull {
+                        it.name == CURRENT_IMAGE_API
+                    } ?: SMMS
+                ) { option ->
+                    CURRENT_IMAGE_API = option.name
+                    closeDialog()
+                }
+            }
+            show()
+        }
+    }
     when (CURRENT_IMAGE_API) {
         SMMS.name -> {
             OutlinedTextField(
@@ -65,37 +99,16 @@ val ImagePage = MixNavPage(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-    }
-    Column {
-        Text(
-            modifier = Modifier.padding(10.dp, 0.dp),
-            text = "图片压缩质量(动图不会压缩): $IMAGE_COMPRESS_RATE",
-            color = colorScheme.primary
-        )
-        Slider(
-            value = IMAGE_COMPRESS_RATE.toFloat() / 100f,
-            steps = 100,
-            modifier = Modifier.fillMaxWidth(),
-            onValueChange = {
-                IMAGE_COMPRESS_RATE = (it * 100).toLong()
-            }
-        )
-    }
-    SettingButton(text = "图片API: ") {
-        MixDialogBuilder("图片API").apply {
-            setContent {
-                SingleSelectItemList(
-                    items = IMAGE_APIS,
-                    getLabel = { it.name },
-                    currentOption = IMAGE_APIS.firstOrNull {
-                        it.name == CURRENT_IMAGE_API
-                    } ?: SMMS
-                ) { option ->
-                    CURRENT_IMAGE_API = option.name
-                    closeDialog()
-                }
-            }
-            show()
+
+        FreeImageHost.name -> {
+            OutlinedTextField(
+                value = FREEIMAGEHOST_KEY,
+                onValueChange = {
+                    FREEIMAGEHOST_KEY = it
+                },
+                label = { Text("FreeImageHost key") },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

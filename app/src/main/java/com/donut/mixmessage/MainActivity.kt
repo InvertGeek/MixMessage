@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.ui.component.common.CommonColumn
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.NavComponent
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.objects.MixActivity
@@ -32,8 +35,19 @@ class MainActivity : MixActivity(MAIN_ID) {
 
     override fun onResume() {
         checkOverlayPermission()
-//        checkAccessibilityPermission()
         super.onResume()
+        isAccessibilityServiceEnabled().isFalse {
+            MixDialogBuilder("提示").apply {
+                setContent {
+                    Text(text = "无障碍权限未开启,是否进入设置?")
+                }
+                setDefaultNegative()
+                setPositiveButton("确定") {
+                    checkAccessibilityPermission()
+                }
+                show()
+            }
+        }
     }
 
     @Composable

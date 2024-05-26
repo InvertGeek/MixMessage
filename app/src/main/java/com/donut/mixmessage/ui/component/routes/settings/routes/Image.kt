@@ -27,6 +27,24 @@ import com.donut.mixmessage.util.image.apis.imgbb.IMGBB_API_TOKEN
 import com.donut.mixmessage.util.image.apis.smms.SMMS
 import com.donut.mixmessage.util.image.apis.smms.SMMS_API_TOKEN
 
+fun selectImageAPI() {
+    MixDialogBuilder("图片API").apply {
+        setContent {
+            SingleSelectItemList(
+                items = IMAGE_APIS,
+                getLabel = { it.name },
+                currentOption = IMAGE_APIS.firstOrNull {
+                    it.name == CURRENT_IMAGE_API
+                } ?: SMMS
+            ) { option ->
+                CURRENT_IMAGE_API = option.name
+                closeDialog()
+            }
+        }
+        show()
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 val ImagePage = MixNavPage(
     gap = 10.dp,
@@ -50,21 +68,7 @@ val ImagePage = MixNavPage(
         )
     }
     SettingButton(text = "图片API: $CURRENT_IMAGE_API") {
-        MixDialogBuilder("图片API").apply {
-            setContent {
-                SingleSelectItemList(
-                    items = IMAGE_APIS,
-                    getLabel = { it.name },
-                    currentOption = IMAGE_APIS.firstOrNull {
-                        it.name == CURRENT_IMAGE_API
-                    } ?: SMMS
-                ) { option ->
-                    CURRENT_IMAGE_API = option.name
-                    closeDialog()
-                }
-            }
-            show()
-        }
+        selectImageAPI()
     }
     when (CURRENT_IMAGE_API) {
         SMMS.name -> {

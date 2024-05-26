@@ -7,7 +7,7 @@ import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.encode.basen.Alphabet
 import com.donut.mixmessage.util.encode.basen.BigIntBaseN
 import com.donut.mixmessage.util.encode.decryptAES
-import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
+import com.donut.mixmessage.util.encode.encoders.ByteShiftEncoder
 import com.donut.mixmessage.util.encode.encryptAES
 
 
@@ -29,12 +29,13 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
         }
         val encodeResultText: String = if (USE_STRICT_ENCODE) {
             baseN.encode(
-                encryptAES(input.toByteArray(), password)
+                encryptAES(input, password)
             )
         } else {
             baseN.encode(
-                ShiftEncoder.encode(input, password)
-                    .text.toByteArray()
+//                ShiftEncoder.encode(input, password)
+//                    .text.toByteArray()
+                ByteShiftEncoder.moveEncByte(input.toByteArray(), password)
             )
         }
         if (encodeResultText.trim().isEmpty()) {
@@ -55,8 +56,9 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
 
         fun decodeSecret(value: String): String {
             val bytes = baseN.decode(value)
-            val shiftDecodeResult = ShiftEncoder.decode(bytes.decodeToString(), password)
-            shiftDecodeResult.isFail.isTrueAnd(isStrict.isNotFalse()) {
+//            val shiftDecodeResult = ShiftEncoder.decode(bytes.decodeToString(), password)
+            val shiftDecodeResult = ByteShiftEncoder.moveDecByte(bytes, password)
+            shiftDecodeResult.isEmpty().isTrueAnd(isStrict.isNotFalse()) {
                 isStrict = true
                 return decryptAES(bytes, password).decodeToString()
             }
@@ -64,7 +66,7 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
                 return ""
             }
             isStrict = false
-            return shiftDecodeResult.text
+            return shiftDecodeResult.decodeToString()
         }
 
         val decodeResultText = filtered.joinToString("\n") { decodeSecret(it) }.trim()

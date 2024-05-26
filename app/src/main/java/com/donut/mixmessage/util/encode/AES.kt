@@ -38,6 +38,14 @@ fun decryptAES(data: ByteArray, key: String): ByteArray {
     return decryptAES(data, key.hashSHA256())
 }
 
+fun encryptAES(data: String, key: String): ByteArray {
+    return encryptAES(data.toByteArray(), key.hashSHA256())
+}
+
+fun decryptAES(data: String, key: String): ByteArray {
+    return decryptAES(data.toByteArray(), key.hashSHA256())
+}
+
 
 fun encryptAESBase64(text: String, key: String): String {
     return encryptAES(text.toByteArray(), key.hashSHA256()).encodeToBase64()

@@ -139,7 +139,7 @@ val Settings = MixNavPage {
     CommonSwitch(
         checked = USE_STRICT_ENCODE,
         text = "启用严格编码:",
-        "启用后将会加密所有字符内容(包括特殊字符),只支持除移位加密以外的算法",
+        "启用后将会使用经过认证的AES算法进行加密,只支持除移位加密以外的算法",
     ) {
         setUseStrictEncode(it)
     }

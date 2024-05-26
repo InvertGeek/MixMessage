@@ -17,7 +17,10 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 
-var FREEIMAGEHOST_KEY by cachedMutableOf("6d207e02198a847aa98d0a2a901485a5","freeimagehost_api_key")
+var FREEIMAGEHOST_KEY by cachedMutableOf(
+    "6d207e02198a847aa98d0a2a901485a5",
+    "freeimagehost_api_key"
+)
 
 object FreeImageHost : ImageAPI("https://freeimage.host/api/1/", "FreeImageHost") {
 

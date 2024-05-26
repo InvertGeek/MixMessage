@@ -1,14 +1,42 @@
 package com.donut.mixmessage.util.encode.encoders
 
+import com.donut.mixmessage.util.common.at
+import com.donut.mixmessage.util.common.negative
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.encode.encoders.bean.TextCoder
 import kotlin.math.abs
 import kotlin.random.Random
 
+
+class XorRandom(var seed: Int) {
+
+    fun nextInt(max: Int = Int.MAX_VALUE): Int {
+        seed = seed xor (seed shl 13)
+        seed = seed xor (seed shr 17)
+        seed = seed xor (seed shl 5)
+        return abs(seed) % max
+    }
+
+}
+
+
+class EncRandom(val password: String) {
+    private val passSeedCache = genCache(genCache().last().nextInt())
+
+    private fun genCache(start: Int = 0) = password.runningFold(XorRandom(start)) { acc, c ->
+        XorRandom(XorRandom(acc.seed + c.code).nextInt())
+    }
+
+    private val passRandom = passSeedCache.last()
+
+    fun nextInt(max: Int = Int.MAX_VALUE) =
+        passSeedCache[passRandom.nextInt(passSeedCache.size)].nextInt(max)
+}
+
 object ShiftEncoder : TextCoder {
     object Alphabet {
         private val legalChars = getAllLegalChar()
-        private const val encChar = '\u4E00'
+        private const val ENC_CHAR = '\u4E00'
         private val charToIndexMap = mutableMapOf<Char, Int>().apply {
             putAll(legalChars.mapIndexed { index, c -> c to index })
         }
@@ -19,7 +47,7 @@ object ShiftEncoder : TextCoder {
         }
 
         fun getPrefix(): String {
-            return "$encChar|$encChar"
+            return "$ENC_CHAR|$ENC_CHAR"
         }
 
         fun getPrefixLength(): Int {
@@ -31,17 +59,11 @@ object ShiftEncoder : TextCoder {
         }
 
         fun getEncCharIndex(): Int {
-            return getCharIndex(encChar)
+            return getCharIndex(ENC_CHAR)
         }
 
         fun getCharByIndex(index: Int): Char {
-            return legalChars[index.run {
-                val fixedIndex = this % (legalChars.size)
-                if (fixedIndex < 0) {
-                    return@run fixedIndex + (legalChars.size)
-                }
-                fixedIndex
-            }]
+            return legalChars.at(index)
         }
 
         fun getCharIndex(c: Char): Int {
@@ -71,30 +93,11 @@ object ShiftEncoder : TextCoder {
             return list.distinct()
         }
 
+        fun getMaxOverFlow() = Int.MAX_VALUE - (getMaxShift() * 2)
+
         fun getRandomChar(): Char {
             return legalChars[Random.nextInt(legalChars.size)]
         }
-    }
-
-    class XorRandom(var seed: Int) {
-
-        fun nextInt(max: Int = Int.MAX_VALUE): Int {
-            seed = seed xor (seed shl 13)
-            seed = seed xor (seed shr 17)
-            seed = seed xor (seed shl 5)
-            return abs(seed) % max
-        }
-
-    }
-
-    class EncRandom(val password: String) {
-        private val passSeedCache = password.runningFold(XorRandom(0)) { acc, c ->
-            XorRandom(XorRandom(acc.seed + c.code).nextInt())
-        }
-        private val passRandom = passSeedCache.last()
-
-        fun nextInt(max: Int = Int.MAX_VALUE) =
-            passSeedCache[passRandom.nextInt(passSeedCache.size)].nextInt(max)
     }
 
 
@@ -105,12 +108,15 @@ object ShiftEncoder : TextCoder {
         reverse: Boolean = false,
     ): String {
 
-        val seed = abs(count).coerceAtMost(Alphabet.getMaxShift())
+        val maxOverFlow = Alphabet.getMaxOverFlow()
+
+        val seed = abs(count) % Alphabet.getMaxShift()
 
         val fixedCount = if (reverse) -seed else seed
 
         val shiftRandom = XorRandom(seed)
         val passRandom = EncRandom(password)
+
         return source.mapIndexed { index, c ->
             val charIndex = Alphabet.getCharIndex(c)
             //编码
@@ -118,10 +124,14 @@ object ShiftEncoder : TextCoder {
                 return@mapIndexed c.toString()
             }
             val passSeed = passRandom.nextInt()
+
             val incShiftValue =
-                ((if (reverse) -index else index)) * (shiftRandom.nextInt() + passSeed)
+                (if (reverse) (index).negative() else (index)) * (shiftRandom.nextInt() + passSeed)
+
             val shiftedChar =
-                Alphabet.getCharByIndex(charIndex + fixedCount + incShiftValue)
+                Alphabet.getCharByIndex(
+                    charIndex + fixedCount + (incShiftValue % maxOverFlow)
+                )
             shiftedChar.toString()
         }.joinToString("")
     }
@@ -129,7 +139,7 @@ object ShiftEncoder : TextCoder {
     private fun moveEncText(text: String, password: String): String {
         return moveStringEnc(
             Alphabet.getPrefix() + text,
-            Random.nextInt(Alphabet.getMaxShift()),
+            Random.nextInt(),
             password
         )
     }
@@ -142,11 +152,13 @@ object ShiftEncoder : TextCoder {
 
         //get random index
         val index = Alphabet.getCharIndex(text[0]) - Alphabet.getEncCharIndex()
-        val decrypted = moveStringEnc(text, index, password, true)
-        if (!decrypted.startsWith(Alphabet.getPrefix())) {
+        val decryptedPrefix =
+            moveStringEnc(text.substring(0, Alphabet.getPrefixLength()), index, password, true)
+        if (!decryptedPrefix.contentEquals(Alphabet.getPrefix())) {
             return ""
         }
-        return decrypted.substring(Alphabet.getPrefixLength())
+
+        return moveStringEnc(text, index, password, true).substring(Alphabet.getPrefixLength())
     }
 
     override val name = "移位编码"

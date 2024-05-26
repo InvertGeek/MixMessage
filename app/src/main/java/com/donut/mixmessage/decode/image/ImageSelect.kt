@@ -16,6 +16,7 @@ import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.encoderText
+import com.donut.mixmessage.ui.component.routes.settings.routes.selectImageAPI
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.encodeText
@@ -42,6 +43,9 @@ fun selectFile() {
                 }
                 closeDialog()
             }
+        }
+        setPositiveButton("图片API") {
+            selectImageAPI()
         }
         setDefaultNegative()
         show()

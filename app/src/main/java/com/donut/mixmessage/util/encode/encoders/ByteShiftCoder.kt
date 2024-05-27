@@ -1,5 +1,6 @@
 package com.donut.mixmessage.util.encode.encoders
 
+import com.donut.mixmessage.util.common.negative
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -14,9 +15,7 @@ object ByteShiftEncoder {
         reverse: Boolean = false,
     ): ByteArray {
 
-        val maxOverFlow = Int.MAX_VALUE - Byte.MAX_VALUE * 2
-
-        val seed = abs(count) % Byte.MAX_VALUE
+        val seed = abs(count) % 256
 
         val fixedCount = if (reverse) -seed else seed
 
@@ -27,14 +26,18 @@ object ByteShiftEncoder {
         return source.mapIndexed { index, c ->
             val passSeed = passRandom.nextInt()
             val incShiftValue =
-                (if (reverse) -index else index) * (shiftRandom.nextInt() + passSeed)
-            val shiftedByte = c + fixedCount + (incShiftValue % maxOverFlow)
+                (if (reverse) index.negative() else index) * (shiftRandom.nextInt() + passSeed)
+            val shiftedByte = c + fixedCount + incShiftValue
             shiftedByte.toByte()
         }.toByteArray()
     }
 
     fun moveEncByte(data: ByteArray, password: String): ByteArray {
-        return moveByteEnc(source = PREFIX + data, password = password, count = Random.nextInt())
+        return moveByteEnc(
+            source = PREFIX + data,
+            password = password,
+            count = Random.nextInt()
+        )
     }
 
     fun moveDecByte(data: ByteArray, password: String): ByteArray {
@@ -43,7 +46,7 @@ object ByteShiftEncoder {
         }
 
         //get random index
-        val index = data.first().toInt()
+        val index = data.first().toUByte().toInt()
         val decryptedPrefix =
             moveByteEnc(
                 data.copyOfRange(0, PREFIX.size),

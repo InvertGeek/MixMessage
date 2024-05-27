@@ -55,7 +55,7 @@ object ShiftEncoder : TextCoder {
         }
 
         fun getMaxShift(): Int {
-            return getCharLength() - getEncCharIndex() - 1
+            return getCharLength() - getEncCharIndex()
         }
 
         fun getEncCharIndex(): Int {
@@ -93,8 +93,6 @@ object ShiftEncoder : TextCoder {
             return list.distinct()
         }
 
-        fun getMaxOverFlow() = Int.MAX_VALUE - (getMaxShift() * 2)
-
         fun getRandomChar(): Char {
             return legalChars[Random.nextInt(legalChars.size)]
         }
@@ -107,9 +105,7 @@ object ShiftEncoder : TextCoder {
         password: String,
         reverse: Boolean = false,
     ): String {
-
-        val maxOverFlow = Alphabet.getMaxOverFlow()
-
+        // 不能超过最大偏移,否则解密时无法利用第一个字符识别本次加密的偏移量
         val seed = abs(count) % Alphabet.getMaxShift()
 
         val fixedCount = if (reverse) -seed else seed
@@ -126,11 +122,11 @@ object ShiftEncoder : TextCoder {
             val passSeed = passRandom.nextInt()
 
             val incShiftValue =
-                (if (reverse) (index).negative() else (index)) * (shiftRandom.nextInt() + passSeed)
+                (if (reverse) index.negative() else (index)) * (shiftRandom.nextInt() + passSeed)
 
             val shiftedChar =
                 Alphabet.getCharByIndex(
-                    charIndex + fixedCount + (incShiftValue % maxOverFlow)
+                    charIndex + fixedCount + incShiftValue
                 )
             shiftedChar.toString()
         }.joinToString("")
@@ -139,7 +135,7 @@ object ShiftEncoder : TextCoder {
     private fun moveEncText(text: String, password: String): String {
         return moveStringEnc(
             Alphabet.getPrefix() + text,
-            Random.nextInt(),
+            1,
             password
         )
     }

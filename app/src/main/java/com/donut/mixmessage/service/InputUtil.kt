@@ -74,8 +74,8 @@ fun inputAndSendText(text: String) {
             showToast("没有搜索到输入框")
             return@launch
         }
-        val inputText = input?.text?.toString()
-        inputText.isNullOr(inputText?.isEmpty().isTrue()) {
+        val inputText = input?.text?.toString() ?: ""
+        inputText.isNullOr(inputText.isEmpty() || checkDialogOpenTextValue(inputText)) {
             input?.setText(text)
         }.isFalse {
             input?.appendText(" $text")

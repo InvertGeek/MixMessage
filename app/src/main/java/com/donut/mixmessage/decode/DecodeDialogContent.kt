@@ -78,7 +78,7 @@ fun sendResult(encodeResult: CoderResult) {
     performHapticFeedBack()
     if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
         openPrefixSelectDialog {
-            inputAndSendText(it + encodeResult.text)
+            inputAndSendText(encodeResult.textWithPrefix(it))
             currentActivity.finish()
         }
         return

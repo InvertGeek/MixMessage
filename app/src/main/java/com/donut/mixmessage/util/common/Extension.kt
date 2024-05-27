@@ -15,17 +15,24 @@ inline fun <T> T?.isNotNull(block: (T) -> Unit = {}): Boolean {
 }
 
 inline fun <T> T?.isNotNullAnd(condition: Boolean, block: (T) -> Unit = {}): Boolean {
-    if (condition && this != null) {
+    if (this != null && condition) {
         block(this)
     }
-    return condition && this != null
+    return this != null && condition
 }
 
 inline fun <T> T?.isNullAnd(condition: Boolean, block: UnitBlock = {}): Boolean {
-    if (condition && this == null) {
+    if (this == null && condition) {
         block()
     }
-    return condition && this == null
+    return this == null && condition
+}
+
+inline fun <T> T?.isNullOr(condition: Boolean, block: UnitBlock = {}): Boolean {
+    if (this == null|| condition ) {
+        block()
+    }
+    return this == null || condition
 }
 
 inline fun <T> T.isEqual(other: Any?, block: (T) -> Unit = {}): Boolean {
@@ -68,10 +75,10 @@ fun Int.negative(): Int {
 }
 
 inline fun Boolean?.isTrueAnd(condition: Boolean, block: UnitBlock = {}): Boolean {
-    if (condition && isTrue()) {
+    if (isTrue() && condition) {
         block()
     }
-    return condition && isTrue()
+    return isTrue() && condition
 }
 
 inline fun Boolean?.isFalse(block: UnitBlock = {}): Boolean {

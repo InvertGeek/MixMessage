@@ -62,6 +62,14 @@ data class CoderResult(
                     ${if (password.endsWith(getCurrentDate())) "时间锁" else ""}
                 """.trimIndent().replace("\n", " ")
 
-    fun textWithPrefix() = if (text.isEmpty()) text else "$prefix$text"
+    fun textWithPrefix(prefixText: String = prefix): String {
+        text.isEmpty().isTrue {
+            return text
+        }
+        if (prefixText.length > 1) {
+            return prefixText[0] + text + prefixText.substring(1)
+        }
+        return "$prefixText$text"
+    }
 
 }

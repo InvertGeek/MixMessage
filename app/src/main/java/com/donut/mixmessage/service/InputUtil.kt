@@ -15,6 +15,7 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
+import com.donut.mixmessage.util.common.isNullOr
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.common.toInt
@@ -73,7 +74,12 @@ fun inputAndSendText(text: String) {
             showToast("没有搜索到输入框")
             return@launch
         }
-        input?.setText(text)
+        val inputText = input?.text?.toString()
+        inputText.isNullOr(inputText?.isEmpty().isTrue()) {
+            input?.setText(text)
+        }.isFalse {
+            input?.appendText(" $text")
+        }
         delay(50)
         val button = findSendButton()
         button.isNull {

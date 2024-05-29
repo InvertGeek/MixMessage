@@ -4,14 +4,14 @@ import com.donut.mixmessage.util.common.decodeBase64
 import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.ignoreError
+import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
-import kotlin.random.Random
 
 fun generateRandomByteArray(size: Int): ByteArray {
     val byteArray = ByteArray(size)
-    Random.nextBytes(byteArray)
+    SecureRandom().nextBytes(byteArray)
     return byteArray
 }
 

@@ -9,6 +9,7 @@ import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
+import com.donut.mixmessage.util.encode.encoders.ChineseEncoder
 import com.donut.mixmessage.util.encode.encoders.EgyptEncoder
 import com.donut.mixmessage.util.encode.encoders.EmojiEncoder
 import com.donut.mixmessage.util.encode.encoders.SCVEncoder
@@ -23,7 +24,8 @@ val ENCODERS = listOf(
     SCVEncoder,
     EmojiEncoder,
     AlphaNumEncoder,
-    EgyptEncoder
+    EgyptEncoder,
+    ChineseEncoder
 )
 
 

@@ -29,7 +29,7 @@ data class CoderResult(
         const val VIDEO_IDENTIFIER = "__video:"
         const val FILE_IDENTIFIER = "__file:"
 
-        fun failed(text: String) = CoderResult(text, "", ShiftEncoder, "", isFail = true)
+        fun failed(text: String) = CoderResult("", "", ShiftEncoder, text, isFail = true)
     }
 
 
@@ -60,7 +60,7 @@ data class CoderResult(
                     使用的密钥: ${if (full) password else password.truncate(10)} 
                     加密方法: ${textCoder.name}
                     长度: ${text.length}
-                    原始长度: ${if (this.isFail) 0 else originText.length}
+                    原始长度: ${originText.length}
                     ${if (isStrict) "严格编码" else ""}
                     ${if (password.endsWith(getCurrentDate())) "时间锁" else ""}
                 """.trimIndent().replace("\n", " ")

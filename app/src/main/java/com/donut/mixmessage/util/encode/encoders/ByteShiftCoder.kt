@@ -1,33 +1,35 @@
 package com.donut.mixmessage.util.encode.encoders
 
-import com.donut.mixmessage.util.common.negative
+import com.donut.mixmessage.util.common.negativeIf
+import com.donut.mixmessage.util.encode.reverseTransformNumber
+import com.donut.mixmessage.util.encode.transformNumber
 import kotlin.math.abs
 import kotlin.random.Random
 
 object ByteShiftEncoder {
 
-    private val PREFIX = byteArrayOf(0, 127, 0, 127, 0)
+    private val PREFIX = byteArrayOf(*((1..8).map { (0).toByte() }.toByteArray()))
 
     private fun moveByteEnc(
         source: ByteArray,
-        count: Int = 1,
+        iv: Long = 1,
         password: String,
         reverse: Boolean = false,
     ): ByteArray {
 
-        val seed = abs(count) % 256
+        val seed = abs(iv) % Int.MAX_VALUE
 
-        val fixedCount = if (reverse) -seed else seed
+        val passRandom = EncRandom(password, seed)
 
-        val shiftRandom = XorRandom(seed)
-
-        val passRandom = EncRandom(password)
+        val seedTransformed = transformNumber(256, seed, 4)
 
         return source.mapIndexed { index, c ->
             val passSeed = passRandom.nextInt()
-            val incShiftValue =
-                (if (reverse) index.negative() else index) * (shiftRandom.nextInt() + passSeed)
-            val shiftedByte = c + fixedCount + incShiftValue
+            val incShiftValue = (index / 4).negativeIf(reverse) * passSeed
+
+            val transformValue = seedTransformed.getOrElse(index) { 0 }.negativeIf(reverse)
+
+            val shiftedByte = c + incShiftValue + transformValue
             shiftedByte.toByte()
         }.toByteArray()
     }
@@ -36,17 +38,18 @@ object ByteShiftEncoder {
         return moveByteEnc(
             source = PREFIX + data,
             password = password,
-            count = Random.nextInt()
+            iv = Random.nextLong()
         )
     }
 
     fun moveDecByte(data: ByteArray, password: String): ByteArray {
-        if (data.size < PREFIX.size + 1) {
+        if (data.size <= PREFIX.size) {
             return byteArrayOf()
         }
 
-        //get random index
-        val index = data.first().toUByte().toInt()
+        val indexTransform =
+            (0..<4).map { data[it].toUByte().toInt() }
+        val index = reverseTransformNumber(256, indexTransform)
         val decryptedPrefix =
             moveByteEnc(
                 data.copyOfRange(0, PREFIX.size),
@@ -59,7 +62,7 @@ object ByteShiftEncoder {
             return byteArrayOf()
         }
         return moveByteEnc(
-            count = index,
+            iv = index,
             source = data,
             password = password,
             reverse = true

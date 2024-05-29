@@ -93,12 +93,16 @@ fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {
     return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 }
 
-fun <T> List<T>.at(index: Int): T {
+fun <T> List<T>.at(index: Long): T {
     var fixedIndex = index % this.size
     if (fixedIndex < 0) {
         fixedIndex += this.size
     }
-    return this[fixedIndex]
+    return this[fixedIndex.toInt()]
+}
+
+fun <T> List<T>.at(index: Int): T {
+    return this.at(index.toLong())
 }
 
 fun Uri.getFileName(): String {

@@ -29,7 +29,7 @@ inline fun <T> T?.isNullAnd(condition: Boolean, block: UnitBlock = {}): Boolean 
 }
 
 inline fun <T> T?.isNullOr(condition: Boolean, block: UnitBlock = {}): Boolean {
-    if (this == null|| condition ) {
+    if (this == null || condition) {
         block()
     }
     return this == null || condition
@@ -73,6 +73,26 @@ fun Boolean?.toInt(): Int {
 fun Int.negative(): Int {
     return -this
 }
+
+fun Long.negativeIf(condition: Boolean): Long {
+    if (condition) {
+        return -this
+    }
+    return this
+}
+
+fun Int.negativeIf(condition: Boolean): Int {
+    if (condition) {
+        return -this
+    }
+    return this
+}
+
+tailrec fun Int.pow(exp: Int, acc: Int = 1): Int =
+    if (exp == 0) acc else this.pow(exp - 1, acc * this)
+
+tailrec fun Long.pow(exp: Int, acc: Long = 1): Long =
+    if (exp == 0) acc else this.pow(exp - 1, acc * this)
 
 inline fun Boolean?.isTrueAnd(condition: Boolean, block: UnitBlock = {}): Boolean {
     if (isTrue() && condition) {

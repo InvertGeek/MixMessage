@@ -7,25 +7,64 @@ import com.donut.mixmessage.util.common.ignoreError
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.random.Random
 
-fun encryptAES(data: ByteArray, key: ByteArray, iv: ByteArray = key): ByteArray {
+fun generateRandomByteArray(size: Int): ByteArray {
+    val byteArray = ByteArray(size)
+    Random.nextBytes(byteArray)
+    return byteArray
+}
+
+
+fun transformNumber(radix: Int, number: Long, maxCount: Int): List<Long> {
+    val result = mutableListOf<Long>()
+    var n = number
+    for (i in 1..maxCount) {
+        result.add(n % radix)
+        n /= radix
+    }
+    return result
+}
+
+fun reverseTransformNumber(radix: Int, numbers: List<Int>): Long {
+    var result = 0L
+    var r = 1L
+    for (i in numbers) {
+        result += i * r
+        r *= radix
+    }
+    return result
+}
+
+
+fun encryptAES(
+    data: ByteArray,
+    key: ByteArray,
+    iv: ByteArray = generateRandomByteArray(8)
+): ByteArray {
     ignoreError {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         val secretKey = SecretKeySpec(key, "AES")
         val ivParameterSpec = IvParameterSpec(iv)
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec)
-        return cipher.doFinal(data)
+        return iv + cipher.doFinal(data)
     }
     return byteArrayOf()
 }
 
-fun decryptAES(data: ByteArray, key: ByteArray, iv: ByteArray = key): ByteArray {
+fun decryptAES(data: ByteArray, key: ByteArray): ByteArray {
     ignoreError {
+        if (data.size <= 8) {
+            return@ignoreError
+        }
+        val iv = data.copyOf(8)
+        val encryptedData = data.copyOfRange(8, data.size)
+        println(data.copyOfRange(8, data.size).toList())
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         val secretKey = SecretKeySpec(key, "AES")
         val ivParameterSpec = IvParameterSpec(iv)
         cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec)
-        return cipher.doFinal(data)
+        return cipher.doFinal(encryptedData)
     }
     return byteArrayOf()
 }

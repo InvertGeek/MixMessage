@@ -49,7 +49,7 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
         val filtered = input.split(Regex("[^${alphabet.key}]+")).filter { it.isNotEmpty() }
 
         if (filtered.isEmpty()) {
-            return CoderResult.Failed
+            return CoderResult.failed(input)
         }
 
         var isStrict: Boolean? = null
@@ -72,7 +72,7 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
         val decodeResultText = filtered.joinToString("\n") { decodeSecret(it) }.trim()
 
         if (decodeResultText.trim().isEmpty()) {
-            return CoderResult.Failed
+            return CoderResult.failed(input)
         }
 
         return CoderResult(decodeResultText, password, this, input, isStrict = isStrict ?: false)

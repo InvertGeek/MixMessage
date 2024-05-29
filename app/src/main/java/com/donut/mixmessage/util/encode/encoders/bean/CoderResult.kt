@@ -28,7 +28,10 @@ data class CoderResult(
         const val IMAGE_IDENTIFIER = "__image:"
         const val VIDEO_IDENTIFIER = "__video:"
         const val FILE_IDENTIFIER = "__file:"
+
+        fun failed(text: String) = CoderResult(text, "", ShiftEncoder, "", isFail = true)
     }
+
 
     inline fun isMedia(
         identifier: String,

@@ -44,6 +44,7 @@ class MainActivity : MixActivity(MAIN_ID) {
                 setDefaultNegative()
                 setPositiveButton("确定") {
                     checkAccessibilityPermission()
+                    closeDialog()
                 }
                 show()
             }

@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ import com.donut.mixmessage.ui.component.routes.settings.routes.ImagePage
 import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.ENCODERS
@@ -63,6 +65,7 @@ var useDefaultPrefix by cachedMutableOf(true, "use_default_prefix")
 var START_BLANK_SCREEN by cachedMutableOf(false, "start_blank_screen")
 
 
+@OptIn(ExperimentalLayoutApi::class)
 fun selectDefaultEncoder() {
     MixDialogBuilder("默认加密方法").apply {
         setContent {
@@ -72,6 +75,48 @@ fun selectDefaultEncoder() {
             ) {
                 setDefaultEncoder(it)
                 closeDialog()
+            }
+        }
+        setBottomContent {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                FlowRow(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(text = "严格模式: ", modifier = Modifier.align(Alignment.CenterVertically))
+                    Switch(
+                        checked = USE_STRICT_ENCODE,
+                        onCheckedChange = {
+                            if (it) {
+                                MixDialogBuilder("确定开启?").apply {
+                                    setContent {
+                                        Text(
+                                            text = """
+                                            开启后将会使用国际认证的AES算法进行加密,
+                                            只支持移位加密以外的算法,输出结果将会占用更多字数
+                                            相同内容使用相同密钥加密将会有18446744073709552000种不同的结果
+                                        """.trimIndent().replace("\n", " ")
+                                        )
+                                    }
+                                    setDefaultNegative()
+                                    setPositiveButton("确定") {
+                                        performHapticFeedBack()
+                                        USE_STRICT_ENCODE = true
+                                        closeDialog()
+                                    }
+                                    show()
+                                }
+                                return@Switch
+                            }
+                            performHapticFeedBack()
+                            USE_STRICT_ENCODE = false
+                        },
+                    )
+                }
             }
         }
         show()

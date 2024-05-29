@@ -40,7 +40,7 @@ fun reverseTransformNumber(radix: Int, numbers: List<Int>): Long {
 fun encryptAES(
     data: ByteArray,
     key: ByteArray,
-    iv: ByteArray = generateRandomByteArray(8)
+    iv: ByteArray = generateRandomByteArray(16)
 ): ByteArray {
     ignoreError {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -54,12 +54,11 @@ fun encryptAES(
 
 fun decryptAES(data: ByteArray, key: ByteArray): ByteArray {
     ignoreError {
-        if (data.size <= 8) {
+        if (data.size <= 16) {
             return@ignoreError
         }
-        val iv = data.copyOf(8)
-        val encryptedData = data.copyOfRange(8, data.size)
-        println(data.copyOfRange(8, data.size).toList())
+        val iv = data.copyOf(16)
+        val encryptedData = data.copyOfRange(16, data.size)
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         val secretKey = SecretKeySpec(key, "AES")
         val ivParameterSpec = IvParameterSpec(iv)

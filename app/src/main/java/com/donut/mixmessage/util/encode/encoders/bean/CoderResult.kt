@@ -15,7 +15,7 @@ data class CoderResult(
     var originText: String,
 //    val isEncrypt: Boolean,
     val isFail: Boolean = false,
-    val isStrict: Boolean = false,
+    val isSimple: Boolean = false,
     val prefix: String = textCoder.generatePrefix(),
 ) {
 
@@ -61,7 +61,7 @@ data class CoderResult(
                     加密方法: ${textCoder.name}
                     长度: ${text.length}
                     原始长度: ${originText.length}
-                    ${if (isStrict) "严格编码" else ""}
+                    ${if (isSimple) "精简模式" else ""}
                     ${if (password.endsWith(getCurrentDate())) "时间锁" else ""}
                 """.trimIndent().replace("\n", " ")
 

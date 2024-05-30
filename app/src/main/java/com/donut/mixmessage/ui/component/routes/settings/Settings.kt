@@ -51,7 +51,7 @@ import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.ENCODERS
 import com.donut.mixmessage.util.encode.USE_RANDOM_ENCODER
 import com.donut.mixmessage.util.encode.USE_RANDOM_PASSWORD
-import com.donut.mixmessage.util.encode.encoders.bean.USE_STRICT_ENCODE
+import com.donut.mixmessage.util.encode.encoders.bean.USE_SIMPLE_MODE
 import com.donut.mixmessage.util.encode.encoders.bean.setUseStrictEncode
 import com.donut.mixmessage.util.encode.setDefaultEncoder
 import com.donut.mixmessage.util.encode.setUseRandomEncoder
@@ -87,25 +87,24 @@ fun selectDefaultEncoder() {
                     modifier = Modifier,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(text = "严格模式: ", modifier = Modifier.align(Alignment.CenterVertically))
+                    Text(text = "精简模式: ", modifier = Modifier.align(Alignment.CenterVertically))
                     Switch(
-                        checked = USE_STRICT_ENCODE,
+                        checked = USE_SIMPLE_MODE,
                         onCheckedChange = {
                             if (it) {
                                 MixDialogBuilder("确定开启?").apply {
                                     setContent {
                                         Text(
                                             text = """
-                                            开启后将会使用国际认证的AES-GCM算法进行加密,
-                                            只支持移位加密以外的算法,输出结果将会占用更多字数
-                                            输出结果将会保持唯一性,永远不会重复,无法被暴力破解
+                                            开启后将会使用精简模式,输出结果字数更短
+                                            占用更少的字数,安全性较低,容易被暴力破解
                                         """.trimIndent().replace("\n", " ")
                                         )
                                     }
                                     setDefaultNegative()
                                     setPositiveButton("确定") {
                                         performHapticFeedBack()
-                                        USE_STRICT_ENCODE = true
+                                        USE_SIMPLE_MODE = true
                                         closeDialog()
                                     }
                                     show()
@@ -113,7 +112,7 @@ fun selectDefaultEncoder() {
                                 return@Switch
                             }
                             performHapticFeedBack()
-                            USE_STRICT_ENCODE = false
+                            USE_SIMPLE_MODE = false
                         },
                     )
                 }
@@ -182,9 +181,9 @@ val Settings = MixNavPage {
         setUseRandomEncoder(it)
     }
     CommonSwitch(
-        checked = USE_STRICT_ENCODE,
-        text = "启用严格编码:",
-        "启用后将会使用经过认证的AES算法进行加密,只支持除移位加密以外的算法",
+        checked = USE_SIMPLE_MODE,
+        text = "启用精简模式:",
+        "启用后输出结果字数将会更短,安全性降低,容易被暴力破解",
     ) {
         setUseStrictEncode(it)
     }

@@ -11,11 +11,10 @@ import com.donut.mixmessage.util.encode.encoders.ByteShiftEncoder
 import com.donut.mixmessage.util.encode.encryptAES
 
 
-//var USE_STRICT_ENCODE by mutableStateOf(kv.decodeBool("use_strict_encode", false))
-var USE_STRICT_ENCODE by cachedMutableOf(false, "use_strict_encode")
+var USE_SIMPLE_MODE by cachedMutableOf(false, "use_simple_mode")
 
 fun setUseStrictEncode(value: Boolean) {
-    USE_STRICT_ENCODE = value
+    USE_SIMPLE_MODE = value
 }
 
 abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
@@ -23,25 +22,25 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
 
     private val baseN = BigIntBaseN(alphabet)
 
+    fun encodeRaw(data: ByteArray) = baseN.encode(data)
+
     override fun encode(input: String, password: String): CoderResult {
         input.trim().isEmpty().isTrue {
             return CoderResult.Failed
         }
-        val encodeResultText: String = if (USE_STRICT_ENCODE) {
+        val encodeResultText: String = if (!USE_SIMPLE_MODE) {
             baseN.encode(
                 encryptAES(input, password)
             )
         } else {
             baseN.encode(
-//                ShiftEncoder.encode(input, password)
-//                    .text.toByteArray()
                 ByteShiftEncoder.moveEncByte(input.toByteArray(), password)
             )
         }
         if (encodeResultText.trim().isEmpty()) {
             return CoderResult.Failed
         }
-        return CoderResult(encodeResultText, password, this, input, isStrict = USE_STRICT_ENCODE)
+        return CoderResult(encodeResultText, password, this, input, isSimple = USE_SIMPLE_MODE)
     }
 
     override fun decode(input: String, password: String): CoderResult {
@@ -52,20 +51,19 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
             return CoderResult.failed(input)
         }
 
-        var isStrict: Boolean? = null
+        var isSimple: Boolean? = null
 
         fun decodeSecret(value: String): String {
             val bytes = baseN.decode(value)
-//            val shiftDecodeResult = ShiftEncoder.decode(bytes.decodeToString(), password)
             val shiftDecodeResult = ByteShiftEncoder.moveDecByte(bytes, password)
-            shiftDecodeResult.isEmpty().isTrueAnd(isStrict.isNotFalse()) {
-                isStrict = true
+            shiftDecodeResult.isEmpty().isTrueAnd(isSimple.isNotFalse()) {
+                isSimple = false
                 return decryptAES(bytes, password).decodeToString()
             }
-            isStrict.isTrue {
+            isSimple.isTrue {
                 return ""
             }
-            isStrict = false
+            isSimple = true
             return shiftDecodeResult.decodeToString()
         }
 
@@ -75,7 +73,7 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
             return CoderResult.failed(input)
         }
 
-        return CoderResult(decodeResultText, password, this, input, isStrict = isStrict ?: false)
+        return CoderResult(decodeResultText, password, this, input, isSimple = isSimple.isTrue())
     }
 
     override fun checkText(input: String) = input.any { it in alphabet.key }

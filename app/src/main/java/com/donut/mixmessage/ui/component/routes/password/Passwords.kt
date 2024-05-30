@@ -30,6 +30,7 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.hashToMD5String
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNull
+import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
@@ -80,7 +81,7 @@ fun startLock(force: Boolean = false) {
 }
 
 fun tryUnlock(password: String) {
-    encryptAESBase64(password, password).contentEquals(LOCK_CACHE).isFalse {
+    decryptAESBase64(LOCK_CACHE, password).isEmpty().isTrue {
         showToast("密码错误")
         return
     }

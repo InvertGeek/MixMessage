@@ -5,6 +5,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.donut.mixmessage.ACS_NOTIFY
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
@@ -97,5 +98,12 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
         "跟随系统自动切换深色模式",
     ) {
         enableAutoDarkMode = it
+    }
+    CommonSwitch(
+        checked = ACS_NOTIFY,
+        text = "无障碍提醒:",
+        "未开启无障碍进入时显示弹窗提醒",
+    ) {
+        ACS_NOTIFY = it
     }
 }

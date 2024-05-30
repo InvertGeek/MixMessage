@@ -27,12 +27,15 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.NavComponent
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
-import com.donut.mixmessage.util.common.isFalse
+import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isFalseAnd
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.objects.MixActivity
 import com.donut.mixmessage.util.objects.MixFileSelector
+
+var ACS_NOTIFY by cachedMutableOf(true, "acs_service_notify")
 
 
 class MainActivity : MixActivity(MAIN_ID) {
@@ -40,7 +43,7 @@ class MainActivity : MixActivity(MAIN_ID) {
     override fun onResume() {
         checkOverlayPermission()
         super.onResume()
-        IS_ACS_ENABLED.isFalse {
+        IS_ACS_ENABLED.isFalseAnd(ACS_NOTIFY) {
             MixDialogBuilder("提示").apply {
                 setContent {
                     Text(text = "无障碍权限未开启,是否进入设置?")

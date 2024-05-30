@@ -107,3 +107,10 @@ inline fun Boolean?.isFalse(block: UnitBlock = {}): Boolean {
     }
     return this == false
 }
+
+inline fun Boolean?.isFalseAnd(condition: Boolean, block: UnitBlock): Boolean {
+    if (isFalse() && condition) {
+        block()
+    }
+    return isFalse() && condition
+}

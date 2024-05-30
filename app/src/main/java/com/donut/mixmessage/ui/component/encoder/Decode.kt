@@ -3,10 +3,12 @@ package com.donut.mixmessage.ui.component.encoder
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -22,7 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.donut.mixmessage.decode.image.FileContent
+import com.donut.mixmessage.decode.image.ImageContent
+import com.donut.mixmessage.decode.image.VideoContent
 import com.donut.mixmessage.ui.component.common.ClearableTextField
+import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.readClipBoardText
@@ -31,7 +37,7 @@ import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 @Composable
-fun DecodeResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) {
+fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) {
     val decodeResultText = decodeResult.text
         .ifEmpty { "解码失败" }
 
@@ -108,7 +114,7 @@ fun DecodeComponent() {
             mutableStateOf(decodeText(inputText.text))
         }
 
-        DecodeResultComponent(decodeResult = decodeResult)
+        DecodeResultContent(decodeResult = decodeResult, noScroll = false)
 
         OutlinedButton(
             modifier = Modifier.fillMaxWidth(),
@@ -119,4 +125,39 @@ fun DecodeComponent() {
             Text(text = "解码剪贴板")
         }
     }
+}
+
+@Composable
+fun DecodeResultContent(decodeResult: CoderResult, noScroll: Boolean = true) {
+    @Composable
+    fun Card(block: @Composable UnitBlock) {
+        ElevatedCard(
+            colors = CardDefaults.cardColors(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(200.dp)
+        ) {
+            block()
+        }
+    }
+    decodeResult.isImage { url, fileName ->
+        Card {
+            ImageContent(imageUrl = url, decodeResult.password, fileName)
+        }
+        return
+    }
+
+    decodeResult.isVideo { url, fileName ->
+        Card {
+            VideoContent(url, decodeResult.password, fileName)
+        }
+        return
+    }
+    decodeResult.isFile { url, fileName ->
+        Card {
+            FileContent(url, decodeResult.password, fileName)
+        }
+        return
+    }
+    DecodeTextResultComponent(decodeResult = decodeResult, noScroll = noScroll)
 }

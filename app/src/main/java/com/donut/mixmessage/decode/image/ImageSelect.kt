@@ -17,28 +17,41 @@ import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.routes.selectImageAPI
 import com.donut.mixmessage.util.common.isNull
+import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.encode.getCurrentPassword
 import com.donut.mixmessage.util.image.startUploadImage
 import com.donut.mixmessage.util.image.toImageData
+import com.donut.mixmessage.util.objects.MixFileSelector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-fun selectFile() {
+fun selectFile(doSend: Boolean = true, selector: MixFileSelector = DecodeActivity.mixFileSelector) {
     MixDialogBuilder("文件类型").apply {
         setContent {
             SingleSelectItemList(listOf("图片", "视频", "文件"), null) {
                 when (it) {
-                    "图片" -> selectImage { data -> data.toImageData() }
+                    "图片" -> selectImage(
+                        doSend = doSend,
+                        selector = selector
+                    ) { data -> data.toImageData() }
+
                     "视频" -> selectImage(
                         "video/*",
-                        CoderResult.VIDEO_IDENTIFIER
+                        CoderResult.VIDEO_IDENTIFIER,
+                        doSend,
+                        selector,
                     )
 
-                    "文件" -> selectImage("*/*", CoderResult.FILE_IDENTIFIER)
+                    "文件" -> selectImage(
+                        "*/*",
+                        CoderResult.FILE_IDENTIFIER,
+                        doSend,
+                        selector = selector
+                    )
                 }
                 closeDialog()
             }
@@ -54,9 +67,11 @@ fun selectFile() {
 fun selectImage(
     type: String = "image/*",
     identifier: String = CoderResult.IMAGE_IDENTIFIER,
-    block: (ByteArray) -> ByteArray = { it }
+    doSend: Boolean = true,
+    selector: MixFileSelector = DecodeActivity.mixFileSelector,
+    block: (ByteArray) -> ByteArray = { it },
 ) {
-    DecodeActivity.mixFileSelector.openSelect(arrayOf(type)) { data, fileName ->
+    selector.openSelect(arrayOf(type)) { data, fileName ->
         MixDialogBuilder(
             "上传中", properties = DialogProperties(
                 dismissOnClickOutside = false
@@ -79,7 +94,6 @@ fun selectImage(
                             password,
                         )
                         url.isNull {
-                            closeDialog()
                             showToast("上传失败")
                             return@launch
                         }
@@ -87,8 +101,11 @@ fun selectImage(
                         withContext(Dispatchers.Main) {
                             encoderText =
                                 TextFieldValue(CoderResult.media(url!!, fileName, identifier))
-                            sendResult(encodeText(encoderText.text, password))
+                            doSend.isTrue {
+                                sendResult(encodeText(encoderText.text, password))
+                            }
                         }
+                        closeDialog()
                     }
                 }
             }

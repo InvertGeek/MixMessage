@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,15 +21,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.NavComponent
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.isFalse
+import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.objects.MixActivity
+import com.donut.mixmessage.util.objects.MixFileSelector
 
 
 class MainActivity : MixActivity(MAIN_ID) {
@@ -36,10 +40,15 @@ class MainActivity : MixActivity(MAIN_ID) {
     override fun onResume() {
         checkOverlayPermission()
         super.onResume()
-        isAccessibilityServiceEnabled().isFalse {
+        IS_ACS_ENABLED.isFalse {
             MixDialogBuilder("提示").apply {
                 setContent {
                     Text(text = "无障碍权限未开启,是否进入设置?")
+                    LaunchedEffect(IS_ACS_ENABLED) {
+                        IS_ACS_ENABLED.isTrue {
+                            closeDialog()
+                        }
+                    }
                 }
                 setDefaultNegative()
                 setPositiveButton("确定") {
@@ -63,10 +72,20 @@ class MainActivity : MixActivity(MAIN_ID) {
         }
     }
 
+    companion object {
+        lateinit var mixFileSelector: MixFileSelector
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mixFileSelector.unregister()
+    }
+
 
     // 处理权限请求结果
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        mixFileSelector = MixFileSelector(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {

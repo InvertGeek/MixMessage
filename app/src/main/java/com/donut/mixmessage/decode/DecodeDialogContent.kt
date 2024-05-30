@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -14,9 +13,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -32,17 +29,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.currentActivity
-import com.donut.mixmessage.decode.image.FileContent
-import com.donut.mixmessage.decode.image.ImageContent
-import com.donut.mixmessage.decode.image.VideoContent
 import com.donut.mixmessage.decode.image.selectFile
 import com.donut.mixmessage.service.inputAndSendText
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.ui.component.encoder.DecodeResultComponent
+import com.donut.mixmessage.ui.component.encoder.DecodeResultContent
 import com.donut.mixmessage.ui.component.encoder.EncodeInputComponent
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
-import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.performHapticFeedBack
@@ -85,42 +78,6 @@ fun sendResult(encodeResult: CoderResult) {
     }
     inputAndSendText(encodeResult.textWithPrefix())
     currentActivity.finish()
-}
-
-@Composable
-fun DecodeResultContent(decodeResult: CoderResult) {
-    @Composable
-    fun Card(block: @Composable UnitBlock) {
-        ElevatedCard(
-            colors = CardDefaults.cardColors(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(200.dp)
-        ) {
-            block()
-        }
-    }
-    decodeResult.isImage { url, fileName ->
-        Card {
-            ImageContent(imageUrl = url, decodeResult.password, fileName)
-        }
-        return
-    }
-
-    decodeResult.isVideo { url, fileName ->
-        Card {
-            VideoContent(url, decodeResult.password, fileName)
-        }
-        return
-    }
-    decodeResult.isFile { url, fileName ->
-        Card {
-            FileContent(url, decodeResult.password, fileName)
-        }
-        return
-    }
-    DecodeResultComponent(decodeResult = decodeResult, noScroll = true)
-
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -166,7 +123,6 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                     )
                 }
             )
-
             DecodeResultContent(decodeResult = decodeResult)
         }
         EncodeInputComponent(

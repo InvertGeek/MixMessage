@@ -20,8 +20,10 @@ import com.donut.mixmessage.ui.theme.enableAutoDarkMode
 import com.donut.mixmessage.util.common.ENABLE_HAPTIC_FEEDBACK
 import com.donut.mixmessage.util.common.LogoUtil
 import com.donut.mixmessage.util.common.showToast
+import com.donut.mixmessage.util.encode.TIME_LOCK_REVERSE
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.objects.MixActivity
+import okhttp3.internal.toLongOrDefault
 
 val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "其他设置", showBackIcon = true)
@@ -33,6 +35,15 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
         maxLines = 1,
         modifier = Modifier.fillMaxWidth(),
         label = { Text("空位加密前缀 %r=随机数字 %e=随机表情") }
+    )
+    OutlinedTextField(
+        value = TIME_LOCK_REVERSE.toString(),
+        onValueChange = { newValue ->
+            TIME_LOCK_REVERSE = newValue.toLongOrDefault(0).coerceAtLeast(0).coerceAtMost(10)
+        },
+        maxLines = 1,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text("时间锁回溯(天),尝试使用过去的日期解密内容") }
     )
     CommonSwitch(
         checked = useDefaultPrefix,

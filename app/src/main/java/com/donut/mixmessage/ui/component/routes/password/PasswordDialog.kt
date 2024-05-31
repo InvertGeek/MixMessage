@@ -1,11 +1,13 @@
 package com.donut.mixmessage.ui.component.routes.password
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
@@ -74,7 +76,7 @@ fun openAddPasswordDialog() {
                 passValue = it
             }, label = {
                 Text(text = "输入密钥")
-            })
+            }, modifier = Modifier.fillMaxWidth())
         }
         setNegativeButton("取消") {
             closeDialog()

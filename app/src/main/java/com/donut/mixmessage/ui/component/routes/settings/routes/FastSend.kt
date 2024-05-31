@@ -15,6 +15,7 @@ import com.donut.mixmessage.service.setSendButtonIdentifier
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
+import okhttp3.internal.toLongOrDefault
 
 val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
     NavTitle(title = "一键发送设置", showBackIcon = true)
@@ -50,7 +51,7 @@ val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
     OutlinedTextField(
         value = SEARCH_BUTTON_TIMEOUT.toString(),
         onValueChange = { newValue ->
-            SEARCH_BUTTON_TIMEOUT = (newValue.toLongOrNull() ?: 100).coerceAtLeast(100)
+            SEARCH_BUTTON_TIMEOUT = newValue.toLongOrDefault(100).coerceAtLeast(100)
         },
         maxLines = 1,
         modifier = Modifier

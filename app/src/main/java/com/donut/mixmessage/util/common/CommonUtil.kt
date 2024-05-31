@@ -148,10 +148,10 @@ inline fun ignoreError(tag: String = "", block: () -> Unit) {
 }
 
 
-fun getCurrentDate(): String {
-    val currentDate = Date()
+fun getCurrentDate(date: Date = Date()): String {
+
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    return formatter.format(currentDate)
+    return formatter.format(date)
 }
 
 fun getCurrentTime(): String {

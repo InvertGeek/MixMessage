@@ -25,6 +25,8 @@ import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.NavComponent
+import com.donut.mixmessage.ui.component.routes.password.LOCK_CACHE
+import com.donut.mixmessage.ui.component.routes.password.Unlock
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -70,8 +72,11 @@ class MainActivity : MixActivity(MAIN_ID) {
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.fillMaxSize()
         ) {
+            if (LOCK_CACHE.isNotEmpty()) {
+                Unlock()
+                return@CommonColumn
+            }
             NavComponent()
-
         }
     }
 

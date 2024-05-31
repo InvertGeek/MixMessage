@@ -16,6 +16,7 @@ import com.donut.mixmessage.util.encode.encoders.SCVEncoder
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+import java.util.Date
 
 val ENCODERS = listOf(
     ShiftEncoder,
@@ -45,6 +46,8 @@ var SUCCESS_DECODE_COUNT by cachedMutableOf(0L, "static_success_decode_count")
 var ENCODE_COUNT by cachedMutableOf(0L, "static_encode_count")
 
 var USE_TIME_LOCK by cachedMutableOf(false, "use_time_lock_encode")
+
+var TIME_LOCK_REVERSE by cachedMutableOf(0, "time_lock_reverse")
 
 fun increaseSuccessDecodeCount() {
     SUCCESS_DECODE_COUNT++
@@ -130,18 +133,19 @@ fun decodeText(text: String): CoderResult {
     }
     ENCODERS.any { coder ->
         coder.isEnabled().isTrueAnd(result.isFail) {
-            return@any PASSWORDS.any {
-                result = coder.decode(text, it)
-                result.isFail.isTrue {
-                    result = coder.decode(text, it + getCurrentDate())
-                }
-                result.isFail.isFalse()
+            return@any PASSWORDS.any { password ->
+                (0..TIME_LOCK_REVERSE).map { num -> password + getCurrentDate(Date(System.currentTimeMillis() - (num * 86400 * 1000))) }
+                    .toMutableList().apply {
+                        add(0, password)
+                    }.any {
+                        result = coder.decode(text, it)
+                        result.isFail.isFalse {
+                            increaseSuccessDecodeCount()
+                        }
+                    }
             }
         }
         return@any false
-    }
-    result.isFail.isFalse {
-        increaseSuccessDecodeCount()
     }
     return result
 }

@@ -35,6 +35,8 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.encoder.DecodeResultContent
 import com.donut.mixmessage.ui.component.encoder.EncodeInputComponent
 import com.donut.mixmessage.ui.component.encoder.encoderText
+import com.donut.mixmessage.ui.component.routes.password.LOCK_CACHE
+import com.donut.mixmessage.ui.component.routes.password.Unlock
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isFalse
@@ -87,6 +89,10 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
     DialogContainer {
         LaunchedEffect(true) {
             performHapticFeedBack()
+        }
+        if (LOCK_CACHE.isNotEmpty()) {
+            Unlock()
+            return@DialogContainer
         }
         if (!decodeResult.isFail) {
             AssistChip(

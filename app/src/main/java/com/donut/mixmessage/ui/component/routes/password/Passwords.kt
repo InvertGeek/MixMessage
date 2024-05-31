@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.CommonSwitch
@@ -258,7 +259,13 @@ fun LockSettings() {
 
 @Composable
 fun Unlock() {
-    Text(text = "密钥已被锁定", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+    Text(
+        text = "密钥已被锁定",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center
+    )
     Button(onClick = {
         var inputValue by mutableStateOf("")
         MixDialogBuilder("输入密码").apply {
@@ -296,10 +303,6 @@ fun Unlock() {
 
 @OptIn(ExperimentalLayoutApi::class)
 val Passwords = MixNavPage(gap = 20.dp) {
-    if (LOCK_CACHE.isNotEmpty()) {
-        Unlock()
-        return@MixNavPage
-    }
     SettingBox {
         Text(text = "密钥列表", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Text(

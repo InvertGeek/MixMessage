@@ -21,11 +21,10 @@ import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.encode.decryptAES
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import okhttp3.CacheControl
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -206,15 +205,12 @@ fun splitArray(array: ByteArray): Pair<ByteArray, ByteArray> {
     )
 }
 
-fun ByteArray.toMultiPart(
-    name: String,
+fun fileFormHeaders(
     suffix: String = ".webp",
     mimeType: String = "image/webp"
-): MultipartBody.Part {
-    val requestFile = run {
-        toRequestBody(mimeType.toMediaTypeOrNull(), 0, size)
+): Headers {
+    return Headers.build {
+        append(HttpHeaders.ContentType, mimeType)
+        append(HttpHeaders.ContentDisposition, "filename=\"${genRandomString(5)}${suffix}\"")
     }
-    val filePart =
-        MultipartBody.Part.createFormData(name, "${genRandomString(5)}${suffix}", requestFile)
-    return filePart
 }

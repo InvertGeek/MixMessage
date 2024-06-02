@@ -4,7 +4,10 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -66,7 +69,12 @@ fun VideoContent(url: String, password: String, fileName: String) {
     }
     error?.invoke()
     uri.isNullAnd(error.isNull()) {
-        progress.LoadingContent()
+        Column(
+            modifier = Modifier.height(400.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            progress.LoadingContent()
+        }
     }
     uri.isNotNull {
         VideoPlayerContent(uri = uri!!, fileData!!, fileName)

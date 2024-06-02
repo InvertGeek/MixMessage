@@ -114,3 +114,5 @@ inline fun Boolean?.isFalseAnd(condition: Boolean, block: UnitBlock): Boolean {
     }
     return isFalse() && condition
 }
+
+fun <T> T?.default(value: T) = this ?: value

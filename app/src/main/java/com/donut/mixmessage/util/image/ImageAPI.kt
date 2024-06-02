@@ -1,6 +1,7 @@
 package com.donut.mixmessage.util.image
 
 import com.donut.mixmessage.app
+import com.donut.mixmessage.decode.image.ProgressContent
 import com.donut.mixmessage.decode.image.ProgressInterceptor
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.catchError
@@ -11,6 +12,12 @@ import com.donut.mixmessage.util.image.apis.FreeImageHost
 import com.donut.mixmessage.util.image.apis.bfs.BFS
 import com.donut.mixmessage.util.image.apis.imgbb.IMGBB
 import com.donut.mixmessage.util.image.apis.smms.SMMS
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
+import io.ktor.serialization.gson.gson
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -35,6 +42,7 @@ val IMAGE_APIS = listOf(
 suspend fun startUploadImage(
     fileData: ByteArray,
     password: String = getCurrentPassword(),
+    progressContent: ProgressContent
 ): String? {
     val encryptedFileData = encryptAES(fileData, password)
     val blankImage = createBlankBitmap(50, 50)
@@ -43,13 +51,13 @@ suspend fun startUploadImage(
     val byteArray = combineArray(blankImageData, encryptedFileData)
     return IMAGE_APIS.maxByOrNull {
         (CURRENT_IMAGE_API == it.name).toInt()
-    }!!.uploadImage(byteArray)
+    }!!.uploadImage(byteArray, progressContent)
 }
 
 
 abstract class ImageAPI(baseUrl: String, val name: String) {
 
-    var retrofit: Retrofit = createRetrofit(baseUrl)
+    var client = createKtorClient(baseUrl)
 
     interface DownloadService {
         @GET
@@ -59,7 +67,25 @@ abstract class ImageAPI(baseUrl: String, val name: String) {
     }
 
     companion object {
-        fun createRetrofit(
+
+        fun createKtorClient(
+            baseUrl: String,
+        ): HttpClient {
+            return HttpClient(CIO).config {
+                install(ContentNegotiation) {
+                    gson()
+                }
+                install(DefaultRequest) {
+                    url(baseUrl)
+                    header(
+                        "User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+                    )
+                }
+            }
+        }
+
+        private fun createRetrofitClient(
             baseUrl: String,
             client: OkHttpClient.Builder.() -> Unit = {}
         ): Retrofit {
@@ -91,7 +117,7 @@ abstract class ImageAPI(baseUrl: String, val name: String) {
                 val cacheSize = 100 * 1024 * 1024 // 100 MiB
                 val cacheDirectory = File(app.cacheDir, "http-cache")
                 val cache = Cache(cacheDirectory, cacheSize.toLong())
-                return createRetrofit("http://127.0.0.1") {
+                return createRetrofitClient("http://127.0.0.1") {
                     addNetworkInterceptor(forceCacheInterceptor)
                     addNetworkInterceptor(genDecodeInterceptor(password))
                     cache(cache)
@@ -103,5 +129,5 @@ abstract class ImageAPI(baseUrl: String, val name: String) {
 
     }
 
-    abstract suspend fun uploadImage(image: ByteArray): String?
+    abstract suspend fun uploadImage(image: ByteArray, progressContent: ProgressContent): String?
 }

@@ -3,7 +3,6 @@ package com.donut.mixmessage.decode.image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -79,12 +78,13 @@ fun selectImage(
         ).apply {
             setContent {
                 val scope = rememberCoroutineScope()
+                val progressContent = ProgressContent("上传中")
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CircularProgressIndicator()
+                    progressContent.LoadingContent()
                 }
                 LaunchedEffect(Unit) {
                     scope.launch(Dispatchers.IO) {
@@ -92,8 +92,10 @@ fun selectImage(
                         val url = startUploadImage(
                             block(data),
                             password,
+                            progressContent
                         )
                         url.isNull {
+                            closeDialog()
                             showToast("上传失败")
                             return@launch
                         }

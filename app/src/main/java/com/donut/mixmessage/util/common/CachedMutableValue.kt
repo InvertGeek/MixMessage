@@ -56,6 +56,7 @@ abstract class CachedMutableValue<T>(value: T, private val key: String) {
         if (!loaded) {
             value = readCachedValue()
         }
+        loaded = true
         return value
     }
 

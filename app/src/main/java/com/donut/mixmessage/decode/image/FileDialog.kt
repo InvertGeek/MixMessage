@@ -84,7 +84,7 @@ fun FileContent(url: String, password: String, fileName: String) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth().padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -93,7 +93,6 @@ fun FileContent(url: String, password: String, fileName: String) {
             fileData.isNotNull {
                 Text(
                     text = "文件已保存到手机下载目录",
-                    modifier = Modifier.padding(10.dp),
                     color = colorScheme.primary
                 )
             }

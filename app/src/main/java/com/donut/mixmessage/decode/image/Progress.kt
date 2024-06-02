@@ -55,6 +55,12 @@ class ProgressContent(
         progress = bytesWritten.toFloat() / contentLength.toFloat()
     }
 
+    val ktorListener: suspend (bytesWritten: Long, bytesTotal: Long) -> Unit = { bytes, length ->
+        bytesWritten = bytes
+        contentLength = length.coerceAtLeast(1)
+        progress = bytesWritten.toFloat() / contentLength.toFloat()
+    }
+
     @Composable
     fun LoadingContent(show: Boolean = true) {
         LoadingBar(
@@ -95,7 +101,7 @@ fun LoadingBar(
 
     Column(
         modifier = Modifier
-            .heightIn(200.dp, sizeDp)
+            .heightIn(0.dp, sizeDp)
             .alpha(if (show) 1f else 0f)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,

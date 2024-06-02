@@ -105,6 +105,27 @@ fun <T> List<T>.at(index: Int): T {
     return this.at(index.toLong())
 }
 
+infix fun <T> List<T>.elementEquals(other: List<T>): Boolean {
+    if (this.size != other.size) return false
+
+    val tracker = BooleanArray(this.size)
+    var counter = 0
+
+    root@ for (value in this) {
+        destination@ for ((i, o) in other.withIndex()) {
+            if (tracker[i]) {
+                continue@destination
+            } else if (value?.equals(o) == true) {
+                counter++
+                tracker[i] = true
+                continue@root
+            }
+        }
+    }
+
+    return counter == this.size
+}
+
 fun Uri.getFileName(): String {
     var fileName = ""
     currentActivity.contentResolver.query(this, null, null, null, null)?.use {

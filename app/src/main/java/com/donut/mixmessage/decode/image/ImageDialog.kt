@@ -28,6 +28,7 @@ import coil.request.ImageRequest
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.genImageLoader
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
+import com.donut.mixmessage.util.common.ZoomableView
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.showToast
@@ -91,55 +92,57 @@ fun ImageContent(imageUrl: String, password: String, fileName: String) {
     var imageData: ByteArray? by remember {
         mutableStateOf(null)
     }
-    SubcomposeAsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl)
-            .crossfade(true)
-            .build(),
-        error = {
-            ErrorMessage(msg = "图片加载失败")
-        },
-        imageLoader = genImageLoader(LocalContext.current,
-            sourceListener = {
-                imageData = it
+    ZoomableView {
+        SubcomposeAsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            error = {
+                ErrorMessage(msg = "图片加载失败")
             },
-            initializer = {
-                OkHttpClient.Builder()
-                    .addNetworkInterceptor(progress.interceptor)
-                    .addNetworkInterceptor(forceCacheInterceptor)
-                    .addNetworkInterceptor(genDecodeInterceptor(password))
-                    .build()
-            }),
-        loading = {
-            progress.LoadingContent()
-        },
-        contentDescription = "图片",
-        modifier = Modifier
+            imageLoader = genImageLoader(LocalContext.current,
+                sourceListener = {
+                    imageData = it
+                },
+                initializer = {
+                    OkHttpClient.Builder()
+                        .addNetworkInterceptor(progress.interceptor)
+                        .addNetworkInterceptor(forceCacheInterceptor)
+                        .addNetworkInterceptor(genDecodeInterceptor(password))
+                        .build()
+                }),
+            loading = {
+                progress.LoadingContent()
+            },
+            contentDescription = "图片",
+            modifier = Modifier
 //            .background(Color.Red)
-            .fillMaxWidth()
-            .heightIn(400.dp)
-            .combinedClickable(
-                onLongClick = {
-                    imageData.isNull {
-                        return@combinedClickable
-                    }
-                    MixDialogBuilder("保存图片到本地?").apply {
-                        setDefaultNegative()
-                        setPositiveButton("确定") {
-                            closeDialog()
-                            saveFileToStorage(
-                                currentActivity,
-                                imageData!!,
-                                fileName,
-                                Environment.DIRECTORY_PICTURES
-                            )
-                            showToast("保存成功")
+                .fillMaxWidth()
+                .heightIn(400.dp)
+                .combinedClickable(
+                    onLongClick = {
+                        imageData.isNull {
+                            return@combinedClickable
                         }
-                        show()
+                        MixDialogBuilder("保存图片到本地?").apply {
+                            setDefaultNegative()
+                            setPositiveButton("确定") {
+                                closeDialog()
+                                saveFileToStorage(
+                                    currentActivity,
+                                    imageData!!,
+                                    fileName,
+                                    Environment.DIRECTORY_PICTURES
+                                )
+                                showToast("保存成功")
+                            }
+                            show()
+                        }
                     }
-                }
-            ) {}
+                ) {}
 
-    )
+        )
+    }
     UrlContent(url = imageUrl)
 }

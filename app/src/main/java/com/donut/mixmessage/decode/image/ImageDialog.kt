@@ -52,6 +52,8 @@ fun ErrorMessage(msg: String) {
     }
 }
 
+class CallBackListener(var callback: () -> Unit = {})
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageContent(imageUrl: String, password: String, fileName: String) {
@@ -59,7 +61,9 @@ fun ImageContent(imageUrl: String, password: String, fileName: String) {
     var imageData: ByteArray? by remember {
         mutableStateOf(null)
     }
-    ZoomableView {
+    val listener = CallBackListener()
+
+    ZoomableView(listener) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
@@ -88,6 +92,9 @@ fun ImageContent(imageUrl: String, password: String, fileName: String) {
                 .fillMaxWidth()
                 .heightIn(400.dp)
                 .combinedClickable(
+                    onDoubleClick = {
+                        listener.callback()
+                    },
                     onLongClick = {
                         imageData.isNull {
                             return@combinedClickable
@@ -107,7 +114,9 @@ fun ImageContent(imageUrl: String, password: String, fileName: String) {
                             show()
                         }
                     }
-                ) {}
+                ) {
+
+                }
 
         )
     }

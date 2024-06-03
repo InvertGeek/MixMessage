@@ -3,10 +3,14 @@ package com.donut.mixmessage.util.common
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -19,14 +23,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.decode.LocalParentScroll
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,7 +87,7 @@ fun addComposeView(content: @Composable (removeView: () -> Unit) -> Unit): () ->
 }
 
 @Composable
-fun <T> ProvidableCompositionLocal<T>.Provide(value: T, content: @Composable () -> Unit){
+fun <T> ProvidableCompositionLocal<T>.Provide(value: T, content: @Composable () -> Unit) {
     CompositionLocalProvider(this provides value) {
         content()
     }
@@ -153,5 +162,35 @@ fun performHapticFeedBack(cd: Long = 400L) {
         it()
     }
 
+}
+
+@Composable
+fun TipText(content: String, onClick: () -> Unit) {
+    Text(
+        text = content,
+        color = Color.Gray,
+        style = TextStyle(
+            fontSize = 10.sp,
+            lineHeight = 12.sp
+        ),
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .fillMaxWidth()
+            .padding(10.dp),
+    )
+}
+
+@Composable
+fun UrlContent(url: String) {
+    TipText("文件地址: $url") {
+        MixDialogBuilder("复制地址到剪贴板?").apply {
+            setDefaultNegative()
+            setPositiveButton("确定") {
+                url.copyToClipboard()
+                closeDialog()
+            }
+            show()
+        }
+    }
 }
 

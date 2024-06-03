@@ -28,6 +28,8 @@ import com.donut.mixmessage.decode.image.FileContent
 import com.donut.mixmessage.decode.image.ImageContent
 import com.donut.mixmessage.decode.image.VideoContent
 import com.donut.mixmessage.ui.component.common.ClearableTextField
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
+import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.performHapticFeedBack
@@ -51,11 +53,20 @@ fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResu
                 containerColor = Color(0x2F69D2FF),
             ),
         ) {
-            Column(modifier = Modifier.padding(10.dp)) {
-                SelectionContainer {
+            Column(modifier = Modifier) {
+                SelectionContainer(modifier = Modifier.padding(10.dp)) {
                     Text(text = decodeResultText)
                 }
-                Text(text = decodeResult.getInfo(), fontSize = 10.sp, color = Color.Gray)
+                TipText(content = decodeResult.getInfo()) {
+                    MixDialogBuilder("复制内容到剪贴板?").apply {
+                        setDefaultNegative()
+                        setPositiveButton("确定") {
+                            decodeResultText.copyToClipboard()
+                            closeDialog()
+                        }
+                        show()
+                    }
+                }
             }
         }
         return

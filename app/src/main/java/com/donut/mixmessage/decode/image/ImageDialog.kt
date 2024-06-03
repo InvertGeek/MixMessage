@@ -2,13 +2,11 @@ package com.donut.mixmessage.decode.image
 
 import android.os.Environment
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,44 +25,14 @@ import coil.request.ImageRequest
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.genImageLoader
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
+import com.donut.mixmessage.util.common.UrlContent
 import com.donut.mixmessage.util.common.ZoomableView
-import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.image.forceCacheInterceptor
 import com.donut.mixmessage.util.image.genDecodeInterceptor
 import com.donut.mixmessage.util.image.saveFileToStorage
 import okhttp3.OkHttpClient
-
-@Composable
-fun UrlContent(url: String) {
-    Column(
-        Modifier
-            .clickable {
-                MixDialogBuilder("复制地址到剪贴板?").apply {
-                    setDefaultNegative()
-                    setPositiveButton("确定") {
-                        url.copyToClipboard()
-                        closeDialog()
-                    }
-                    show()
-                }
-            }
-            .fillMaxWidth()
-            .padding(10.dp)
-    ) {
-        Text(
-            text = "文件地址: $url",
-            color = Color.Gray,
-            style = TextStyle(
-                fontSize = 10.sp,
-                lineHeight = 12.sp
-            ),
-            modifier = Modifier
-                .fillMaxWidth(),
-        )
-    }
-}
 
 @Composable
 fun ErrorMessage(msg: String) {

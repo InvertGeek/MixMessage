@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.UnitBlock
+import com.donut.mixmessage.util.common.UrlContent
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isNullAnd

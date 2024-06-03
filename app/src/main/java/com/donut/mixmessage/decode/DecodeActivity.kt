@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,7 +29,6 @@ import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.decode.DecodeActivity.Companion.LAST_FORCE_CLOSE
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.theme.MixMessageTheme
-import com.donut.mixmessage.util.common.Provide
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.encode.decodeText
@@ -39,12 +36,9 @@ import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.objects.MixActivity
 import com.donut.mixmessage.util.objects.MixFileSelector
 
-
-val LocalParentScroll = compositionLocalOf { ScrollState(initial = 0) }
-
 @Composable
 fun DialogContainer(content: @Composable () -> Unit) {
-    val scrollState = rememberScrollState()
+
     Dialog(
         onDismissRequest = {
             currentActivity.finish()
@@ -62,12 +56,10 @@ fun DialogContainer(content: @Composable () -> Unit) {
                 modifier = Modifier
                     .padding(8.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .verticalScroll(scrollState),
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.Start,
             ) {
-                LocalParentScroll.Provide(value = scrollState) {
-                    content()
-                }
+                content()
             }
         }
     }

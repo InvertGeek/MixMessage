@@ -31,8 +31,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.donut.mixmessage.decode.LocalParentScroll
-import com.donut.mixmessage.util.common.Provide
 import com.donut.mixmessage.util.common.genRandomString
 import com.donut.mixmessage.util.common.isNotNull
 import java.lang.ref.WeakReference
@@ -59,21 +57,17 @@ class MixNavPage(
                 exitTransition = { if (useTransition) slideOutHorizontally(tween()) { it } else null },
             ) {
 
-                val scrollState = rememberScrollState()
-
                 if (getCurrentRoute().contentEquals(name)) {
                     showNavBar = displayNavBar
                 }
-                LocalParentScroll.Provide(value = scrollState) {
-                    Column(
-                        modifier = modifier
-                            .verticalScroll(scrollState)
-                            .fillMaxSize()
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(gap),
-                    ) {
-                        content(it)
-                    }
+                Column(
+                    modifier = modifier
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(gap),
+                ) {
+                    content(it)
                 }
             }
         }

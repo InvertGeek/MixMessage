@@ -12,8 +12,8 @@ android {
         applicationId = "com.donut.mixmessage"
         minSdk = 24
         targetSdk = 34
-        versionCode = 49
-        versionName = "1.4.9"
+        versionCode = 50
+        versionName = "1.4.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -70,6 +70,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-gson:$ktor_version")
+    implementation("net.engawapg.lib:zoomable:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.github.getActivity:EasyWindow:10.6")

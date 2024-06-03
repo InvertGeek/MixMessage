@@ -20,9 +20,9 @@ object SMMS : ImageAPI("https://smms.app/api/v2/", "SM.MS") {
 
     override suspend fun uploadImage(image: ByteArray, progressContent: ProgressContent): String? {
         catchError {
-            val smResult = client.post("upload"){
-                setBody(MultiPartFormDataContent(formData{
-                    append("smfile",image, fileFormHeaders())
+            val smResult = client.post("upload") {
+                setBody(MultiPartFormDataContent(formData {
+                    append("smfile", image, fileFormHeaders())
                 }))
                 header("Authorization", SMMS_API_TOKEN.trim())
                 onUpload(progressContent.ktorListener)

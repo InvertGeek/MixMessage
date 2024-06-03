@@ -85,7 +85,8 @@ fun FileContent(url: String, password: String, fileName: String) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth().padding(10.dp),
+                .fillMaxWidth()
+                .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

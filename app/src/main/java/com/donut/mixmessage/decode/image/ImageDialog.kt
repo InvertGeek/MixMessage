@@ -26,12 +26,13 @@ import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.genImageLoader
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.UrlContent
-import com.donut.mixmessage.util.common.ZoomableView
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.image.forceCacheInterceptor
 import com.donut.mixmessage.util.image.genDecodeInterceptor
 import com.donut.mixmessage.util.image.saveFileToStorage
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 import okhttp3.OkHttpClient
 
 @Composable
@@ -52,8 +53,6 @@ fun ErrorMessage(msg: String) {
     }
 }
 
-class CallBackListener(var callback: () -> Unit = {})
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageContent(imageUrl: String, password: String, fileName: String) {
@@ -61,64 +60,60 @@ fun ImageContent(imageUrl: String, password: String, fileName: String) {
     var imageData: ByteArray? by remember {
         mutableStateOf(null)
     }
-    val listener = CallBackListener()
-
-    ZoomableView(listener) {
-        SubcomposeAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            error = {
-                ErrorMessage(msg = "图片加载失败")
+    val zoomState = rememberZoomState()
+    SubcomposeAsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .crossfade(true)
+            .build(),
+        error = {
+            ErrorMessage(msg = "图片加载失败")
+        },
+        imageLoader = genImageLoader(LocalContext.current,
+            sourceListener = {
+                imageData = it
             },
-            imageLoader = genImageLoader(LocalContext.current,
-                sourceListener = {
-                    imageData = it
-                },
-                initializer = {
-                    OkHttpClient.Builder()
-                        .addNetworkInterceptor(progress.interceptor)
-                        .addNetworkInterceptor(forceCacheInterceptor)
-                        .addNetworkInterceptor(genDecodeInterceptor(password))
-                        .build()
-                }),
-            loading = {
-                progress.LoadingContent()
-            },
-            contentDescription = "图片",
-            modifier = Modifier
-//            .background(Color.Red)
-                .fillMaxWidth()
-                .heightIn(400.dp)
-                .combinedClickable(
-                    onDoubleClick = {
-                        listener.callback()
-                    },
-                    onLongClick = {
-                        imageData.isNull {
-                            return@combinedClickable
-                        }
-                        MixDialogBuilder("保存图片到本地?").apply {
-                            setDefaultNegative()
-                            setPositiveButton("确定") {
-                                closeDialog()
-                                saveFileToStorage(
-                                    currentActivity,
-                                    imageData!!,
-                                    fileName,
-                                    Environment.DIRECTORY_PICTURES
-                                )
-                                showToast("保存成功")
-                            }
-                            show()
-                        }
+            initializer = {
+                OkHttpClient.Builder()
+                    .addNetworkInterceptor(progress.interceptor)
+                    .addNetworkInterceptor(forceCacheInterceptor)
+                    .addNetworkInterceptor(genDecodeInterceptor(password))
+                    .build()
+            }),
+        loading = {
+            progress.LoadingContent()
+        },
+        contentDescription = "图片",
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(400.dp, 1000.dp)
+            .zoomable(zoomState)
+            .combinedClickable(
+                //不能传递null,否则zoom无法监听到事件
+                onDoubleClick = {},
+                onLongClick = {
+                    imageData.isNull {
+                        return@combinedClickable
                     }
-                ) {
-
+                    MixDialogBuilder("保存图片到本地?").apply {
+                        setDefaultNegative()
+                        setPositiveButton("确定") {
+                            closeDialog()
+                            saveFileToStorage(
+                                currentActivity,
+                                imageData!!,
+                                fileName,
+                                Environment.DIRECTORY_PICTURES
+                            )
+                            showToast("保存成功")
+                        }
+                        show()
+                    }
                 }
+            ) {
 
-        )
-    }
+            }
+
+    )
     UrlContent(url = imageUrl)
 }

@@ -1,5 +1,7 @@
 package com.donut.mixmessage.util.common
 
+import kotlin.streams.toList
+
 inline fun <T> T?.isNull(block: UnitBlock = {}): Boolean {
     if (this == null) {
         block()
@@ -113,6 +115,22 @@ inline fun Boolean?.isFalseAnd(condition: Boolean, block: UnitBlock): Boolean {
         block()
     }
     return isFalse() && condition
+}
+
+fun String.subCodePoint(start: Int, end: Int): String {
+    return this.substring(this.codePointOffset(start), this.codePointOffset(end))
+}
+
+fun String.codePointsString(): List<String> {
+    return this.codePoints().toList().map { Character.toChars(it).joinToString("") }
+}
+
+fun List<String>.subAsString(start: Int, end: Int = this.size): String {
+    return this.subList(start, end).joinToString("")
+}
+
+fun String.codePointOffset(index: Int): Int {
+    return this.codePointCount(0, index)
 }
 
 fun <T> T?.default(value: T) = this ?: value

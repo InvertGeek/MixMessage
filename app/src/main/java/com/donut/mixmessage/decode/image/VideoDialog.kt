@@ -118,7 +118,6 @@ fun VideoPlayerContent(uri: Uri, fileData: ByteArray, fileName: String) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
             .heightIn(600.dp)
-
     )
     TextButton(modifier = Modifier.fillMaxWidth(), onClick = {
         MixDialogBuilder("保存视频到本地?").apply {

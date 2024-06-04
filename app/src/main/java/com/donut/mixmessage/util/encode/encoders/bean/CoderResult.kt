@@ -1,10 +1,12 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
+import com.donut.mixmessage.util.common.codePointsString
 import com.donut.mixmessage.util.common.decodeBase64
 import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.ignoreError
 import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.common.subAsString
 import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 
@@ -69,8 +71,9 @@ data class CoderResult(
         text.isEmpty().isTrue {
             return text
         }
-        if (prefixText.length > 1) {
-            return prefixText[0] + text + prefixText.substring(1)
+        val codePoints = prefixText.codePointsString()
+        if (codePoints.size > 1) {
+            return codePoints[0] + text + codePoints.subAsString(1)
         }
         return "$prefixText$text"
     }

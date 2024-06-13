@@ -12,8 +12,8 @@ android {
         applicationId = "com.donut.mixmessage"
         minSdk = 24
         targetSdk = 34
-        versionCode = 51
-        versionName = "1.4.11"
+        versionCode = 52
+        versionName = "1.4.12"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

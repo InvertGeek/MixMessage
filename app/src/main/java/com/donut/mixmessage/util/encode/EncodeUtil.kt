@@ -32,13 +32,14 @@ val ENCODERS = listOf(
 
 var PASSWORDS by cachedMutableOf(setOf("123"), "encoder_passwords")
 
-var DEFAULT_ENCODER by cachedMutableOf(ShiftEncoder.name, "default_encoder")
+var DEFAULT_ENCODER by cachedMutableOf(ZeroWidthEncoder.name, "default_encoder")
 
 var DEFAULT_PASSWORD by cachedMutableOf("123", "default_password")
 
 var USE_RANDOM_PASSWORD by cachedMutableOf(false, "use_random_password")
 
 var USE_RANDOM_ENCODER by cachedMutableOf(false, "use_random_encoder")
+
 var LAST_DECODE = System.currentTimeMillis()
 
 var SUCCESS_DECODE_COUNT by cachedMutableOf(0L, "static_success_decode_count")
@@ -111,7 +112,6 @@ fun exportAllPassword() {
 fun importPasswords(): Int {
     val clipBoard = readClipBoardText()
     val origSize = PASSWORDS.size
-//    PASSWORDS.addAll(clipBoard.split("\n"))
     modifyPasswords {
         addAll(clipBoard.split("\n"))
     }

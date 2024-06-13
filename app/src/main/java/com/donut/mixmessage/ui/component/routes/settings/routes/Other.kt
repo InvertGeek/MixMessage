@@ -28,9 +28,9 @@ import okhttp3.internal.toLongOrDefault
 val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "其他设置", showBackIcon = true)
     OutlinedTextField(
-        value = ZeroWidthEncoder.encodeResultPrefix,
+        value = ZeroWidthEncoder.encodePrefix,
         onValueChange = { newValue ->
-            ZeroWidthEncoder.setShiftEncodeResultPrefix(newValue)
+            ZeroWidthEncoder.encodePrefix = newValue
         },
         maxLines = 1,
         modifier = Modifier.fillMaxWidth(),

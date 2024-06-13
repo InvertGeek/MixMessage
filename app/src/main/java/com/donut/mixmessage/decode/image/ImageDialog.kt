@@ -56,7 +56,9 @@ fun ErrorMessage(msg: String) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageContent(imageUrl: String, password: String, fileName: String) {
-    val progress = ProgressContent(tip = "图片加载中")
+    val progress = remember {
+        ProgressContent(tip = "图片加载中")
+    }
     var imageData: ByteArray? by remember {
         mutableStateOf(null)
     }

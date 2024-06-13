@@ -14,7 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -25,6 +28,7 @@ import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
@@ -100,25 +104,18 @@ fun ZoomableView(
     }
 }
 
-var lastHapticFeedBackTime = 0L
-
 var ENABLE_HAPTIC_FEEDBACK by cachedMutableOf(true, "enable_haptic_feedback")
 fun performHapticFeedBack(cd: Long = 400L) {
-    if (ENABLE_HAPTIC_FEEDBACK.isFalse()) {
+    ENABLE_HAPTIC_FEEDBACK.isFalse {
         return
     }
-    if (System.currentTimeMillis() - lastHapticFeedBackTime < cd) {
-        return
+    withCd("haptic_feedback", cd) {
+        val view = ComposeView(currentActivity)
+        addContentView(view).also {
+            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            it()
+        }
     }
-
-    lastHapticFeedBackTime = System.currentTimeMillis()
-
-    val view = ComposeView(currentActivity)
-    addContentView(view).also {
-        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-        it()
-    }
-
 }
 
 @Composable
@@ -152,5 +149,25 @@ fun UrlContent(url: String) {
             show()
         }
     }
+}
+
+@Composable
+@NonRestartableComposable
+fun UseEffect(
+    vararg keys: Any?,
+    block: suspend CoroutineScope.() -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(*keys) {
+        scope.launch(Dispatchers.IO, block = block)
+    }
+}
+
+@Composable
+@NonRestartableComposable
+fun UseEffect(
+    block: suspend CoroutineScope.() -> Unit
+) {
+    UseEffect(Unit, block = block)
 }
 

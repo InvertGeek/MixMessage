@@ -73,7 +73,7 @@ class MixAccessibilityService : AccessibilityApi() {
     companion object {
         var ENABLE_SINGLE_CLICK by cachedMutableOf(true, "AUTO_DECODE_ENABLE_SINGLE_CLICK")
         var ENABLE_LONG_CLICK by cachedMutableOf(true, "AUTO_DECODE_ENABLE_LONG_CLICK")
-        var ENABLE_SELECT_TEXT by cachedMutableOf(false, "AUTO_DECODE_ENABLE_SELECT_TEXT")
+        var ENABLE_SELECT_TEXT by cachedMutableOf(true, "AUTO_DECODE_ENABLE_SELECT_TEXT")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

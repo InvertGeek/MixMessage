@@ -82,7 +82,7 @@ fun EncodeInputComponent(
         encoderText,
         DEFAULT_ENCODER,
         USE_SIMPLE_MODE,
-        ZeroWidthEncoder.encodeResultPrefix,
+        ZeroWidthEncoder.encodePrefix,
         DEFAULT_PASSWORD,
         USE_TIME_LOCK
     ) {

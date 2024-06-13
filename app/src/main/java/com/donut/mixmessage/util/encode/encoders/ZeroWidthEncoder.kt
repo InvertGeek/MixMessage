@@ -28,14 +28,11 @@ object ZeroWidthEncoder : AlphabetCoder(
 
     override val name = "空位编码"
 
-    var encodeResultPrefix by cachedMutableOf("x%r%r%r", "zero_width_encode_result_prefix")
+    var encodePrefix by cachedMutableOf("x%r%r%r", "zero_width_encode_result_prefix")
 
-    fun setShiftEncodeResultPrefix(prefix: String) {
-        encodeResultPrefix = prefix
-    }
 
     override fun generatePrefix(): String {
-        return encodeResultPrefix.replace(Regex("%r")) {
+        return encodePrefix.replace(Regex("%r")) {
             Random.nextInt(10).toString()
         }.replace(Regex("%e")) {
             EmojiEncoder.replaceMap.keys.random()

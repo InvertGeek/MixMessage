@@ -133,4 +133,4 @@ fun String.codePointOffset(index: Int): Int {
     return this.codePointCount(0, index)
 }
 
-fun <T> T?.default(value: T) = this ?: value
+infix fun <T> T?.default(value: T) = this ?: value

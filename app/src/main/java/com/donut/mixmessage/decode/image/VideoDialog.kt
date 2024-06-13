@@ -13,11 +13,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +24,7 @@ import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.UrlContent
+import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isNullAnd
@@ -37,13 +36,13 @@ import io.sanghun.compose.video.RepeatMode
 import io.sanghun.compose.video.VideoPlayer
 import io.sanghun.compose.video.controller.VideoPlayerControllerConfig
 import io.sanghun.compose.video.uri.VideoPlayerMediaItem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @Composable
 fun VideoContent(url: String, password: String, fileName: String) {
-    val progress = ProgressContent(tip = "视频加载中")
+    val progress = remember {
+        ProgressContent(tip = "视频加载中")
+    }
     var error: @Composable UnitBlock? by remember {
         mutableStateOf(null)
     }
@@ -54,21 +53,17 @@ fun VideoContent(url: String, password: String, fileName: String) {
         mutableStateOf(null)
     }
 
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        scope.launch(Dispatchers.IO) {
-            fileData = ImageAPI.downloadEncryptedData(
-                url,
-                password,
-                progress.interceptor
-            )
-            fileData.isNull {
-                error = { ErrorMessage(msg = "视频加载失败") }
-                return@launch
-            }
-            uri = fileData?.toURI("video")
+    UseEffect {
+        fileData = ImageAPI.downloadEncryptedData(
+            url,
+            password,
+            progress.interceptor
+        )
+        fileData.isNull {
+            error = { ErrorMessage(msg = "视频加载失败") }
+            return@UseEffect
         }
+        uri = fileData?.toURI("video")
     }
     error?.invoke()
     uri.isNullAnd(error.isNull()) {

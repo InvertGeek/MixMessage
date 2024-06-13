@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +21,7 @@ import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.UrlContent
+import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNotTrue
@@ -30,13 +29,13 @@ import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.image.ImageAPI
 import com.donut.mixmessage.util.image.saveFileToStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun FileContent(url: String, password: String, fileName: String) {
 
-    val progress = ProgressContent()
+    val progress = remember {
+        ProgressContent()
+    }
 
     var download by remember {
         mutableStateOf(false)
@@ -50,31 +49,28 @@ fun FileContent(url: String, password: String, fileName: String) {
         mutableStateOf(null)
     }
 
-    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(download) {
+    UseEffect(download) {
         download.isFalse {
-            return@LaunchedEffect
+            return@UseEffect
         }
-        scope.launch(Dispatchers.IO) {
-            fileData = ImageAPI.downloadEncryptedData(
-                url,
-                password,
-                progress.interceptor
-            )
-            fileData.isNull {
-                error = { ErrorMessage(msg = "文件下载失败") }
-                return@launch
-            }
-            saveFileToStorage(
-                currentActivity,
-                fileData!!,
-                fileName,
-                Environment.DIRECTORY_DOWNLOADS,
-                MediaStore.Files.getContentUri("external")
-            )
-            showToast("下载成功!")
+        fileData = ImageAPI.downloadEncryptedData(
+            url,
+            password,
+            progress.interceptor
+        )
+        fileData.isNull {
+            error = { ErrorMessage(msg = "文件下载失败") }
+            return@UseEffect
         }
+        saveFileToStorage(
+            currentActivity,
+            fileData!!,
+            fileName,
+            Environment.DIRECTORY_DOWNLOADS,
+            MediaStore.Files.getContentUri("external")
+        )
+        showToast("下载成功!")
     }
 
     Column(

@@ -3,8 +3,7 @@ package com.donut.mixmessage.decode.image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
@@ -15,6 +14,7 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.routes.selectImageAPI
+import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
@@ -25,7 +25,6 @@ import com.donut.mixmessage.util.image.startUploadImage
 import com.donut.mixmessage.util.image.toImageData
 import com.donut.mixmessage.util.objects.MixFileSelector
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 fun selectFile(doSend: Boolean = true, selector: MixFileSelector = DecodeActivity.mixFileSelector) {
@@ -77,8 +76,9 @@ fun selectImage(
             )
         ).apply {
             setContent {
-                val scope = rememberCoroutineScope()
-                val progressContent = ProgressContent("上传中")
+                val progressContent = remember {
+                    ProgressContent("上传中")
+                }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -86,29 +86,27 @@ fun selectImage(
                 ) {
                     progressContent.LoadingContent()
                 }
-                LaunchedEffect(Unit) {
-                    scope.launch(Dispatchers.IO) {
-                        val password = getCurrentPassword()
-                        val url = startUploadImage(
-                            block(data),
-                            password,
-                            progressContent
-                        )
-                        url.isNull {
-                            closeDialog()
-                            showToast("上传失败")
-                            return@launch
-                        }
-                        showToast("上传成功!")
-                        withContext(Dispatchers.Main) {
-                            encoderText =
-                                TextFieldValue(CoderResult.media(url!!, fileName, identifier))
-                            doSend.isTrue {
-                                sendResult(encodeText(encoderText.text, password))
-                            }
-                        }
+                UseEffect {
+                    val password = getCurrentPassword()
+                    val url = startUploadImage(
+                        block(data),
+                        password,
+                        progressContent
+                    )
+                    url.isNull {
                         closeDialog()
+                        showToast("上传失败")
+                        return@UseEffect
                     }
+                    showToast("上传成功!")
+                    withContext(Dispatchers.Main) {
+                        encoderText =
+                            TextFieldValue(CoderResult.media(url!!, fileName, identifier))
+                        doSend.isTrue {
+                            sendResult(encodeText(encoderText.text, password))
+                        }
+                    }
+                    closeDialog()
                 }
             }
             setDefaultNegative()

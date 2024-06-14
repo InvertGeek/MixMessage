@@ -98,7 +98,7 @@ fun EncodeInputComponent(
         },
         maxLines = maxLines,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text("输入内容") }
+        label = "输入内容"
     )
 
     TextField(
@@ -155,9 +155,6 @@ fun EncodeInputComponent(
 fun EncodeComponent() {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "编码", fontSize = 20.sp, fontWeight = FontWeight.Bold) // 指定字体大小为 20sp)
-        EncodeInputComponent() {
-
-        }
-
+        EncodeInputComponent()
     }
 }

@@ -43,6 +43,7 @@ import com.donut.mixmessage.ui.component.routes.settings.routes.AutoDecode
 import com.donut.mixmessage.ui.component.routes.settings.routes.FastSend
 import com.donut.mixmessage.ui.component.routes.settings.routes.ImagePage
 import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
+import com.donut.mixmessage.ui.component.routes.settings.routes.RSAPage
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.performHapticFeedBack
@@ -231,6 +232,9 @@ val Settings = MixNavPage {
     }
     SettingItem(title = "图片上传设置") {
         controller.navigate(ImagePage.name)
+    }
+    SettingItem(title = "非对称加密设置") {
+        controller.navigate(RSAPage.name)
     }
     SettingItem(title = "其他设置") {
         controller.navigate(OtherPage.name)

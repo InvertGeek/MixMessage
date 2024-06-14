@@ -92,24 +92,22 @@ fun CommonSwitch(
 @Composable
 fun ClearableTextField(
     value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     maxLines: Int = Int.MAX_VALUE,
-    label: @Composable () -> Unit = {}
+    label: String = "",
+    onValueChange: (TextFieldValue) -> Unit,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.Bottom
     ) {
-
-
         TextField(
             value = value,
             maxLines = maxLines,
             onValueChange = {
                 onValueChange(it)
             },
-            label = label,
+            label = { Text(text = label)},
 //            textStyle = TextStyle(color = Color.Black), // 可以根据需要设置文本样式
             modifier = Modifier.weight(1f) // 占据剩余空间
         )

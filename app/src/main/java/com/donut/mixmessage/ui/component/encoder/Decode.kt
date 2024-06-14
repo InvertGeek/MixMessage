@@ -3,14 +3,8 @@ package com.donut.mixmessage.ui.component.encoder
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -19,24 +13,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.donut.mixmessage.decode.image.FileContent
-import com.donut.mixmessage.decode.image.ImageContent
-import com.donut.mixmessage.decode.image.VideoContent
 import com.donut.mixmessage.ui.component.common.ClearableTextField
-import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.util.common.TipText
-import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+
 
 @Composable
 fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) {
@@ -46,32 +34,9 @@ fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResu
     val isError = decodeResult.isFail
 
     if (noScroll) {
-        OutlinedCard(
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0x2F69D2FF),
-            ),
-        ) {
-            Column(modifier = Modifier) {
-                SelectionContainer(modifier = Modifier.padding(10.dp)) {
-                    Text(text = decodeResultText)
-                }
-                TipText(content = decodeResult.getInfo()) {
-                    MixDialogBuilder("复制内容到剪贴板?").apply {
-                        setDefaultNegative()
-                        setPositiveButton("确定") {
-                            decodeResultText.copyToClipboard()
-                            closeDialog()
-                        }
-                        show()
-                    }
-                }
-            }
-        }
+        TextCoderResultContent(text = decodeResultText, decodeResult = decodeResult)
         return
     }
-
 
     TextField(
         value = TextFieldValue(decodeResultText),
@@ -87,7 +52,6 @@ fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResu
             )
         }
     )
-
 
     Button(
         onClick = {
@@ -118,7 +82,7 @@ fun DecodeComponent() {
             },
             maxLines = 5,
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("输入内容") }
+            label = "输入内容"
         )
 
         val decodeResult by remember(inputText.text) {
@@ -136,39 +100,4 @@ fun DecodeComponent() {
             Text(text = "解码剪贴板")
         }
     }
-}
-
-@Composable
-fun DecodeResultContent(decodeResult: CoderResult, noScroll: Boolean = true) {
-    @Composable
-    fun Card(block: @Composable UnitBlock) {
-        ElevatedCard(
-            colors = CardDefaults.cardColors(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(200.dp)
-        ) {
-            block()
-        }
-    }
-    decodeResult.isImage { url, fileName ->
-        Card {
-            ImageContent(imageUrl = url, decodeResult.password, fileName)
-        }
-        return
-    }
-
-    decodeResult.isVideo { url, fileName ->
-        Card {
-            VideoContent(url, decodeResult.password, fileName)
-        }
-        return
-    }
-    decodeResult.isFile { url, fileName ->
-        Card {
-            FileContent(url, decodeResult.password, fileName)
-        }
-        return
-    }
-    DecodeTextResultComponent(decodeResult = decodeResult, noScroll = noScroll)
 }

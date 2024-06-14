@@ -1,5 +1,8 @@
 package com.donut.mixmessage.decode
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -43,6 +46,8 @@ import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.common.truncate
+import com.donut.mixmessage.util.encode.RSAUtil
+import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
@@ -73,12 +78,12 @@ fun sendResult(encodeResult: CoderResult) {
     performHapticFeedBack()
     if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
         openPrefixSelectDialog {
-            inputAndSendText(encodeResult.textWithPrefix(it))
+            inputAndSendText(encodeResult.textWithPrefix(it), encodeResult)
             currentActivity.finish()
         }
         return
     }
-    inputAndSendText(encodeResult.textWithPrefix())
+    inputAndSendText(encodeResult.textWithPrefix(), encodeResult)
     currentActivity.finish()
 }
 
@@ -131,6 +136,9 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
             )
             DecodeResultContent(decodeResult = decodeResult)
         }
+//        decodeResult.isPublicKey {
+//            return@DialogContainer
+//        }
         EncodeInputComponent(
             noScroll = true,
             showPasteButton = false,
@@ -149,6 +157,27 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(text = if (hasText) "一键发送" else "选择文件")
+            }
+
+            AnimatedVisibility(
+                visible = encodeResult.originText.contentEquals("rsa", true),
+                enter = slideInVertically { -it },
+                exit = slideOutVertically { -it }
+            ) {
+                Button(
+                    onClick = {
+                        encodeText(
+                            CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKey,
+                            "123"
+                        ).also {
+                            sendResult(it)
+                        }
+                    },
+                    elevation = ButtonDefaults.elevatedButtonElevation(),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = "发送公钥")
+                }
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
 

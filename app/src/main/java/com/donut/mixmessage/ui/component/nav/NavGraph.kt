@@ -20,6 +20,7 @@ import com.donut.mixmessage.ui.component.routes.settings.routes.AutoDecode
 import com.donut.mixmessage.ui.component.routes.settings.routes.FastSend
 import com.donut.mixmessage.ui.component.routes.settings.routes.ImagePage
 import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
+import com.donut.mixmessage.ui.component.routes.settings.routes.RSAPage
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -43,6 +44,7 @@ fun NavContent(innerPaddingValues: PaddingValues) {
                 AboutPage(this)
                 OtherPage(this)
                 ImagePage(this)
+                RSAPage(this)
             }
         }
     }

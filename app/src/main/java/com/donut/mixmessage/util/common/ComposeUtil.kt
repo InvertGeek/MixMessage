@@ -119,7 +119,7 @@ fun performHapticFeedBack(cd: Long = 400L) {
 }
 
 @Composable
-fun TipText(content: String, onClick: () -> Unit) {
+fun TipText(content: String, onClick: () -> Unit = {}) {
     Text(
         text = content,
         color = Color.Gray,

@@ -59,7 +59,7 @@ fun ViewNode.setText(text: String) {
 }
 
 
-fun inputAndSendText(text: String) {
+fun inputAndSendText(text: String, coderResult: CoderResult = CoderResult.Failed) {
 
     if (IS_ACS_ENABLED.isFalse()) {
         return showToast("请先开启无障碍服务")
@@ -69,7 +69,7 @@ fun inputAndSendText(text: String) {
         delay(100)
         val input = findInput()
         input.isNull {
-            openDecodeDialog(result = CoderResult.Failed)
+            openDecodeDialog(result = coderResult)
             delay(200)
             showToast("没有搜索到输入框")
             return@launch

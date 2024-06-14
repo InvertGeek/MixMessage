@@ -8,7 +8,9 @@ import com.donut.mixmessage.util.common.ignoreError
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.subAsString
 import com.donut.mixmessage.util.common.truncate
+import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
+import java.security.PublicKey
 
 data class CoderResult(
     var text: String,
@@ -30,6 +32,8 @@ data class CoderResult(
         const val IMAGE_IDENTIFIER = "__image:"
         const val VIDEO_IDENTIFIER = "__video:"
         const val FILE_IDENTIFIER = "__file:"
+        const val PUBLIC_KEY_IDENTIFIER = "__public_key:"
+        const val PRIVATE_MESSAGE_IDENTIFIER = "__private_message:"
 
         fun failed(text: String) = CoderResult("", "", ShiftEncoder, text, isFail = true)
     }
@@ -57,6 +61,28 @@ data class CoderResult(
 
     inline fun isFile(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
         isMedia(FILE_IDENTIFIER, block)
+
+    inline fun isPublicKey(block: (publicKey: PublicKey) -> Unit = { _ -> }): Boolean {
+        val isPublicKey = text.startsWith(PUBLIC_KEY_IDENTIFIER)
+        isPublicKey.isTrue {
+            ignoreError {
+                val keyStr = text.substring(PUBLIC_KEY_IDENTIFIER.length)
+                val publicKey = RSAUtil.publicKeyFromString(keyStr)
+                block(publicKey)
+            }
+        }
+        return isPublicKey
+    }
+
+    inline fun isPrivateMessage(block: () -> Unit = { }): Boolean {
+        val isPrivateMessage = text.startsWith(PRIVATE_MESSAGE_IDENTIFIER)
+        isPrivateMessage.isTrue {
+            ignoreError {
+                block()
+            }
+        }
+        return isPrivateMessage
+    }
 
     fun getInfo(full: Boolean = false) = """
                     使用的密钥: ${if (full) password else password.truncate(10)} 

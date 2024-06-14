@@ -6,7 +6,7 @@ import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.ignoreError
 import java.security.SecureRandom
 import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 fun generateRandomByteArray(size: Int): ByteArray {
@@ -45,8 +45,8 @@ fun encryptAES(
     ignoreError {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         val secretKey = SecretKeySpec(key, "AES")
-        val ivParameterSpec = IvParameterSpec(iv)
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec)
+        val gcmParameterSpec = GCMParameterSpec(128, iv)
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec)
         return iv + cipher.doFinal(data)
     }
     return byteArrayOf()
@@ -61,8 +61,8 @@ fun decryptAES(data: ByteArray, key: ByteArray): ByteArray {
         val encryptedData = data.copyOfRange(16, data.size)
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         val secretKey = SecretKeySpec(key, "AES")
-        val ivParameterSpec = IvParameterSpec(iv)
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec)
+        val gcmParameterSpec = GCMParameterSpec(128, iv)
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec)
         return cipher.doFinal(encryptedData)
     }
     return byteArrayOf()

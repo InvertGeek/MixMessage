@@ -7,14 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.CommonSwitch
+import com.donut.mixmessage.ui.component.common.LabelSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.nav.MixNavPage
@@ -126,39 +125,30 @@ fun showPasswordsDialog() {
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                FlowRow(
-                    modifier = Modifier,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(text = "时间锁: ", modifier = Modifier.align(Alignment.CenterVertically))
-                    Switch(
-                        checked = USE_TIME_LOCK,
-                        onCheckedChange = {
-                            if (it) {
-                                MixDialogBuilder("确定开启?").apply {
-                                    setContent {
-                                        Text(
-                                            text = """
+                LabelSwitch(checked = USE_TIME_LOCK, label = "时间锁: ") {
+                    if (it) {
+                        MixDialogBuilder("确定开启?").apply {
+                            setContent {
+                                Text(
+                                    text = """
                                             开启后当天加密的内容只会在当天自动解密成功,
                                             会在当前密钥后方添加当前日期后再进行加密,
                                             解密时会自动在所有密钥后方添加日期尝试解密(默认)
                                         """.trimIndent().replace("\n", " ")
-                                        )
-                                    }
-                                    setDefaultNegative()
-                                    setPositiveButton("确定") {
-                                        performHapticFeedBack()
-                                        USE_TIME_LOCK = true
-                                        closeDialog()
-                                    }
-                                    show()
-                                }
-                                return@Switch
+                                )
                             }
-                            performHapticFeedBack()
-                            USE_TIME_LOCK = false
-                        },
-                    )
+                            setDefaultNegative()
+                            setPositiveButton("确定") {
+                                performHapticFeedBack()
+                                USE_TIME_LOCK = true
+                                closeDialog()
+                            }
+                            show()
+                        }
+                        return@LabelSwitch
+                    }
+                    performHapticFeedBack()
+                    USE_TIME_LOCK = false
                 }
                 Button(onClick = { openAddPasswordDialog() }) {
                     Text(text = "添加密钥")

@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +30,7 @@ import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.service.startFloat
 import com.donut.mixmessage.service.stopFloat
 import com.donut.mixmessage.ui.component.common.CommonSwitch
+import com.donut.mixmessage.ui.component.common.LabelSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.copyWhenRefresh
@@ -84,38 +84,29 @@ fun selectDefaultEncoder() {
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                FlowRow(
-                    modifier = Modifier,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(text = "精简模式: ", modifier = Modifier.align(Alignment.CenterVertically))
-                    Switch(
-                        checked = USE_SIMPLE_MODE,
-                        onCheckedChange = {
-                            if (it) {
-                                MixDialogBuilder("确定开启?").apply {
-                                    setContent {
-                                        Text(
-                                            text = """
+                LabelSwitch(checked = USE_SIMPLE_MODE, label = "精简模式: ") {
+                    if (it) {
+                        MixDialogBuilder("确定开启?").apply {
+                            setContent {
+                                Text(
+                                    text = """
                                             开启后将会使用精简模式,输出结果字数更短
                                             占用更少的字数,安全性较低,容易被暴力破解
                                         """.trimIndent().replace("\n", " ")
-                                        )
-                                    }
-                                    setDefaultNegative()
-                                    setPositiveButton("确定") {
-                                        performHapticFeedBack()
-                                        USE_SIMPLE_MODE = true
-                                        closeDialog()
-                                    }
-                                    show()
-                                }
-                                return@Switch
+                                )
                             }
-                            performHapticFeedBack()
-                            USE_SIMPLE_MODE = false
-                        },
-                    )
+                            setDefaultNegative()
+                            setPositiveButton("确定") {
+                                performHapticFeedBack()
+                                USE_SIMPLE_MODE = true
+                                closeDialog()
+                            }
+                            show()
+                        }
+                        return@LabelSwitch
+                    }
+                    performHapticFeedBack()
+                    USE_SIMPLE_MODE = false
                 }
             }
         }

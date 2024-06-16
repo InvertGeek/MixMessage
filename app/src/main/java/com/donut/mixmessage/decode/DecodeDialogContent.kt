@@ -160,14 +160,14 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
             }
 
             AnimatedVisibility(
-                visible = encodeResult.originText.contentEquals("rsa", true),
+                visible = encoderText.text.contentEquals("rsa", true),
                 enter = slideInVertically { -it },
                 exit = slideOutVertically { -it }
             ) {
                 Button(
                     onClick = {
                         encodeText(
-                            CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKey,
+                            CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKeyStr,
                             "123"
                         ).also {
                             sendResult(it)

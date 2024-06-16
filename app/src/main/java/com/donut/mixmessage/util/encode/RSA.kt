@@ -1,5 +1,6 @@
 package com.donut.mixmessage.util.encode
 
+import com.donut.mixmessage.util.common.CachedDelegate
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.decodeBase64
@@ -15,25 +16,30 @@ import javax.crypto.Cipher
 
 @Suppress("MemberVisibilityCanBePrivate")
 object RSAUtil {
-    var publicKey by cachedMutableOf("", "rsa_public_key")
+    var publicKeyStr by cachedMutableOf("", "rsa_public_key")
 
-    var privateKey by cachedMutableOf("", "rsa_private_key")
+    var privateKeyStr by cachedMutableOf("", "rsa_private_key")
 
     init {
-        if (publicKey.isEmpty() || privateKey.isEmpty()) {
+        if (publicKeyStr.isEmpty() || privateKeyStr.isEmpty()) {
             regenerateKeyPair()
         }
     }
 
-    fun getPublicKey() = publicKeyFromString(publicKey)
 
-    fun getPrivateKey() = privateKeyFromString(privateKey)
+    val publicKey by CachedDelegate({ arrayOf(publicKeyStr) }) { publicKeyFromString(publicKeyStr) }
+
+    val privateKey by CachedDelegate({ arrayOf(privateKeyStr) }) {
+        privateKeyFromString(
+            privateKeyStr
+        )
+    }
 
 
     fun regenerateKeyPair() {
         val keyPair = generateKeyPair()
-        publicKey = keyPair.public.encoded.encodeToBase64()
-        privateKey = keyPair.private.encoded.encodeToBase64()
+        publicKeyStr = keyPair.public.encoded.encodeToBase64()
+        privateKeyStr = keyPair.private.encoded.encodeToBase64()
     }
 
     private val keyFactory = KeyFactory.getInstance("RSA")
@@ -55,7 +61,7 @@ object RSAUtil {
         return keyFactory.generatePrivate(string.privateKeySpec())
     }
 
-    fun getCipher() = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
+    fun getCipher(): Cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
 
     fun generateKeyPair(): KeyPair {
         val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -65,7 +71,7 @@ object RSAUtil {
 
     fun encryptRSA(
         data: ByteArray,
-        publicKey: PublicKey = getPublicKey()
+        publicKey: PublicKey = this.publicKey
     ): ByteArray {
         val cipher = getCipher()
         cipher.init(Cipher.ENCRYPT_MODE, publicKey)
@@ -75,7 +81,7 @@ object RSAUtil {
 
     fun decryptRSA(
         data: ByteArray,
-        privateKey: PrivateKey = getPrivateKey()
+        privateKey: PrivateKey = this.privateKey
     ): ByteArray {
         val cipher = getCipher()
         cipher.init(Cipher.DECRYPT_MODE, privateKey)
@@ -84,14 +90,14 @@ object RSAUtil {
 
     fun encryptRSA(
         data: String,
-        publicKey: PublicKey = getPublicKey()
+        publicKey: PublicKey = this.publicKey
     ): String {
         return encryptRSA(data.toByteArray(), publicKey).encodeToBase64()
     }
 
     fun decryptRSA(
         data: String,
-        privateKey: PrivateKey = getPrivateKey()
+        privateKey: PrivateKey = this.privateKey
     ): String {
         catchError {
             return decryptRSA(data.decodeBase64(), privateKey).decodeToString()

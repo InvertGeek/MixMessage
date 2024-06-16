@@ -74,11 +74,16 @@ fun inputAndSendText(text: String, coderResult: CoderResult = CoderResult.Failed
             showToast("没有搜索到输入框")
             return@launch
         }
-        val inputText = input?.text?.toString() ?: ""
-        inputText.isNullOr(inputText.isEmpty() || checkDialogOpenTextValue(inputText)) {
-            input?.setText(text)
+        input!!
+        val inputText = input.text?.toString() ?: ""
+        inputText.isNullOr(
+            inputText.isEmpty()
+                    || checkDialogOpenTextValue(inputText)
+                    || !input.node.isTextSelectable
+        ) {
+            input.setText(text)
         }.isFalse {
-            input?.appendText(" $text")
+            input.appendText(" $text")
         }
         delay(50)
         val button = findSendButton()

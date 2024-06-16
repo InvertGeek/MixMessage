@@ -20,7 +20,9 @@ import com.donut.mixmessage.util.common.performHapticFeedBack
 class MixDialogBuilder(
     private var title: String,
     private val tag: String = title,
-    private val properties: DialogProperties = DialogProperties()
+    private val properties: DialogProperties = DialogProperties(
+//        usePlatformDefaultWidth = false
+    )
 ) {
     private var content = @Composable {}
     private var positiveButton = @Composable {}

@@ -49,6 +49,30 @@ fun CommonColumn(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
+fun LabelSwitch(
+    checked: Boolean,
+    label: String,
+    onCheckedChangeListener: (Boolean) -> Unit = {},
+) {
+    FlowRow(
+        modifier = Modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = {
+                onCheckedChangeListener(it)
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
 fun CommonSwitch(
     checked: Boolean,
     text: String,
@@ -107,7 +131,7 @@ fun ClearableTextField(
             onValueChange = {
                 onValueChange(it)
             },
-            label = { Text(text = label)},
+            label = { Text(text = label) },
 //            textStyle = TextStyle(color = Color.Black), // 可以根据需要设置文本样式
             modifier = Modifier.weight(1f) // 占据剩余空间
         )

@@ -17,7 +17,8 @@ val RSAPage = MixNavPage(
     useTransition = true,
 ) {
     NavTitle(title = "非对称加密设置", showBackIcon = true)
-    Text(text = """
+    Text(
+        text = """
         非对称加密采用RSA算法,
         会为你生成独一无二的公钥和私钥,
         在解密弹窗输入框输入rsa这三个字符,即可出现发送公钥按钮
@@ -27,11 +28,11 @@ val RSAPage = MixNavPage(
         依然无法解密使用你的公钥加密的内容
         推荐用来发送对称加密使用的密钥
         在下方可查看密钥对的公钥(私钥隐藏无法查看)
-    """.trimIndent())
+    """.trimIndent()
+    )
     Text(
-        text = "当前密钥对公钥(点击重新生成): ${RSAUtil.publicKey}",
-        color = colorScheme.primary
-        ,
+        text = "当前密钥对公钥(点击重新生成): ${RSAUtil.publicKeyStr}",
+        color = colorScheme.primary,
         modifier = Modifier.clickable {
             MixDialogBuilder("确定重新生成密钥对?").apply {
                 setPositiveButton("确定") {

@@ -31,6 +31,23 @@ fun String.removeBrackets(): String {
     return this
 }
 
+class CachedDelegate<T>(val getKeys: () -> Array<Any?>, private val initializer: () -> T) {
+    private var cache: T? = null
+    private var keys: Array<Any?> = arrayOf()
+
+    operator fun getValue(thisRef: Any?, property: Any?): T {
+        val newKeys = getKeys()
+        if (cache == null || !keys.contentEquals(newKeys)) {
+            keys = newKeys
+            cache = initializer()
+        }
+        return cache!!
+    }
+
+    operator fun setValue(thisRef: Any?, property: Any?, value: T) {
+        cache = value
+    }
+}
 
 tailrec fun String.hashToMD5String(round: Int = 1): String {
     val digest = calculateHash("MD5")
@@ -169,10 +186,9 @@ inline fun ignoreError(tag: String = "", block: () -> Unit) {
 }
 
 
-fun getCurrentDate(date: Date = Date()): String {
-
+fun getCurrentDate(reverseDays: Long = 0): String {
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    return formatter.format(date)
+    return formatter.format(Date(System.currentTimeMillis() - (reverseDays * 86400 * 1000)))
 }
 
 fun getCurrentTime(): String {

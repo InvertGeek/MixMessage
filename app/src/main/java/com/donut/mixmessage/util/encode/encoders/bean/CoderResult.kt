@@ -3,7 +3,6 @@ package com.donut.mixmessage.util.encode.encoders.bean
 import com.donut.mixmessage.util.common.codePointsString
 import com.donut.mixmessage.util.common.decodeBase64
 import com.donut.mixmessage.util.common.encodeToBase64
-import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.ignoreError
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.subAsString
@@ -20,6 +19,7 @@ data class CoderResult(
 //    val isEncrypt: Boolean,
     val isFail: Boolean = false,
     val isSimple: Boolean = false,
+    var isTimeLock: Boolean = false,
     val prefix: String = textCoder.generatePrefix(),
 ) {
 
@@ -90,7 +90,7 @@ data class CoderResult(
                     长度: ${text.length}
                     原始长度: ${originText.length}
                     ${if (isSimple) "精简模式" else ""}
-                    ${if (password.endsWith(getCurrentDate())) "时间锁" else ""}
+                    ${if (isTimeLock) "时间锁" else ""}
                 """.trimIndent().replace("\n", " ")
 
     fun textWithPrefix(prefixText: String = prefix): String {

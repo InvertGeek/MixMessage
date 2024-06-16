@@ -21,7 +21,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.appScope
@@ -169,5 +171,12 @@ fun UseEffect(
     block: suspend CoroutineScope.() -> Unit
 ) {
     UseEffect(Unit, block = block)
+}
+
+@Composable
+fun screenWidthInDp(): Dp {
+    val configuration = LocalConfiguration.current
+    val screenWidthDp = configuration.screenWidthDp
+    return screenWidthDp.dp
 }
 

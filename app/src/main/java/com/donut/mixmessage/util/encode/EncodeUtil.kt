@@ -10,13 +10,15 @@ import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
 import com.donut.mixmessage.util.encode.encoders.ChineseEncoder
+import com.donut.mixmessage.util.encode.encoders.CuneiEncoder
 import com.donut.mixmessage.util.encode.encoders.EgyptEncoder
 import com.donut.mixmessage.util.encode.encoders.EmojiEncoder
+import com.donut.mixmessage.util.encode.encoders.HangulEncoder
 import com.donut.mixmessage.util.encode.encoders.SCVEncoder
 import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
+import com.donut.mixmessage.util.encode.encoders.YiEncoder
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
-import java.util.Date
 
 val ENCODERS = listOf(
     ShiftEncoder,
@@ -26,7 +28,10 @@ val ENCODERS = listOf(
     EmojiEncoder,
     AlphaNumEncoder,
     EgyptEncoder,
-    ChineseEncoder
+    ChineseEncoder,
+    YiEncoder,
+    HangulEncoder,
+    CuneiEncoder,
 )
 
 
@@ -134,11 +139,12 @@ fun decodeText(text: String): CoderResult {
     ENCODERS.any { coder ->
         coder.isEnabled().isTrueAnd(result.isFail) {
             return@any PASSWORDS.any { password ->
-                (0..TIME_LOCK_REVERSE).map { num -> password + getCurrentDate(Date(System.currentTimeMillis() - (num * 86400 * 1000))) }
+                (0..TIME_LOCK_REVERSE).map { num -> password + getCurrentDate(num) to true }
                     .toMutableList().apply {
-                        add(0, password)
+                        add(0, password to false)
                     }.any {
-                        result = coder.decode(text, it)
+                        result = coder.decode(text, it.first)
+                        result.isTimeLock = it.second
                         result.isFail.isFalse {
                             increaseSuccessDecodeCount()
                         }

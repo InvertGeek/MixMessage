@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MixMessage"
+        android:theme="@style/MixMessage"
         tools:targetApi="31">
         <service
             android:name=".service.MixAccessibilityService"
@@ -55,6 +55,7 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
+            android:theme="@style/MixMessage"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

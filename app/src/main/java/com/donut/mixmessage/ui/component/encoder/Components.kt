@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -13,7 +14,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +31,7 @@ import com.donut.mixmessage.decode.image.ImageContent
 import com.donut.mixmessage.decode.image.VideoContent
 import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.ClearableTextField
+import com.donut.mixmessage.ui.component.common.LabelSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.TipText
@@ -82,7 +83,11 @@ fun TextCoderResultContent(
 }
 
 @Composable
-fun RSAEncryptComponent(decodeResult: CoderResult, publicKey: PublicKey) {
+fun RSAEncryptComponent(
+    decodeResult: CoderResult,
+    publicKey: PublicKey,
+    noScroll: Boolean = true
+) {
     val decodeResultText = remember {
         decodeResult.text.substring(CoderResult.PUBLIC_KEY_IDENTIFIER.length)
     }
@@ -111,17 +116,32 @@ fun RSAEncryptComponent(decodeResult: CoderResult, publicKey: PublicKey) {
             color = colorScheme.primary,
             fontSize = 12.sp
         )
-        ElevatedButton(
-            modifier = Modifier.fillMaxWidth(),
-            enabled = text.text.trim().isNotEmpty(),
-            onClick = {
-                val encryptedText = RSAUtil.encryptRSA(text.text, publicKey)
-                encodeText(CoderResult.PRIVATE_MESSAGE_IDENTIFIER + encryptedText, "123").also {
-                    sendResult(it)
-                }
-            },
-        ) {
-            Text(text = "加密并发送")
+
+        fun getEncodeResult(): CoderResult {
+            val encryptedText = RSAUtil.encryptRSA(text.text, publicKey)
+            return encodeText(CoderResult.PRIVATE_MESSAGE_IDENTIFIER + encryptedText, "123")
+        }
+
+        if (noScroll) {
+            ElevatedButton(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = text.text.trim().isNotEmpty(),
+                onClick = {
+                    sendResult(getEncodeResult())
+                },
+            ) {
+                Text(text = "加密并发送")
+            }
+        } else {
+            ElevatedButton(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = text.text.trim().isNotEmpty(),
+                onClick = {
+                    getEncodeResult().textWithPrefix().copyToClipboard()
+                },
+            ) {
+                Text(text = "复制加密结果")
+            }
         }
     }
 }
@@ -141,7 +161,7 @@ fun RSADecryptComponent(decodeResult: CoderResult) {
     password.isEmpty().isTrue {
         CardTextArea(
             "解密失败",
-            "解密RSA内容失败,可能对方使用了未知的公钥",
+            "解密RSA内容失败,此条消息未使用你的公钥进行加密",
             color = colorScheme.error
         )
         return
@@ -167,38 +187,45 @@ fun RSADecryptComponent(decodeResult: CoderResult) {
                         Text(text = "密钥: $password")
                     }
                     setBottomContent {
+
                         var setDefault by remember {
                             mutableStateOf(false)
                         }
+
+                        var refreshRSA by remember {
+                            mutableStateOf(true)
+                        }
+
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.Center,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            FlowRow(
-                                modifier = Modifier,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                Text(
-                                    text = "设为默认: ",
-                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                )
-                                Switch(
-                                    checked = setDefault,
-                                    onCheckedChange = {
-                                        setDefault = it
-                                    },
-                                )
+                            LabelSwitch(checked = setDefault, label = "设为默认: ") {
+                                setDefault = it
                             }
-                            Button(onClick = {
-                                addPassword(password)
-                                setDefault.isTrue {
-                                    setDefaultPassword(password)
+                            LabelSwitch(checked = refreshRSA, label = "刷新RSA密钥对: ") {
+                                refreshRSA = it
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 10.dp),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Button(onClick = {
+                                    addPassword(password)
+                                    setDefault.isTrue {
+                                        setDefaultPassword(password)
+                                    }
+                                    refreshRSA.isTrue {
+                                        RSAUtil.regenerateKeyPair()
+                                    }
+                                    showToast("添加成功!")
+                                    closeDialog()
+                                }) {
+                                    Text(text = "确认")
                                 }
-                                showToast("添加成功!")
-                                closeDialog()
-                            }) {
-                                Text(text = "确认")
                             }
                         }
                     }
@@ -245,7 +272,7 @@ fun DecodeResultContent(decodeResult: CoderResult, noScroll: Boolean = true) {
     }
     decodeResult.isPublicKey { publicKey ->
         Card {
-            RSAEncryptComponent(decodeResult, publicKey = publicKey)
+            RSAEncryptComponent(decodeResult, publicKey = publicKey, noScroll)
         }
         return
     }
@@ -253,6 +280,7 @@ fun DecodeResultContent(decodeResult: CoderResult, noScroll: Boolean = true) {
         RSADecryptComponent(decodeResult)
         return
     }
+
     DecodeTextResultComponent(decodeResult = decodeResult, noScroll = noScroll)
 
 }

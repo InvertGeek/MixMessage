@@ -1,5 +1,8 @@
 package com.donut.mixmessage.ui.component.encoder
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -7,6 +10,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -32,6 +36,7 @@ import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.DEFAULT_PASSWORD
+import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.USE_TIME_LOCK
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
@@ -148,6 +153,29 @@ fun EncodeInputComponent(
         }
         extra?.invoke(encodeResult)
     }
+    if (showPasteButton) {
+        AnimatedVisibility(
+            visible = encoderText.text.contentEquals("rsa", true),
+            enter = slideInVertically { -it },
+            exit = slideOutVertically { -it }
+        ) {
+            Button(
+                onClick = {
+                    encodeText(
+                        CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKeyStr,
+                        "123"
+                    ).also {
+                        it.textWithPrefix().copyToClipboard()
+                    }
+                },
+                elevation = ButtonDefaults.elevatedButtonElevation(),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(text = "复制公钥")
+            }
+        }
+    }
+
 }
 
 

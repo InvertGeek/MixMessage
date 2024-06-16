@@ -43,9 +43,17 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
         return CoderResult(encodeResultText, password, this, input, isSimple = USE_SIMPLE_MODE)
     }
 
+    private val regex by lazy {
+        Regex(
+            "[^${
+                alphabet.key.toCharArray().joinToString("") { Regex.escape(it.toString()) }
+            }]+"
+        )
+    }
+
     override fun decode(input: String, password: String): CoderResult {
         //按照不在alphabet中的分割
-        val filtered = input.split(Regex("[^${alphabet.key}]+")).filter { it.isNotEmpty() }
+        val filtered = input.split(regex).filter { it.isNotEmpty() }
 
         if (filtered.isEmpty()) {
             return CoderResult.failed(input)

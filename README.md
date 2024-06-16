@@ -3,7 +3,7 @@
 ![1](image.png)\
 安卓平台全自动信息编码解码软件\
 已发布版本: \
-https://gitlab.com/invertgeek1/MixMessage/-/releases \
+https://gitlab.com/ivgeek/MixMessage/-/releases \
 使用帮助: \
 https://gitlab.com/ivgeek/MixMessage/-/wikis/%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9
 ## 特点

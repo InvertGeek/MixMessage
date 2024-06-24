@@ -116,11 +116,14 @@ fun genDecodeInterceptor(password: String): Interceptor {
         val originalResponse = chain.proceed(
             chain.request()
         )
+        val body = originalResponse.body
         val contentLength = originalResponse.header("content-length")?.toInt() ?: 0
         if (contentLength > 1024 * 1024 * 20) {
-            return@Interceptor originalResponse
+            return@Interceptor originalResponse.newBuilder()
+                .header("content-length", "0")
+                .body(byteArrayOf().toResponseBody())
+                .build()
         }
-        val body = originalResponse.body
         val originalBytes = body?.bytes()
         originalBytes.isNull {
             return@Interceptor originalResponse

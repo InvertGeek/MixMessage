@@ -28,6 +28,7 @@ import okhttp3.Interceptor
 import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
@@ -115,6 +116,10 @@ fun genDecodeInterceptor(password: String): Interceptor {
         val originalResponse = chain.proceed(
             chain.request()
         )
+        val contentLength = originalResponse.header("content-length")?.toInt() ?: 0
+        if (contentLength > 1024 * 1024 * 20) {
+            return@Interceptor originalResponse
+        }
         val body = originalResponse.body
         val originalBytes = body?.bytes()
         originalBytes.isNull {
@@ -132,8 +137,20 @@ fun genDecodeInterceptor(password: String): Interceptor {
     }
 }
 
-fun Uri.toByteArray(): ByteArray {
+inline fun <T> Uri.withStream(block: (InputStream) -> T): T? {
     return app.contentResolver.openInputStream(this)?.use {
+        block(it)
+    }
+}
+
+fun Uri.getFileSize(): Long {
+    return withStream {
+        it.available().toLong()
+    } ?: 0
+}
+
+fun Uri.toByteArray(): ByteArray {
+    return withStream {
         it.readBytes()
     } ?: byteArrayOf()
 }

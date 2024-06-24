@@ -3,6 +3,8 @@ package com.donut.mixmessage.util.objects
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.donut.mixmessage.util.common.getFileName
+import com.donut.mixmessage.util.common.showToast
+import com.donut.mixmessage.util.image.getFileSize
 import com.donut.mixmessage.util.image.toByteArray
 
 class MixFileSelector(activity: MixActivity) {
@@ -12,6 +14,11 @@ class MixFileSelector(activity: MixActivity) {
     init {
         fileSelector = activity.registerForActivityResult(ActivityResultContracts.OpenDocument()) {
             it?.let {
+                val size = it.getFileSize()
+                if (size > 20 * 1024 * 1024) {
+                    showToast("文件过大!")
+                    return@let
+                }
                 callback(it.toByteArray(), it.getFileName())
             }
         }

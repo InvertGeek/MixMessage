@@ -136,9 +136,6 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
             )
             DecodeResultContent(decodeResult = decodeResult)
         }
-//        decodeResult.isPublicKey {
-//            return@DialogContainer
-//        }
         EncodeInputComponent(
             noScroll = true,
             showPasteButton = false,

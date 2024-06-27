@@ -1,11 +1,14 @@
 package com.donut.mixmessage.ui.component.routes.password
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -249,45 +252,55 @@ fun LockSettings() {
 
 @Composable
 fun Unlock() {
-    Text(
-        text = "密钥已被锁定",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
-    )
-    Button(onClick = {
-        var inputValue by mutableStateOf("")
-        MixDialogBuilder("输入密码").apply {
-            setContent {
-                OutlinedTextField(value = inputValue, onValueChange = {
-                    inputValue = it
-                }, label = {
-                    Text(text = "输入解锁密码")
-                }, modifier = Modifier.fillMaxWidth())
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = "密钥已被锁定",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            Button(onClick = {
+                var inputValue by mutableStateOf("")
+                MixDialogBuilder("输入密码").apply {
+                    setContent {
+                        OutlinedTextField(value = inputValue, onValueChange = {
+                            inputValue = it
+                        }, label = {
+                            Text(text = "输入解锁密码")
+                        }, modifier = Modifier.fillMaxWidth())
+                    }
+                    setPositiveButton("确认") {
+                        tryUnlock(inputValue.hashToMD5String(100))
+                        closeDialog()
+                    }
+                    show()
+                }
+            }, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "立即解锁", fontSize = 20.sp)
             }
-            setPositiveButton("确认") {
-                tryUnlock(inputValue.hashToMD5String(100))
-                closeDialog()
+            OutlinedButton(onClick = {
+                MixDialogBuilder("确定忽略锁定?").apply {
+                    setContent {
+                        Text(text = "忽略后,密钥列表将会可以访问,但是所有已经加密的密钥无法还原")
+                    }
+                    setPositiveButton("确认") {
+                        ignoreLock()
+                        closeDialog()
+                    }
+                    show()
+                }
+            }, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "忽略锁定", fontSize = 20.sp)
             }
-            show()
         }
-    }, modifier = Modifier.fillMaxWidth()) {
-        Text(text = "立即解锁")
-    }
-    Button(onClick = {
-        MixDialogBuilder("确定忽略锁定?").apply {
-            setContent {
-                Text(text = "忽略后,密钥列表将会可以访问,但是所有已经加密的密钥无法还原")
-            }
-            setPositiveButton("确认") {
-                ignoreLock()
-                closeDialog()
-            }
-            show()
-        }
-    }, modifier = Modifier.fillMaxWidth()) {
-        Text(text = "忽略锁定")
     }
 }
 

@@ -87,9 +87,13 @@ fun sendResult(encodeResult: CoderResult) {
     currentActivity.finish()
 }
 
+var lastDecodeResult = CoderResult.Failed
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DecodeTextDialog(decodeResult: CoderResult) {
+
+    lastDecodeResult = decodeResult
 
     DialogContainer {
         LaunchedEffect(true) {

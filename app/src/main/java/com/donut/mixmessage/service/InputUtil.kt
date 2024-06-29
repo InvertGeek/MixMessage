@@ -9,6 +9,7 @@ import cn.vove7.auto.core.viewfinder.SmartFinder
 import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
+import com.donut.mixmessage.decode.lastDecodeResult
 import com.donut.mixmessage.decode.openDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -69,7 +70,7 @@ fun inputAndSendText(text: String, coderResult: CoderResult = CoderResult.Failed
         delay(100)
         val input = findInput()
         input.isNull {
-            openDecodeDialog(result = coderResult)
+            openDecodeDialog(result = lastDecodeResult)
             delay(200)
             showToast("没有搜索到输入框")
             return@launch
@@ -88,7 +89,7 @@ fun inputAndSendText(text: String, coderResult: CoderResult = CoderResult.Failed
         delay(50)
         val button = findSendButton()
         button.isNull {
-            openDecodeDialog(result = CoderResult.Failed)
+            openDecodeDialog(result = lastDecodeResult)
             delay(200)
             showToast("没有搜索到发送按钮")
             return@launch

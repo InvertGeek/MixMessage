@@ -2,6 +2,7 @@ package com.donut.mixmessage.util.encode
 
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.default
 import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
@@ -54,6 +55,9 @@ var ENCODE_COUNT by cachedMutableOf(0L, "static_encode_count")
 var USE_TIME_LOCK by cachedMutableOf(false, "use_time_lock_encode")
 
 var TIME_LOCK_REVERSE by cachedMutableOf(0, "time_lock_reverse")
+
+
+fun getDefaultEncoder() = ENCODERS.firstOrNull { it.name.contentEquals(DEFAULT_ENCODER) } default ZeroWidthEncoder
 
 fun increaseSuccessDecodeCount() {
     SUCCESS_DECODE_COUNT++
@@ -170,7 +174,7 @@ fun encodeText(text: String, password: String = getCurrentPassword()): CoderResu
     if (text.trim().isEmpty()) {
         return CoderResult.Failed
     }
-    var encoder = ENCODERS.firstOrNull { it.name == DEFAULT_ENCODER } ?: ShiftEncoder
+    var encoder = getDefaultEncoder()
     USE_RANDOM_ENCODER.isTrue { encoder = ENCODERS.random() }
     return encoder.encode(
         text.trim(), password

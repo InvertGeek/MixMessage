@@ -30,6 +30,7 @@ import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import com.donut.mixmessage.util.image.apis.bb.sCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -138,14 +139,25 @@ fun TipText(content: String, onClick: () -> Unit = {}) {
 
 @Composable
 fun UrlContent(url: String) {
-    TipText("文件地址: ${url.truncate(50)}") {
+    val hiddenUrl = url.run {
+        this.startsWith("肞駌矨銍瘷昅鯚信夹://増擾挸礣.騝蒱厏菪灂萺萦齫鑸.南缞瀻/".sCode)
+            .isTrue {
+                return@run "HIDDEN"
+            }
+        this
+    }
+    TipText(
+        "文件地址: ${
+            hiddenUrl.truncate(50)
+        }"
+    ) {
         MixDialogBuilder("复制地址到剪贴板?").apply {
             setDefaultNegative()
             setContent {
-                Text(text = url)
+                Text(text = hiddenUrl)
             }
             setPositiveButton("确定") {
-                url.copyToClipboard()
+                hiddenUrl.copyToClipboard()
                 closeDialog()
             }
             show()

@@ -50,15 +50,17 @@ class ProgressContent(
     private var contentLength: Long by mutableLongStateOf(0)
 
     val interceptor = ProgressInterceptor { bytes, length, done ->
-        bytesWritten = bytes
-        contentLength = length.coerceAtLeast(1)
-        progress = bytesWritten.toFloat() / contentLength.toFloat()
+        updateProgress(bytes, length)
     }
 
     val ktorListener: suspend (bytesWritten: Long, bytesTotal: Long) -> Unit = { bytes, length ->
-        bytesWritten = bytes
-        contentLength = length.coerceAtLeast(1)
-        progress = bytesWritten.toFloat() / contentLength.toFloat()
+        updateProgress(bytes, length)
+    }
+
+    fun updateProgress(written: Long = bytesWritten, total: Long = contentLength) {
+        bytesWritten = written
+        contentLength = total.coerceAtLeast(1)
+        progress = written.toFloat() / total.toFloat()
     }
 
     @Composable
@@ -70,6 +72,12 @@ class ProgressContent(
             tip = tip,
             show
         )
+    }
+
+    fun increaseBytesWritten(bytes: Long, total: Long) {
+        bytesWritten += bytes
+        contentLength = total.coerceAtLeast(1)
+        updateProgress()
     }
 
 }

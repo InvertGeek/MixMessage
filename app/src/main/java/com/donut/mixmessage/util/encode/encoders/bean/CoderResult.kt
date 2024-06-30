@@ -8,7 +8,7 @@ import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.subAsString
 import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.RSAUtil
-import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
+import com.donut.mixmessage.util.encode.getDefaultEncoder
 import java.security.PublicKey
 
 data class CoderResult(
@@ -28,14 +28,14 @@ data class CoderResult(
             return "$identifier${url.encodeToBase64()}|${fileName.encodeToBase64()}"
         }
 
-        val Failed = CoderResult("", "", ShiftEncoder, "", isFail = true)
+        val Failed = CoderResult("", "", getDefaultEncoder(), "", isFail = true)
         const val IMAGE_IDENTIFIER = "__image:"
         const val VIDEO_IDENTIFIER = "__video:"
         const val FILE_IDENTIFIER = "__file:"
         const val PUBLIC_KEY_IDENTIFIER = "__public_key:"
         const val PRIVATE_MESSAGE_IDENTIFIER = "__private_message:"
 
-        fun failed(text: String) = CoderResult("", "", ShiftEncoder, text, isFail = true)
+        fun failed(text: String) = Failed.copy(text = text)
     }
 
 

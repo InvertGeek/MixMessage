@@ -12,7 +12,6 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 class ExampleUnitTest {
 
 
-
     @OptIn(ExperimentalEncodingApi::class)
     @Test
     fun addition_isCorrect() {

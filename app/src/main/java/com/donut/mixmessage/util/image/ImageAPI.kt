@@ -9,6 +9,7 @@ import com.donut.mixmessage.util.common.toInt
 import com.donut.mixmessage.util.encode.encryptAES
 import com.donut.mixmessage.util.encode.getCurrentPassword
 import com.donut.mixmessage.util.image.apis.FreeImageHost
+import com.donut.mixmessage.util.image.apis.bb.BB
 import com.donut.mixmessage.util.image.apis.bfs.BFS
 import com.donut.mixmessage.util.image.apis.imgbb.IMGBB
 import com.donut.mixmessage.util.image.apis.smms.SMMS
@@ -30,13 +31,14 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 
-var CURRENT_IMAGE_API by cachedMutableOf(SMMS.name, "current_image_api")
+var CURRENT_IMAGE_API by cachedMutableOf(BB.name, "current_image_api")
 
 val IMAGE_APIS = listOf(
     SMMS,
     IMGBB,
     BFS,
-    FreeImageHost
+    FreeImageHost,
+    BB
 )
 
 suspend fun startUploadImage(

@@ -50,7 +50,7 @@ class CachedDelegate<T>(val getKeys: () -> Array<Any?>, private val initializer:
 }
 
 tailrec fun String.hashToMD5String(round: Int = 1): String {
-    val digest = calculateHash("MD5")
+    val digest = hashMD5()
     val sb = StringBuilder()
     for (b in digest) {
         sb.append(String.format("%02x", b))

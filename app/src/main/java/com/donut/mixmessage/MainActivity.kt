@@ -30,6 +30,7 @@ import com.donut.mixmessage.ui.component.routes.password.Unlock
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isFalseAnd
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.performHapticFeedBack
@@ -42,25 +43,30 @@ var ACS_NOTIFY by cachedMutableOf(true, "acs_service_notify")
 
 class MainActivity : MixActivity(MAIN_ID) {
 
+    private var notified = false
+
     override fun onResume() {
         checkOverlayPermission()
         super.onResume()
-        IS_ACS_ENABLED.isFalseAnd(ACS_NOTIFY) {
-            MixDialogBuilder("提示").apply {
-                setContent {
-                    Text(text = "无障碍权限未开启,是否进入设置?")
-                    LaunchedEffect(IS_ACS_ENABLED) {
-                        IS_ACS_ENABLED.isTrue {
-                            closeDialog()
+        notified.isFalse {
+            notified = true
+            IS_ACS_ENABLED.isFalseAnd(ACS_NOTIFY) {
+                MixDialogBuilder("提示").apply {
+                    setContent {
+                        Text(text = "无障碍权限未开启,是否进入设置?")
+                        LaunchedEffect(IS_ACS_ENABLED) {
+                            IS_ACS_ENABLED.isTrue {
+                                closeDialog()
+                            }
                         }
                     }
+                    setDefaultNegative()
+                    setPositiveButton("确定") {
+                        checkAccessibilityPermission()
+                        closeDialog()
+                    }
+                    show()
                 }
-                setDefaultNegative()
-                setPositiveButton("确定") {
-                    checkAccessibilityPermission()
-                    closeDialog()
-                }
-                show()
             }
         }
     }

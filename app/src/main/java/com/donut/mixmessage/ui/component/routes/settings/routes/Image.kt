@@ -9,12 +9,14 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.routes.settings.SettingButton
 import com.donut.mixmessage.ui.theme.colorScheme
+import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.image.CURRENT_IMAGE_API
 import com.donut.mixmessage.util.image.IMAGE_APIS
 import com.donut.mixmessage.util.image.IMAGE_COMPRESS_RATE
@@ -45,6 +47,8 @@ fun selectImageAPI() {
     }
 }
 
+var ENABLE_IMAGE_COMPRESS by cachedMutableOf(false, "ENABLE_IMAGE_COMPRESS")
+
 @OptIn(ExperimentalLayoutApi::class)
 val ImagePage = MixNavPage(
     gap = 10.dp,
@@ -66,6 +70,13 @@ val ImagePage = MixNavPage(
                 IMAGE_COMPRESS_RATE = (it * 100).toLong()
             }
         )
+    }
+    CommonSwitch(
+        checked = ENABLE_IMAGE_COMPRESS,
+        text = "启用图片压缩:",
+        "启用后发送图片时将会进行有损压缩(建议上传失败时启用)",
+    ) {
+        ENABLE_IMAGE_COMPRESS = it
     }
     SettingButton(text = "图片API: $CURRENT_IMAGE_API") {
         selectImageAPI()

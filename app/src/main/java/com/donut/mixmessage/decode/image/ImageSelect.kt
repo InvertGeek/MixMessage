@@ -13,6 +13,7 @@ import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.encoderText
+import com.donut.mixmessage.ui.component.routes.settings.routes.ENABLE_IMAGE_COMPRESS
 import com.donut.mixmessage.ui.component.routes.settings.routes.selectImageAPI
 import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isNull
@@ -35,7 +36,7 @@ fun selectFile(doSend: Boolean = true, selector: MixFileSelector = DecodeActivit
                     "图片" -> selectImage(
                         doSend = doSend,
                         selector = selector
-                    ) { data -> data.toImageData() }
+                    ) { data -> if (ENABLE_IMAGE_COMPRESS) data.toImageData() else data }
 
                     "视频" -> selectImage(
                         "video/*",

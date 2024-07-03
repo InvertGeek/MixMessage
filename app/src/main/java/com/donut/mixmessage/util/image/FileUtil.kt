@@ -18,7 +18,6 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.genRandomString
 import com.donut.mixmessage.util.common.isFalse
-import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.encode.decryptAES
 import io.ktor.http.Headers
@@ -116,19 +115,9 @@ fun genDecodeInterceptor(password: String): Interceptor {
         val originalResponse = chain.proceed(
             chain.request()
         )
-        val body = originalResponse.body
-        val contentLength = originalResponse.header("content-length")?.toInt() ?: 0
-        if (contentLength > 1024 * 1024 * 20) {
-            return@Interceptor originalResponse.newBuilder()
-                .header("content-length", "0")
-                .body(byteArrayOf().toResponseBody())
-                .build()
-        }
-        val originalBytes = body?.bytes()
-        originalBytes.isNull {
-            return@Interceptor originalResponse
-        }
-        originalBytes!!
+        val maxFileSize = 25 * 1024 * 1024L
+        val body = originalResponse.peekBody(maxFileSize)
+        val originalBytes = body.bytes()
         val fileData = decryptAES(
             splitArray(originalBytes).second,
             password

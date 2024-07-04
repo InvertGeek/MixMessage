@@ -97,11 +97,21 @@ tailrec fun Long.pow(exp: Int, acc: Long = 1): Long =
     if (exp == 0) acc else this.pow(exp - 1, acc * this)
 
 inline fun Boolean?.isTrueAnd(condition: Boolean, block: UnitBlock = {}): Boolean {
-    if (isTrue() && condition) {
-        block()
+    return (isTrue() && condition).also {
+        if (it) {
+            block()
+        }
     }
-    return isTrue() && condition
 }
+
+inline fun Boolean?.isTrueOr(condition: Boolean, block: UnitBlock = {}): Boolean {
+    return (isTrue() || condition).also {
+        if (it) {
+            block()
+        }
+    }
+}
+
 
 inline fun Boolean?.isFalse(block: UnitBlock = {}): Boolean {
     if (this == false) {

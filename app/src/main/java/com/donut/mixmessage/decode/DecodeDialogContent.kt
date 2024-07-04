@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.decode.image.selectFile
 import com.donut.mixmessage.service.inputAndSendText
@@ -50,6 +51,11 @@ import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 fun openPrefixSelectDialog(callback: (String) -> Unit) {
@@ -74,17 +80,24 @@ fun openPrefixSelectDialog(callback: (String) -> Unit) {
     }
 }
 
+suspend fun selectPrefix(): String = suspendCoroutine {
+    openPrefixSelectDialog { prefix ->
+        it.resume(prefix)
+    }
+}
+
 fun sendResult(encodeResult: CoderResult) {
     performHapticFeedBack()
-    if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
-        openPrefixSelectDialog {
-            inputAndSendText(encodeResult.textWithPrefix(it), encodeResult)
-            currentActivity.finish()
+    appScope.launch(Dispatchers.IO) {
+        var prefix = encodeResult.prefix
+        if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
+            withContext(Dispatchers.Main) {
+                prefix = selectPrefix()
+            }
         }
-        return
+        currentActivity.finish()
+        inputAndSendText(encodeResult.textWithPrefix(prefix))
     }
-    inputAndSendText(encodeResult.textWithPrefix(), encodeResult)
-    currentActivity.finish()
 }
 
 var lastDecodeResult = CoderResult.Failed

@@ -8,7 +8,6 @@ import cn.vove7.auto.core.viewfinder.ConditionGroup
 import cn.vove7.auto.core.viewfinder.SmartFinder
 import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
-import com.donut.mixmessage.appScope
 import com.donut.mixmessage.decode.lastDecodeResult
 import com.donut.mixmessage.decode.openDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
@@ -16,14 +15,11 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
-import com.donut.mixmessage.util.common.isNullOr
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.common.toInt
-import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -59,45 +55,58 @@ fun ViewNode.setText(text: String) {
     }
 }
 
-
-fun inputAndSendText(text: String, coderResult: CoderResult = CoderResult.Failed) {
-
-    if (IS_ACS_ENABLED.isFalse()) {
-        return showToast("请先开启无障碍服务")
+fun ViewNode?.getText(): String {
+    this.isNull {
+        return ""
     }
+    this!!
+    val node = this.node
+    node.refresh()
+    node.isTextSelectable.isFalse {
+        return ""
+    }
+    return node.text?.toString() ?: ""
+}
 
-    appScope.launch(Dispatchers.IO) {
-        delay(100)
-        val input = findInput()
-        input.isNull {
-            openDecodeDialog(result = lastDecodeResult)
-            delay(200)
-            showToast("没有搜索到输入框")
-            return@launch
-        }
-        input!!
-        val inputText = input.text?.toString() ?: ""
-        inputText.isNullOr(
-            inputText.isEmpty()
-                    || checkDialogOpenTextValue(inputText)
-                    || !input.node.isTextSelectable
-        ) {
-            input.setText(text)
-        }.isFalse {
-            input.appendText(" $text")
-        }
-        delay(50)
-        val button = findSendButton()
-        button.isNull {
-            openDecodeDialog(result = lastDecodeResult)
-            delay(200)
-            showToast("没有搜索到发送按钮")
-            return@launch
-        }
-        withContext(Dispatchers.Main) {
-            encoderText = TextFieldValue()
-        }
-        button?.click()
+suspend fun trySendText(text: String, input: ViewNode?, originalInputText: String): String? {
+    if (IS_ACS_ENABLED.isFalse()) {
+        return "请先开启无障碍服务"
+    }
+    input.isNull {
+        return "没有搜索到输入框"
+    }
+    input!!
+    if (originalInputText.isEmpty() || checkDialogOpenTextValue(originalInputText)) {
+        input.setText(text)
+    } else input.appendText(" $text")
+    delay(50)
+    val currentText = input.getText()
+    if (!currentText.endsWith(text)) {
+        return "内容超过字数限制: ${text.length}/${currentText.length}"
+    }
+    val button = findSendButton()
+    button.isNull {
+        return "没有搜索到发送按钮"
+    }
+    withContext(Dispatchers.Main) {
+        encoderText = TextFieldValue()
+    }
+    button?.click()
+    return null
+}
+
+
+suspend fun inputAndSendText(text: String) {
+    delay(100)
+    val input = findInput()
+    val originalInputText = input.getText()
+    val sendResult = trySendText(text, input, originalInputText)
+    if (sendResult != null) {
+        input?.setText(originalInputText)
+        openDecodeDialog(result = lastDecodeResult)
+        delay(200)
+        showToast(sendResult)
+        return
     }
 }
 

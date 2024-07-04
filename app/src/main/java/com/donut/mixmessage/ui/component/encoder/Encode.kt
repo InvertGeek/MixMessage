@@ -114,7 +114,7 @@ fun EncodeInputComponent(
         maxLines = maxLines,
         placeholder = { Text("编码结果") },
         supportingText = {
-            Text(text = encodeResult.getInfo())
+            Text(text = encodeResult.getInfo(prefixLength = encodeResult.prefix.length))
         }
     )
     FlowRow(

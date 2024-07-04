@@ -84,10 +84,10 @@ data class CoderResult(
         return isPrivateMessage
     }
 
-    fun getInfo(full: Boolean = false) = """
+    fun getInfo(full: Boolean = false, prefixLength: Int = 0) = """
                     使用的密钥: ${if (full) password else password.truncate(10)} 
                     加密方法: ${textCoder.name}
-                    长度: ${text.length}
+                    长度: ${text.length + prefixLength}
                     原始长度: ${originText.length}
                     ${if (isSimple) "精简模式" else ""}
                     ${if (isTimeLock) "时间锁" else ""}

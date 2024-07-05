@@ -57,7 +57,8 @@ var USE_TIME_LOCK by cachedMutableOf(false, "use_time_lock_encode")
 var TIME_LOCK_REVERSE by cachedMutableOf(0, "time_lock_reverse")
 
 
-fun getDefaultEncoder() = ENCODERS.firstOrNull { it.name.contentEquals(DEFAULT_ENCODER) } default ZeroWidthEncoder
+fun getDefaultEncoder() =
+    ENCODERS.firstOrNull { it.name.contentEquals(DEFAULT_ENCODER) } default ZeroWidthEncoder
 
 fun increaseSuccessDecodeCount() {
     SUCCESS_DECODE_COUNT++

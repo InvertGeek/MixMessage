@@ -1,9 +1,9 @@
-package com.donut.mixmessage.util.encode.encoders.bean;
+package com.donut.mixmessage.util.encode.encoders.bean
 
 import com.donut.mixmessage.kv
 
 
-public interface TextCoder {
+interface TextCoder {
 
 
     val name: String

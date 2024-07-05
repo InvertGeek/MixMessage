@@ -16,7 +16,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         referenceCache[id] = mutableSetOf()
     }
 
-    var isActive = false;
+    var isActive = false
     var lastPause = System.currentTimeMillis()
 
     companion object {

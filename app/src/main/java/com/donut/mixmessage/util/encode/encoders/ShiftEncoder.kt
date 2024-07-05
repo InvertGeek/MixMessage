@@ -186,7 +186,7 @@ object ShiftEncoder : TextCoder {
         val encodeText = replaceMap.entries.fold(input) { acc, entry ->
             acc.replace(entry.key, entry.value)
         }
-        val encodeResultText = moveEncText(encodeText, password.ifEmpty { "123" });
+        val encodeResultText = moveEncText(encodeText, password.ifEmpty { "123" })
         return CoderResult(
             encodeResultText,
             password,

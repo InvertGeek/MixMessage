@@ -1,4 +1,4 @@
-package com.donut.mixmessage.util.encode.encoders;
+package com.donut.mixmessage.util.encode.encoders
 
 import com.donut.mixmessage.util.encode.encoders.bean.AlphabetCoder
 

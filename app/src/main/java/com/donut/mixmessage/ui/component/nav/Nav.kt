@@ -42,9 +42,7 @@ fun NavComponent() {
                 enter = slideInVertically { it } + fadeIn(tween()),
                 exit = slideOutVertically { it }
             ) {
-                NavigationBar(
-//                    containerColor = colorScheme.secondary
-                ) {
+                NavigationBar {
                     @Composable
                     fun NavButton(text: String, icon: ImageVector, jumpTo: String) {
                         NavigationBarItem(

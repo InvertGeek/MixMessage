@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
-import androidx.navigation.navigation
 import com.donut.mixmessage.ui.component.routes.Home
 import com.donut.mixmessage.ui.component.routes.password.Passwords
 import com.donut.mixmessage.ui.component.routes.settings.Settings
@@ -20,6 +19,7 @@ import com.donut.mixmessage.ui.component.routes.settings.routes.AutoDecode
 import com.donut.mixmessage.ui.component.routes.settings.routes.FastSend
 import com.donut.mixmessage.ui.component.routes.settings.routes.ImagePage
 import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
+import com.donut.mixmessage.ui.component.routes.settings.routes.PrefixPage
 import com.donut.mixmessage.ui.component.routes.settings.routes.RSAPage
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -37,14 +37,14 @@ fun NavContent(innerPaddingValues: PaddingValues) {
         ) {
             Home(this)
             Passwords(this)
-            navigation(startDestination = Settings.name, route = "settings") {
-                Settings(this)
+            Settings(this).also {
                 AutoDecode(this)
                 FastSend(this)
                 AboutPage(this)
                 OtherPage(this)
                 ImagePage(this)
                 RSAPage(this)
+                PrefixPage(this)
             }
         }
     }

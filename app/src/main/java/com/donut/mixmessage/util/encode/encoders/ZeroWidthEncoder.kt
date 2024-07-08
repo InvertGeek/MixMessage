@@ -1,6 +1,10 @@
 package com.donut.mixmessage.util.encode.encoders
 
+import com.donut.mixmessage.decode.lastDecodeResult
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.encode.IdiomPrefix
+import com.donut.mixmessage.util.encode.PoemPrefix
 import com.donut.mixmessage.util.encode.encoders.bean.AlphabetCoder
 import kotlin.random.Random
 
@@ -30,8 +34,22 @@ object ZeroWidthEncoder : AlphabetCoder(
 
     var encodePrefix by cachedMutableOf("x%r%r%r", "zero_width_encode_result_prefix")
 
+    var usePoemPrefix by cachedMutableOf(false, "zero_width_use_poem_prefix")
+
+    var useIdiomPrefix by cachedMutableOf(false, "zero_width_use_idiom_prefix")
+
+
+    fun removeInvisibleChars(text: String) = text.replace(Regex("[\\s\\uFE00-\\uFE0f]"), "")
+
 
     override fun generatePrefix(): String {
+        val lastText = lastDecodeResult.originText
+        useIdiomPrefix.isTrue {
+            return IdiomPrefix.getIdiomByPrefix(lastText)
+        }
+        usePoemPrefix.isTrue {
+            return PoemPrefix.getPoemPrefix(lastText)
+        }
         return encodePrefix.replace(Regex("%r")) {
             Random.nextInt(10).toString()
         }.replace(Regex("%e")) {

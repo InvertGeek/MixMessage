@@ -13,7 +13,6 @@ import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.component.routes.settings.SettingButton
-import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
 import com.donut.mixmessage.ui.theme.Theme
 import com.donut.mixmessage.ui.theme.currentTheme
 import com.donut.mixmessage.ui.theme.enableAutoDarkMode
@@ -21,21 +20,11 @@ import com.donut.mixmessage.util.common.ENABLE_HAPTIC_FEEDBACK
 import com.donut.mixmessage.util.common.LogoUtil
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.TIME_LOCK_REVERSE
-import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.objects.MixActivity
 import okhttp3.internal.toLongOrDefault
 
 val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "其他设置", showBackIcon = true)
-    OutlinedTextField(
-        value = ZeroWidthEncoder.encodePrefix,
-        onValueChange = { newValue ->
-            ZeroWidthEncoder.encodePrefix = newValue
-        },
-        maxLines = 1,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text("空位加密前缀 %r=随机数字 %e=随机表情") }
-    )
     OutlinedTextField(
         value = TIME_LOCK_REVERSE.toString(),
         onValueChange = { newValue ->
@@ -45,13 +34,6 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
         modifier = Modifier.fillMaxWidth(),
         label = { Text("时间锁回溯(天),尝试使用过去的日期解密内容") }
     )
-    CommonSwitch(
-        checked = useDefaultPrefix,
-        text = "一键发送时使用自动前缀(空位加密):",
-        "关闭则每次手动输入前缀",
-    ) {
-        useDefaultPrefix = it
-    }
     CommonSwitch(
         checked = START_BLANK_SCREEN,
         text = "启动白屏:",

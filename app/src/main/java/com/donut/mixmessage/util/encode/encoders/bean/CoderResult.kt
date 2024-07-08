@@ -28,7 +28,7 @@ data class CoderResult(
             return "$identifier${url.encodeToBase64()}|${fileName.encodeToBase64()}"
         }
 
-        val Failed = CoderResult("", "", getDefaultEncoder(), "", isFail = true)
+        val Failed = CoderResult("", "", getDefaultEncoder(), "", isFail = true, prefix = "")
         const val IMAGE_IDENTIFIER = "__image:"
         const val VIDEO_IDENTIFIER = "__video:"
         const val FILE_IDENTIFIER = "__file:"

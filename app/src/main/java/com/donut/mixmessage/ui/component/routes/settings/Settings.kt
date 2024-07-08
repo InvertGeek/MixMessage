@@ -40,9 +40,9 @@ import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.nav.getNavController
 import com.donut.mixmessage.ui.component.routes.settings.routes.AboutPage
 import com.donut.mixmessage.ui.component.routes.settings.routes.AutoDecode
-import com.donut.mixmessage.ui.component.routes.settings.routes.FastSend
 import com.donut.mixmessage.ui.component.routes.settings.routes.ImagePage
 import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
+import com.donut.mixmessage.ui.component.routes.settings.routes.PrefixPage
 import com.donut.mixmessage.ui.component.routes.settings.routes.RSAPage
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -215,24 +215,22 @@ val Settings = MixNavPage {
     }
 
     val controller = getNavController()
-    SettingItem(title = "自动解码设置") {
-        controller.navigate(AutoDecode.name)
+
+    @Composable
+    fun SettingPage(title: String, path: String) {
+        SettingItem(title = title) {
+            controller.navigate(path)
+        }
     }
-    SettingItem(title = "一键发送设置") {
-        controller.navigate(FastSend.name)
-    }
-    SettingItem(title = "图片上传设置") {
-        controller.navigate(ImagePage.name)
-    }
-    SettingItem(title = "非对称加密设置") {
-        controller.navigate(RSAPage.name)
-    }
-    SettingItem(title = "其他设置") {
-        controller.navigate(OtherPage.name)
-    }
-    SettingItem(title = "关于") {
-        controller.navigate(AboutPage.name)
-    }
+
+    SettingPage("自动解码设置", AutoDecode.name)
+    SettingPage("一键发送设置", PrefixPage.name)
+    SettingPage("图片上传设置", ImagePage.name)
+    SettingPage("非对称加密设置", RSAPage.name)
+    SettingPage("前缀设置", PrefixPage.name)
+    SettingPage("其他设置", OtherPage.name)
+    SettingPage("关于", AboutPage.name)
+
 }
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MixMessage" parent="android:Theme.Material.Light.NoActionBar" >
+    <style name="MixMessage" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowMinWidthMajor">95%</item>
         <item name="android:windowMinWidthMinor">95%</item>
     </style>

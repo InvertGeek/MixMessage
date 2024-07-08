@@ -73,7 +73,7 @@ fun openPrefixSelectDialog(callback: (String) -> Unit) {
             )
         }
         setPositiveButton("确认发送") {
-            callback(prefix)
+            callback(ZeroWidthEncoder.removeInvisibleChars(prefix))
             closeDialog()
         }
         show()

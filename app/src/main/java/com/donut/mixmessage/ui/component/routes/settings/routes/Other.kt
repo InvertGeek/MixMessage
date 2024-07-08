@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.ACS_NOTIFY
+import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
@@ -18,10 +19,13 @@ import com.donut.mixmessage.ui.theme.currentTheme
 import com.donut.mixmessage.ui.theme.enableAutoDarkMode
 import com.donut.mixmessage.util.common.ENABLE_HAPTIC_FEEDBACK
 import com.donut.mixmessage.util.common.LogoUtil
+import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.TIME_LOCK_REVERSE
 import com.donut.mixmessage.util.objects.MixActivity
 import okhttp3.internal.toLongOrDefault
+
+var ALLOW_SCREENSHOT by cachedMutableOf(false, "allow_screenshot")
 
 val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "其他设置", showBackIcon = true)
@@ -50,6 +54,14 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
         "点击等操作时提供触觉反馈",
     ) {
         ENABLE_HAPTIC_FEEDBACK = it
+    }
+    CommonSwitch(
+        checked = ALLOW_SCREENSHOT,
+        text = "允许截图:",
+        "是否允许在APP进行截图",
+    ) {
+        ALLOW_SCREENSHOT = it
+        currentActivity.refreshAllowScreenShot()
     }
     SettingButton(text = "APP伪装: ") {
         MixDialogBuilder("APP伪装").apply {

@@ -82,7 +82,7 @@ suspend fun trySendText(text: String, input: ViewNode?, originalInputText: Strin
     } else input.appendText(" $text")
     delay(50)
     val currentText = input.getText()
-    if (DETECT_TEXT_LENGTH && !currentText.contains(text)) {
+    if (DETECT_TEXT_LENGTH && !currentText.contains(text) && currentText.isNotEmpty()) {
         return "内容超过字数限制: ${(if (originalInputText.isEmpty()) 0 else originalInputText.length + 1) + text.length}/${currentText.length}"
     }
     val button = findSendButton()

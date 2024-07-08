@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
 import android.os.Looper
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
@@ -38,7 +37,7 @@ lateinit var kv: MMKV
 private lateinit var innerApp: Application
 
 
-val currentActivity: ComponentActivity
+val currentActivity: MixActivity
     get() {
         return MixActivity.firstActiveActivity()!!
     }

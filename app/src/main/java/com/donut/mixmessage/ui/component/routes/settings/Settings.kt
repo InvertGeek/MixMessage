@@ -40,6 +40,7 @@ import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.nav.getNavController
 import com.donut.mixmessage.ui.component.routes.settings.routes.AboutPage
 import com.donut.mixmessage.ui.component.routes.settings.routes.AutoDecode
+import com.donut.mixmessage.ui.component.routes.settings.routes.FastSend
 import com.donut.mixmessage.ui.component.routes.settings.routes.ImagePage
 import com.donut.mixmessage.ui.component.routes.settings.routes.OtherPage
 import com.donut.mixmessage.ui.component.routes.settings.routes.PrefixPage
@@ -224,7 +225,7 @@ val Settings = MixNavPage {
     }
 
     SettingPage("自动解码设置", AutoDecode.name)
-    SettingPage("一键发送设置", PrefixPage.name)
+    SettingPage("一键发送设置", FastSend.name)
     SettingPage("图片上传设置", ImagePage.name)
     SettingPage("非对称加密设置", RSAPage.name)
     SettingPage("前缀设置", PrefixPage.name)

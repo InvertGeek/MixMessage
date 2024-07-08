@@ -5,7 +5,9 @@ package com.donut.mixmessage.util.objects
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import com.donut.mixmessage.ui.component.routes.settings.routes.ALLOW_SCREENSHOT
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
@@ -38,6 +40,25 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         referenceCache[id]?.remove(this)
     }
 
+    fun allowScreenshot() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+    }
+
+    fun forbidScreenshot() {
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+    }
+
+    fun refreshAllowScreenShot(){
+        if (ALLOW_SCREENSHOT) {
+            allowScreenshot()
+        } else {
+            forbidScreenshot()
+        }
+    }
+
     override fun onPause() {
         isActive = false
         lastPause = System.currentTimeMillis()
@@ -53,6 +74,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
 //                AccessibilityApi.requireBaseAccessibility()
             }
         }
+        refreshAllowScreenShot()
         super.onResume()
     }
 

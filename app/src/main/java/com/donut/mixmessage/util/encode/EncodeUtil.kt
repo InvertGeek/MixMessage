@@ -86,7 +86,7 @@ fun setUseRandomEncoder(useRandomEncoder: Boolean) {
 }
 
 fun modifyPasswords(action: MutableSet<String>.() -> Unit) {
-    PASSWORDS = PASSWORDS.toMutableSet().apply(action)
+    PASSWORDS = HashSet(PASSWORDS.toMutableSet().apply(action))
 }
 
 fun addPassword(password: String) {
@@ -94,6 +94,16 @@ fun addPassword(password: String) {
     modifyPasswords {
         add(password)
     }
+}
+
+fun getPasswordIndex(password: String, isTimeLock: Boolean = false): Int {
+    password.isEmpty().isTrue {
+        return -1
+    }
+    isTimeLock.isTrue {
+        return PASSWORDS.indexOf(password.substring(0, password.length - getCurrentDate().length))
+    }
+    return PASSWORDS.indexOf(password)
 }
 
 fun setDefaultPassword(password: String) {
@@ -150,8 +160,14 @@ fun decodeText(text: String): CoderResult {
                     }.any {
                         result = coder.decode(text, it.first)
                         result.isTimeLock = it.second
-                        result.isFail.isFalse {
-                            increaseSuccessDecodeCount()
+                        val isSuccess = !result.isFail
+                        isSuccess.apply {
+                            isTrue {
+                                increaseSuccessDecodeCount()
+                            }
+                            isFalse {
+                                result.isTimeLock = false
+                            }
                         }
                     }
             }
@@ -183,5 +199,7 @@ fun encodeText(text: String, password: String = getCurrentPassword()): CoderResu
         if (!it.isFail) {
             increaseEncodeCount()
         }
+    }.apply {
+        isTimeLock = USE_TIME_LOCK
     }
 }

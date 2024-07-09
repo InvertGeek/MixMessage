@@ -3,9 +3,9 @@ package com.donut.mixmessage.util.encode.encoders
 import com.donut.mixmessage.decode.lastDecodeResult
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isTrue
-import com.donut.mixmessage.util.encode.IdiomPrefix
-import com.donut.mixmessage.util.encode.PoemPrefix
 import com.donut.mixmessage.util.encode.encoders.bean.AlphabetCoder
+import com.donut.mixmessage.util.encode.prefix.IdiomPrefix
+import com.donut.mixmessage.util.encode.prefix.PoemPrefix
 import kotlin.random.Random
 
 
@@ -39,7 +39,7 @@ object ZeroWidthEncoder : AlphabetCoder(
     var useIdiomPrefix by cachedMutableOf(false, "zero_width_use_idiom_prefix")
 
 
-    fun removeInvisibleChars(text: String) = text.replace(Regex("[\\s\\uFE00-\\uFE0f]"), "")
+    fun removeInvisibleChars(text: String) = text.replace(Regex("[\\s\\uFE00-\\uFE0f\\u200b]"), "")
 
 
     override fun generatePrefix(): String {

@@ -58,7 +58,7 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
     CommonSwitch(
         checked = ALLOW_SCREENSHOT,
         text = "允许截图:",
-        "是否允许在APP进行截图",
+        "是否允许在APP进行截图(建议禁用,可防止截屏录屏和其他应用读取屏幕内容)",
     ) {
         ALLOW_SCREENSHOT = it
         currentActivity.refreshAllowScreenShot()

@@ -9,7 +9,10 @@ import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
+import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
+
+var ADD_ZERO_WIDTH_PREFIX by cachedMutableOf(true, "add_zero_width_prefix")
 
 val PrefixPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "空位加密前缀(伪装文本)设置", showBackIcon = true)
@@ -28,6 +31,13 @@ val PrefixPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = 
         "关闭则每次手动输入前缀",
     ) {
         useDefaultPrefix = it
+    }
+    CommonSwitch(
+        checked = ADD_ZERO_WIDTH_PREFIX,
+        text = "前缀中嵌入额外零宽字符:",
+        "在前缀中加入额外一个不可见字符防止影响第一个字符显示样式",
+    ) {
+        ADD_ZERO_WIDTH_PREFIX = it
     }
     CommonSwitch(
         checked = ZeroWidthEncoder.usePoemPrefix,

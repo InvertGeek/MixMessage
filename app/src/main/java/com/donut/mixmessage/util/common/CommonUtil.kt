@@ -153,6 +153,8 @@ fun Uri.getFileName(): String {
     return fileName
 }
 
+fun readRawText(id: Int) = app.resources.openRawResource(id).readBytes().decodeToString()
+
 typealias UnitBlock = () -> Unit
 
 fun readClipBoardText(): String {

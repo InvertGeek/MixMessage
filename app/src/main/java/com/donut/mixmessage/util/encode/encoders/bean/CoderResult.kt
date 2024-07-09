@@ -1,14 +1,15 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
+import com.donut.mixmessage.ui.component.routes.settings.routes.ADD_ZERO_WIDTH_PREFIX
 import com.donut.mixmessage.util.common.codePointsString
 import com.donut.mixmessage.util.common.decodeBase64
 import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.ignoreError
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.subAsString
-import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.getDefaultEncoder
+import com.donut.mixmessage.util.encode.getPasswordIndex
 import java.security.PublicKey
 
 data class CoderResult(
@@ -84,14 +85,25 @@ data class CoderResult(
         return isPrivateMessage
     }
 
+    private fun Boolean.trueText(trueText: String, falseText: String = "") =
+        if (this) trueText else falseText
+
     fun getInfo(full: Boolean = false, prefixLength: Int = 0) = """
-                    使用的密钥: ${if (full) password else password.truncate(10)} 
+                    ${full.trueText("使用的密钥: $password")}
+                    ${(!full).trueText("密钥编号: #${getPasswordIndex(password, isTimeLock)}")}
                     加密方法: ${textCoder.name}
-                    长度: ${text.length + prefixLength}
+                    长度: ${text.length + prefixLength + getZeroWidthCharPrefix().length}
                     原始长度: ${originText.length}
-                    ${if (isSimple) "精简模式" else ""}
-                    ${if (isTimeLock) "时间锁" else ""}
+                    ${isSimple.trueText("精简模式")}
+                    ${isTimeLock.trueText("时间锁")}
                 """.trimIndent().replace("\n", " ")
+
+    private fun getZeroWidthCharPrefix(): String {
+        if (ADD_ZERO_WIDTH_PREFIX) {
+            return "\u200b"
+        }
+        return ""
+    }
 
     fun textWithPrefix(prefixText: String = prefix): String {
         text.isEmpty().isTrue {
@@ -99,9 +111,9 @@ data class CoderResult(
         }
         val codePoints = prefixText.codePointsString()
         if (codePoints.size > 1) {
-            return codePoints[0] + text + codePoints.subAsString(1)
+            return codePoints[0] + getZeroWidthCharPrefix() + text + codePoints.subAsString(1)
         }
-        return "$prefixText$text"
+        return "$prefixText${getZeroWidthCharPrefix()}$text"
     }
 
 }

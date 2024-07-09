@@ -9,7 +9,7 @@ fun <T> constructCachedMutableValue(
     value: T,
     key: String,
     setVal: (value: T) -> Unit,
-    getVal: () -> T
+    getVal: () -> T,
 ) =
     object : CachedMutableValue<T>(value, key) {
         override fun readCachedValue(): T {
@@ -40,14 +40,16 @@ fun cachedMutableOf(value: Set<String>, key: String) =
         value,
         key,
         { kv.encode(key, it) },
-        { kv.decodeStringSet(key, value) ?: setOf() })
+        { kv.decodeStringSet(key, value) ?: setOf() },
+    )
 
 
-abstract class CachedMutableValue<T>(value: T, private val key: String) {
+abstract class CachedMutableValue<T>(
+    value: T,
+    private val key: String,
+) {
     var value by mutableStateOf(value)
     private var loaded = false
-
-
     abstract fun readCachedValue(): T
 
     abstract fun writeCachedValue(value: T)

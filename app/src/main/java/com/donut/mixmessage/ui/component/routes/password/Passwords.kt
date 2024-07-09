@@ -45,6 +45,7 @@ import com.donut.mixmessage.util.encode.clearAllPassword
 import com.donut.mixmessage.util.encode.decryptAESBase64
 import com.donut.mixmessage.util.encode.encryptAESBase64
 import com.donut.mixmessage.util.encode.exportAllPassword
+import com.donut.mixmessage.util.encode.getPasswordIndex
 import com.donut.mixmessage.util.encode.importPasswords
 import com.donut.mixmessage.util.encode.removePassword
 
@@ -118,7 +119,9 @@ fun showPasswordsDialog() {
     MixDialogBuilder("密钥列表").apply {
         setContent {
             val passList = PASSWORDS.toList().reversed()
-            SingleSelectItemList(passList, DEFAULT_PASSWORD) {
+            SingleSelectItemList(passList, DEFAULT_PASSWORD, {
+                "#${getPasswordIndex(it)} $it"
+            }) {
                 openPasswordDialog(it)
             }
         }

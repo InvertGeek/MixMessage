@@ -51,7 +51,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         )
     }
 
-    fun refreshAllowScreenShot(){
+    fun refreshAllowScreenShot() {
         if (ALLOW_SCREENSHOT) {
             allowScreenshot()
         } else {

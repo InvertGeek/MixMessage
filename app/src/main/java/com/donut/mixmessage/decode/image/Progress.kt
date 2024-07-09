@@ -60,7 +60,7 @@ class ProgressContent(
     fun updateProgress(written: Long = bytesWritten, total: Long = contentLength) {
         bytesWritten = written
         contentLength = total.coerceAtLeast(1)
-        progress = written.toFloat() / total.toFloat()
+        progress = bytesWritten.toFloat() / contentLength.toFloat()
     }
 
     @Composable

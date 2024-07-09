@@ -52,15 +52,17 @@ fun openPasswordDialog(passwordText: String) {
             showToast("设置成功")
             it()
         }
-        setNegativeButton("删除密钥") {
-            if (passwordText == "123" || passwordText == DEFAULT_PASSWORD) {
-                showToast("默认密钥不能删除")
-                return@setNegativeButton
-            }
-            openCommonConfirmDialog("删除该密钥") {
-                removePassword(passwordText)
-                showToast("删除成功")
-                it()
+        if (!passwordText.contentEquals("123")) {
+            setNegativeButton("删除密钥") {
+                if (passwordText.contentEquals(DEFAULT_PASSWORD)) {
+                    showToast("默认密钥不能删除")
+                    return@setNegativeButton
+                }
+                openCommonConfirmDialog("删除该密钥") {
+                    removePassword(passwordText)
+                    showToast("删除成功")
+                    it()
+                }
             }
         }
         show()

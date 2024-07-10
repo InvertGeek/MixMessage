@@ -107,6 +107,10 @@ class DecodeActivity : MixActivity("decode") {
 
 }
 
+fun reOpenDecodeDialog(){
+    openDecodeDialog(result = lastDecodeResult)
+}
+
 
 fun openDecodeDialog(text: String = "", result: CoderResult? = null) {
     if (System.currentTimeMillis() - LAST_FORCE_CLOSE < 3000) {

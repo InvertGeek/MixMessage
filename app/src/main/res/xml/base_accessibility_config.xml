@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityEventTypes="typeViewClicked|typeViewLongClicked|typeViewTextSelectionChanged"
     android:accessibilityFeedbackType="feedbackAllMask"
     android:accessibilityFlags="flagIncludeNotImportantViews|flagReportViewIds|flagRetrieveInteractiveWindows|flagRequestEnhancedWebAccessibility"
-    android:canRetrieveWindowContent="true"
-    android:canRequestFilterKeyEvents="true"
-    android:canRequestTouchExplorationMode="true"
-    android:description="@string/auto_decode_desc"
-    android:notificationTimeout="10"
     android:canPerformGestures="true"
     android:canRequestEnhancedWebAccessibility="true"
+    android:canRequestFilterKeyEvents="true"
+    android:canRequestTouchExplorationMode="true"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/auto_decode_desc"
+    android:notificationTimeout="10"
     android:settingsActivity=".MainActivity"
     android:summary="MixMessage自动解码" /><!--    android:canRequestFilterKeyEvents="true"-->
     <!--flagRequestFilterKeyEvents-->

@@ -118,8 +118,9 @@ fun genDecodeInterceptor(password: String): Interceptor {
         val maxFileSize = 25 * 1024 * 1024L
         val body = originalResponse.peekBody(maxFileSize)
         val originalBytes = body.bytes()
+        val data = splitArray(originalBytes).second
         val fileData = decryptAES(
-            splitArray(originalBytes).second,
+            data,
             password
         )
         originalResponse.newBuilder()

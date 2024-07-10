@@ -8,8 +8,7 @@ import cn.vove7.auto.core.viewfinder.ConditionGroup
 import cn.vove7.auto.core.viewfinder.SmartFinder
 import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
-import com.donut.mixmessage.decode.lastDecodeResult
-import com.donut.mixmessage.decode.openDecodeDialog
+import com.donut.mixmessage.decode.reOpenDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.routes.DETECT_TEXT_LENGTH
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -108,7 +107,7 @@ suspend fun inputAndSendText(text: String) {
     val sendResult = trySendText(text, input, originalInputText)
     if (sendResult != null) {
         input?.setText(originalInputText)
-        openDecodeDialog(result = lastDecodeResult)
+        reOpenDecodeDialog()
         delay(200)
         showToast(sendResult)
         return

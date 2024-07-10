@@ -46,14 +46,16 @@ suspend fun startUploadImage(
     password: String = getCurrentPassword(),
     progressContent: ProgressContent
 ): String? {
+    val currentUploader = IMAGE_APIS.maxByOrNull {
+        (CURRENT_IMAGE_API == it.name).toInt()
+    }!!
     val encryptedFileData = encryptAES(fileData, password)
     val blankImage = createBlankBitmap(50, 50)
     val useGif = CURRENT_IMAGE_API.contentEquals(BFS.name)
     val blankImageData = blankImage.compressToByteArray(webpQuality = 0, gifHeader = useGif)
     val byteArray = combineArray(blankImageData, encryptedFileData)
-    return IMAGE_APIS.maxByOrNull {
-        (CURRENT_IMAGE_API == it.name).toInt()
-    }!!.uploadImage(byteArray, progressContent)
+
+    return currentUploader.uploadImage(byteArray, progressContent)
 }
 
 

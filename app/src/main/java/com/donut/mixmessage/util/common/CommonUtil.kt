@@ -3,6 +3,7 @@ package com.donut.mixmessage.util.common
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.provider.Settings
@@ -16,6 +17,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+
 
 fun String.copyToClipboard(showToast: Boolean = true) {
     val clipboard = getClipBoard()
@@ -205,6 +207,22 @@ fun genRandomString(length: Int = 32): String {
         .map { kotlin.random.Random.nextInt(0, charPool.size) }
         .map(charPool::get)
         .joinToString("")
+}
+
+
+
+fun hasIntentHandler(intent: Intent): Boolean {
+    return intent.resolveActivity(app.packageManager).isNotNull()
+}
+
+
+fun isValidUri(uriString: String): Boolean {
+    try {
+        val uri = Uri.parse(uriString)
+        return uri != null && uri.scheme != null
+    } catch (e: Exception) {
+        return false
+    }
 }
 
 fun showError(e: Throwable, tag: String = "") {

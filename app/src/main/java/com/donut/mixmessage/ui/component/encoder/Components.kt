@@ -1,5 +1,7 @@
 package com.donut.mixmessage.ui.component.encoder
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -26,9 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.donut.mixmessage.app
+import com.donut.mixmessage.appScope
+import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.decode.image.FileContent
 import com.donut.mixmessage.decode.image.ImageContent
 import com.donut.mixmessage.decode.image.VideoContent
+import com.donut.mixmessage.decode.reOpenDecodeDialog
 import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.ClearableTextField
 import com.donut.mixmessage.ui.component.common.LabelSwitch
@@ -38,12 +44,15 @@ import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.common.isValidUri
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.addPassword
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.encode.setDefaultPassword
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.security.PublicKey
 
 @Composable
@@ -79,7 +88,41 @@ fun TextCoderResultContent(
     decodeResult: CoderResult,
     color: Color = Color.Unspecified
 ) {
-    CardTextArea(text, decodeResult.getInfo(), color)
+    val isUri = remember(decodeResult) {
+        isValidUri(decodeResult.text)
+    }
+
+    CardTextArea(
+        text,
+        decodeResult.getInfo(),
+        if (color == Color.Unspecified && isUri) colorScheme.primary else color
+    )
+
+    if (isUri) {
+        val intent = remember(decodeResult) {
+            Intent(Intent.ACTION_VIEW, Uri.parse(decodeResult.text)).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
+        ElevatedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                appScope.launch {
+                    currentActivity.finish()
+                    delay(200)
+                    try {
+                        app.startActivity(intent)
+                    } catch (e: Exception) {
+                        delay(200)
+                        reOpenDecodeDialog()
+                        showToast("没有可以处理此Uri的应用")
+                    }
+                }
+            },
+        ) {
+            Text(text = "跳转此Uri")
+        }
+    }
 }
 
 @Composable

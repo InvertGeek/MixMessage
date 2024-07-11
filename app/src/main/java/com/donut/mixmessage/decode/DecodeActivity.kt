@@ -107,7 +107,7 @@ class DecodeActivity : MixActivity("decode") {
 
 }
 
-fun reOpenDecodeDialog(){
+fun reOpenDecodeDialog() {
     openDecodeDialog(result = lastDecodeResult)
 }
 

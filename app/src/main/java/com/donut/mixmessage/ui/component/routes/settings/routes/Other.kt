@@ -1,20 +1,25 @@
 package com.donut.mixmessage.ui.component.routes.settings.routes
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.ACS_NOTIFY
+import com.donut.mixmessage.LocalLockVisible
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
+import com.donut.mixmessage.ui.component.routes.settings.CALCULATOR_LOCK
 import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.component.routes.settings.SettingButton
 import com.donut.mixmessage.ui.theme.Theme
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.ui.theme.currentTheme
 import com.donut.mixmessage.ui.theme.enableAutoDarkMode
 import com.donut.mixmessage.util.common.ENABLE_HAPTIC_FEEDBACK
@@ -23,30 +28,51 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.TIME_LOCK_REVERSE
 import com.donut.mixmessage.util.objects.MixActivity
-import okhttp3.internal.toLongOrDefault
 
 var ALLOW_SCREENSHOT by cachedMutableOf(false, "allow_screenshot")
 
 val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
     NavTitle(title = "其他设置", showBackIcon = true)
-    OutlinedTextField(
-        value = TIME_LOCK_REVERSE.toString(),
-        onValueChange = { newValue ->
-            TIME_LOCK_REVERSE = newValue.toLongOrDefault(0).coerceAtLeast(0).coerceAtMost(10)
-        },
-        maxLines = 1,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text("时间锁回溯(天),尝试使用过去的日期解密内容") }
-    )
+    Column {
+        Text(
+            modifier = Modifier.padding(10.dp, 0.dp),
+            text = "时间锁回溯(天),尝试使用过去的日期解密内容: $TIME_LOCK_REVERSE",
+            color = colorScheme.primary
+        )
+        Slider(
+            value = TIME_LOCK_REVERSE.toFloat() / 10f,
+            steps = 100,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = {
+                TIME_LOCK_REVERSE = (it * 10).toLong()
+            }
+        )
+    }
+    val visible = LocalLockVisible.current
     CommonSwitch(
         checked = START_BLANK_SCREEN,
         text = "启动白屏:",
         "开启后APP启动显示白屏(双指放大解锁)",
     ) {
         if (it) {
+            CALCULATOR_LOCK = false
+            visible.value = false
             showToast("使用双指放大解锁")
         }
         START_BLANK_SCREEN = it
+    }
+
+    CommonSwitch(
+        checked = CALCULATOR_LOCK,
+        text = "计算器锁定:",
+        "开启后APP启动显示计算器(输入66/66后点击等号解锁)",
+    ) {
+        if (it) {
+            START_BLANK_SCREEN = false
+            visible.value = false
+            showToast("输入66/66后点击等号解锁")
+        }
+        CALCULATOR_LOCK = it
     }
     CommonSwitch(
         checked = ENABLE_HAPTIC_FEEDBACK,

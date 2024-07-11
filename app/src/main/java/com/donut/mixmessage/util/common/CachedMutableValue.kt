@@ -40,7 +40,7 @@ fun cachedMutableOf(value: Set<String>, key: String) =
         value,
         key,
         { kv.encode(key, it) },
-        { kv.decodeStringSet(key, value) ?: setOf() },
+        { kv.decodeStringSet(key, value)!! },
     )
 
 

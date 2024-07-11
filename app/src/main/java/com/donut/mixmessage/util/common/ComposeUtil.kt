@@ -1,8 +1,12 @@
 package com.donut.mixmessage.util.common
 
+import android.annotation.SuppressLint
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
@@ -191,4 +196,31 @@ fun screenWidthInDp(): Dp {
     val screenWidthDp = configuration.screenWidthDp
     return screenWidthDp.dp
 }
+
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun WebViewComponent(url: String) {
+    GenWebViewClient {
+        loadUrl(url)
+    }
+}
+
+
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun GenWebViewClient(modifier: Modifier = Modifier, block: WebView.() -> Unit) =
+    AndroidView(factory = { context ->
+        WebView(context).apply {
+            webViewClient = WebViewClient()
+            settings.apply {
+                domStorageEnabled = true
+                javaScriptEnabled = true
+                allowUniversalAccessFromFileURLs = true
+                allowContentAccess = true
+                allowFileAccessFromFileURLs = true
+                mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            }
+            block()
+        }
+    }, modifier = modifier)
 

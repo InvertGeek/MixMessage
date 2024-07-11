@@ -210,7 +210,6 @@ fun genRandomString(length: Int = 32): String {
 }
 
 
-
 fun hasIntentHandler(intent: Intent): Boolean {
     return intent.resolveActivity(app.packageManager).isNotNull()
 }

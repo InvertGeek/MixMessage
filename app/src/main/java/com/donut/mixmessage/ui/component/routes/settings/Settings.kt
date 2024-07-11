@@ -64,6 +64,8 @@ var enableFloat by cachedMutableOf(false, "enable_float")
 
 var useDefaultPrefix by cachedMutableOf(true, "use_default_prefix")
 
+var CALCULATOR_LOCK by cachedMutableOf(false, "calculator_lock")
+
 var START_BLANK_SCREEN by cachedMutableOf(false, "start_blank_screen")
 
 

@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.ACS_NOTIFY
-import com.donut.mixmessage.LocalLockVisible
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
@@ -28,6 +27,7 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.TIME_LOCK_REVERSE
 import com.donut.mixmessage.util.objects.MixActivity
+import com.donut.mixmessage.visible
 
 var ALLOW_SCREENSHOT by cachedMutableOf(false, "allow_screenshot")
 
@@ -48,7 +48,7 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
             }
         )
     }
-    val visible = LocalLockVisible.current
+
     CommonSwitch(
         checked = START_BLANK_SCREEN,
         text = "启动白屏:",
@@ -56,7 +56,7 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
     ) {
         if (it) {
             CALCULATOR_LOCK = false
-            visible.value = false
+            visible = false
             showToast("使用双指放大解锁")
         }
         START_BLANK_SCREEN = it
@@ -69,7 +69,7 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
     ) {
         if (it) {
             START_BLANK_SCREEN = false
-            visible.value = false
+            visible = false
             showToast("输入66/66后点击等号解锁")
         }
         CALCULATOR_LOCK = it

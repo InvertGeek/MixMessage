@@ -12,7 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
-import com.donut.mixmessage.LocalDestination
+import com.donut.mixmessage.lastDestination
 import com.donut.mixmessage.ui.component.routes.Home
 import com.donut.mixmessage.ui.component.routes.password.Passwords
 import com.donut.mixmessage.ui.component.routes.settings.Settings
@@ -35,10 +35,9 @@ fun NavContent(innerPaddingValues: PaddingValues) {
             .fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         val controller = getNavController()
-        val lastDestination = LocalDestination.current
         LaunchedEffect(Unit) {
-            if (lastDestination.value.isNotBlank()) {
-                controller.navigate(lastDestination.value) {
+            if (lastDestination.isNotBlank()) {
+                controller.navigate(lastDestination) {
                     anim {
                         enter = 0
                         exit = 0
@@ -49,7 +48,7 @@ fun NavContent(innerPaddingValues: PaddingValues) {
             }
             controller.addOnDestinationChangedListener { controller, destination, _ ->
                 destination.route?.let {
-                    lastDestination.value = it
+                    lastDestination = it
                 }
             }
         }

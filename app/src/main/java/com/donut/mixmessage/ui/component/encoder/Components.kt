@@ -98,7 +98,7 @@ fun TextCoderResultContent(
         if (color == Color.Unspecified && isUri) colorScheme.primary else color
     )
 
-    if (isUri) {
+    if (isUri && !decodeResult.isPublicKey()) {
         val intent = remember(decodeResult) {
             Intent(Intent.ACTION_VIEW, Uri.parse(decodeResult.text)).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -115,6 +115,7 @@ fun TextCoderResultContent(
                     } catch (e: Exception) {
                         delay(200)
                         reOpenDecodeDialog()
+                        delay(200)
                         showToast("没有可以处理此Uri的应用")
                     }
                 }

@@ -28,8 +28,7 @@ import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 @Composable
 fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResult) {
-    val decodeResultText = decodeResult.text
-        .ifEmpty { "解码失败" }
+    val decodeResultText = if (decodeResult.isFail) "解码失败" else decodeResult.text
 
     val isError = decodeResult.isFail
 

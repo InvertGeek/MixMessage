@@ -158,7 +158,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
             showPasteButton = false,
             useTextButton = true
         ) { encodeResult ->
-            val hasText = encodeResult.textWithPrefix().isNotEmpty()
+            val hasText = encodeResult.textWithPrefix.isNotEmpty()
             Button(
                 onClick = {
                     hasText.isFalse {
@@ -219,7 +219,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
 
                 ) {
                     Text(
-                        text = if (encodeResult.textWithPrefix()
+                        text = if (encodeResult.textWithPrefix
                                 .isNotEmpty()
                         ) "关闭并清空" else "关闭"
                     )

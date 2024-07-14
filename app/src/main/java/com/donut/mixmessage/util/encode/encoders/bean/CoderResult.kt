@@ -1,12 +1,9 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
-import com.donut.mixmessage.ui.component.routes.settings.routes.ADD_ZERO_WIDTH_PREFIX
-import com.donut.mixmessage.util.common.codePointsString
 import com.donut.mixmessage.util.common.decodeBase64
 import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.ignoreError
 import com.donut.mixmessage.util.common.isTrue
-import com.donut.mixmessage.util.common.subAsString
 import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.getDefaultEncoder
 import com.donut.mixmessage.util.encode.getPasswordIndex
@@ -17,11 +14,12 @@ data class CoderResult(
     val password: String,
     val textCoder: TextCoder,
     var originText: String,
-//    val isEncrypt: Boolean,
+    var isEncrypt: Boolean = false,
     val isFail: Boolean = false,
     val isSimple: Boolean = false,
     var isTimeLock: Boolean = false,
     val prefix: String = textCoder.generatePrefix(),
+    var textWithPrefix: String = textCoder.textWithPrefix(prefix, text)
 ) {
 
     companion object {
@@ -36,7 +34,7 @@ data class CoderResult(
         const val PUBLIC_KEY_IDENTIFIER = "__public_key:"
         const val PRIVATE_MESSAGE_IDENTIFIER = "__private_message:"
 
-        fun failed(text: String) = Failed.copy(text = text)
+        fun failed(text: String) = Failed.copy(originText = text)
     }
 
 
@@ -88,32 +86,19 @@ data class CoderResult(
     private fun Boolean.trueText(trueText: String, falseText: String = "") =
         if (this) trueText else falseText
 
-    fun getInfo(full: Boolean = false, prefixLength: Int = 0) = """
+    fun getInfo(full: Boolean = false) = """
                     ${full.trueText("使用的密钥: $password")}
                     ${(!full).trueText("密钥编号: #${getPasswordIndex(password, isTimeLock)}")}
                     加密方法: ${textCoder.name}
-                    长度: ${text.length + prefixLength + getZeroWidthCharPrefix().length}
+                    长度: ${textWithPrefix.length}
                     原始长度: ${originText.length}
                     ${isSimple.trueText("精简模式")}
                     ${isTimeLock.trueText("时间锁")}
                 """.trimIndent().replace("\n", " ")
 
-    private fun getZeroWidthCharPrefix(): String {
-        if (ADD_ZERO_WIDTH_PREFIX) {
-            return "\u200b"
-        }
-        return ""
-    }
 
     fun textWithPrefix(prefixText: String = prefix): String {
-        text.isEmpty().isTrue {
-            return text
-        }
-        val codePoints = prefixText.codePointsString()
-        if (codePoints.size > 1) {
-            return codePoints[0] + getZeroWidthCharPrefix() + text + codePoints.subAsString(1)
-        }
-        return "$prefixText${getZeroWidthCharPrefix()}$text"
+        return textCoder.textWithPrefix(prefixText, text)
     }
 
 }

@@ -182,7 +182,7 @@ fun RSAEncryptComponent(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = text.text.trim().isNotEmpty(),
                 onClick = {
-                    getEncodeResult().textWithPrefix().copyToClipboard()
+                    getEncodeResult().textWithPrefix.copyToClipboard()
                 },
             ) {
                 Text(text = "复制加密结果")

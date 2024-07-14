@@ -16,6 +16,10 @@ interface TextCoder {
         return ""
     }
 
+    fun textWithPrefix(prefixText: String = generatePrefix(), text: String): String {
+        return "$prefixText$text"
+    }
+
 
     fun checkText(input: String): Boolean {
         return input.isNotEmpty()

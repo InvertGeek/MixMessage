@@ -1,8 +1,11 @@
 package com.donut.mixmessage.util.encode.encoders
 
 import com.donut.mixmessage.decode.lastDecodeResult
+import com.donut.mixmessage.ui.component.routes.settings.routes.ADD_ZERO_WIDTH_PREFIX
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.codePointsString
 import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.common.subAsString
 import com.donut.mixmessage.util.encode.encoders.bean.AlphabetCoder
 import com.donut.mixmessage.util.encode.prefix.IdiomPrefix
 import com.donut.mixmessage.util.encode.prefix.PoemPrefix
@@ -40,6 +43,25 @@ object ZeroWidthEncoder : AlphabetCoder(
 
 
     fun removeInvisibleChars(text: String) = text.replace(Regex("[\\s\\uFE00-\\uFE0f\\u200b]"), "")
+
+
+    override fun textWithPrefix(prefixText: String, text: String): String {
+        text.isEmpty().isTrue {
+            return text
+        }
+        val codePoints = prefixText.codePointsString()
+        if (codePoints.size > 1) {
+            return codePoints[0] + getZeroWidthCharPrefix() + text + codePoints.subAsString(1)
+        }
+        return "$prefixText${getZeroWidthCharPrefix()}$text"
+    }
+
+    private fun getZeroWidthCharPrefix(): String {
+        if (ADD_ZERO_WIDTH_PREFIX) {
+            return "\u200b"
+        }
+        return ""
+    }
 
 
     override fun generatePrefix(): String {

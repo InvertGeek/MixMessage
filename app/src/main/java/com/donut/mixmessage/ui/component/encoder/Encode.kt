@@ -107,14 +107,14 @@ fun EncodeInputComponent(
     )
 
     TextField(
-        value = TextFieldValue(encodeResult.textWithPrefix()),
+        value = TextFieldValue(encodeResult.textWithPrefix),
         onValueChange = {},
         modifier = Modifier.fillMaxWidth(),
         readOnly = true,
         maxLines = maxLines,
         placeholder = { Text("编码结果") },
         supportingText = {
-            Text(text = encodeResult.getInfo(prefixLength = encodeResult.prefix.length))
+            Text(text = encodeResult.getInfo())
         }
     )
     FlowRow(
@@ -128,12 +128,12 @@ fun EncodeInputComponent(
             if (!copyWhenRefresh) {
                 return@EncodeButton showToast("刷新成功")
             }
-            encodeResult.textWithPrefix().copyToClipboard()
+            encodeResult.textWithPrefix.copyToClipboard()
             showToast("刷新并复制成功")
         }
 
         EncodeButton("复制结果", useTextButton = useTextButton) {
-            encodeResult.textWithPrefix().copyToClipboard()
+            encodeResult.textWithPrefix.copyToClipboard()
             showToast("复制结果成功")
         }
 
@@ -165,7 +165,7 @@ fun EncodeInputComponent(
                         CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKeyStr,
                         "123"
                     ).also {
-                        it.textWithPrefix().copyToClipboard()
+                        it.textWithPrefix.copyToClipboard()
                     }
                 },
                 elevation = ButtonDefaults.elevatedButtonElevation(),

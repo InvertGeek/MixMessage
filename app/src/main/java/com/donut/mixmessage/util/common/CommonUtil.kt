@@ -3,7 +3,6 @@ package com.donut.mixmessage.util.common
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.provider.Settings
@@ -209,10 +208,6 @@ fun genRandomString(length: Int = 32): String {
         .joinToString("")
 }
 
-
-fun hasIntentHandler(intent: Intent): Boolean {
-    return intent.resolveActivity(app.packageManager).isNotNull()
-}
 
 
 fun isValidUri(uriString: String): Boolean {

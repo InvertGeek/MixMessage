@@ -99,8 +99,9 @@ fun TextCoderResultContent(
     )
 
     if (isUri && !decodeResult.isPublicKey()) {
+        val uri = Uri.parse(decodeResult.text)
         val intent = remember(decodeResult) {
-            Intent(Intent.ACTION_VIEW, Uri.parse(decodeResult.text)).apply {
+            Intent(Intent.ACTION_VIEW, uri).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
         }

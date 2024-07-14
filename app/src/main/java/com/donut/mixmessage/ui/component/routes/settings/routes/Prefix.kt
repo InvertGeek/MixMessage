@@ -10,6 +10,7 @@ import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 
 var ADD_ZERO_WIDTH_PREFIX by cachedMutableOf(true, "add_zero_width_prefix")
@@ -44,13 +45,19 @@ val PrefixPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = 
         text = "使用古诗前缀:",
         "智能回复下一句对应诗句,无则随机使用唐诗三百首诗句",
     ) {
+        it.isTrue {
+            ZeroWidthEncoder.useIdiomPrefix = false
+        }
         ZeroWidthEncoder.usePoemPrefix = it
     }
     CommonSwitch(
         checked = ZeroWidthEncoder.useIdiomPrefix,
         text = "使用成语前缀:",
-        "智能的成语接龙前缀(优先级高于古诗前缀)",
+        "智能的成语接龙前缀",
     ) {
+        it.isTrue {
+            ZeroWidthEncoder.usePoemPrefix = false
+        }
         ZeroWidthEncoder.useIdiomPrefix = it
     }
 }

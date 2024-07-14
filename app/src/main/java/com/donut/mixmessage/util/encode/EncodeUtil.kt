@@ -202,5 +202,6 @@ fun encodeText(text: String, password: String = getCurrentPassword()): CoderResu
     }.apply {
         isTimeLock = USE_TIME_LOCK
         isEncrypt = true
+        textWithPrefix = textCoder.textWithPrefix(prefix, this.text)
     }
 }

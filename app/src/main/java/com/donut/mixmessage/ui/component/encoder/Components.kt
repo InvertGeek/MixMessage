@@ -43,6 +43,8 @@ import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.copyWithDialog
+import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.isValidUri
 import com.donut.mixmessage.util.common.showToast
@@ -69,14 +71,7 @@ fun CardTextArea(text: String, tip: String, color: Color = Color.Unspecified) {
                 Text(text = text, color = color)
             }
             TipText(content = tip) {
-                MixDialogBuilder("复制内容到剪贴板?").apply {
-                    setDefaultNegative()
-                    setPositiveButton("确定") {
-                        text.copyToClipboard()
-                        closeDialog()
-                    }
-                    show()
-                }
+                text.copyWithDialog("内容")
             }
         }
     }
@@ -133,20 +128,22 @@ fun RSAEncryptComponent(
     publicKey: PublicKey,
     noScroll: Boolean = true
 ) {
-    val decodeResultText = remember {
-        decodeResult.text.substring(CoderResult.PUBLIC_KEY_IDENTIFIER.length)
-    }
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(0.dp, 10.dp)
     ) {
+        val fingerPrint = remember(publicKey) {
+            publicKey.encoded.hashSHA256()
+        }
         TextCoderResultContent(
-            text = "公钥: $decodeResultText",
+            text = """
+                当前信息为公钥,指纹如下:
+                $fingerPrint
+            """.trimIndent(),
             decodeResult = decodeResult,
             color = colorScheme.primary
         )
-
         var text by remember {
             mutableStateOf(TextFieldValue())
         }

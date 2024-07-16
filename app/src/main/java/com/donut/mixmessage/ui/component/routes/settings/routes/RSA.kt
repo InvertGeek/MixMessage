@@ -8,6 +8,8 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.MixNavPage
 import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.ui.theme.colorScheme
+import com.donut.mixmessage.util.common.copyWithDialog
+import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.RSAUtil
 
@@ -30,6 +32,13 @@ val RSAPage = MixNavPage(
         在下方可查看密钥对的公钥(私钥隐藏无法查看)
     """.trimIndent()
     )
+    val fingerPrint = RSAUtil.publicKey.encoded.hashSHA256()
+    Text(
+        text = "当前公钥指纹(点击复制): $fingerPrint",
+        color = colorScheme.primary,
+        modifier = Modifier.clickable {
+            fingerPrint.copyWithDialog()
+        })
     Text(
         text = "当前密钥对公钥(点击重新生成): ${RSAUtil.publicKeyStr}",
         color = colorScheme.primary,

@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.util.Log
 import com.donut.mixmessage.app
 import com.donut.mixmessage.currentActivity
+import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import java.net.URL
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
@@ -25,11 +26,16 @@ fun String.copyToClipboard(showToast: Boolean = true) {
     if (showToast) showToast("复制成功")
 }
 
-fun String.removeBrackets(): String {
-    if (this.startsWith("[") && this.endsWith("]")) {
-        return this.substring(1, this.length - 1)
+fun String.copyWithDialog(description: String = "") {
+    val str = this
+    MixDialogBuilder("复制${description}到剪贴板?").apply {
+        setDefaultNegative()
+        setPositiveButton("确定") {
+            str.copyToClipboard()
+            closeDialog()
+        }
+        show()
     }
-    return this
 }
 
 class CachedDelegate<T>(val getKeys: () -> Array<Any?>, private val initializer: () -> T) {
@@ -50,14 +56,19 @@ class CachedDelegate<T>(val getKeys: () -> Array<Any?>, private val initializer:
     }
 }
 
+
 tailrec fun String.hashToMD5String(round: Int = 1): String {
     val digest = hashMD5()
-    val sb = StringBuilder()
-    for (b in digest) {
-        sb.append(String.format("%02x", b))
-    }
     if (round > 1) {
-        return sb.toString().hashToMD5String(round - 1)
+        return digest.toHex().hashToMD5String(round - 1)
+    }
+    return digest.toHex()
+}
+
+fun ByteArray.toHex(): String {
+    val sb = StringBuilder()
+    for (b in this) {
+        sb.append(String.format("%02x", b))
     }
     return sb.toString()
 }
@@ -71,6 +82,14 @@ fun String.calculateHash(algorithm: String): ByteArray {
     md.update(this.toByteArray())
     return md.digest()
 }
+
+fun ByteArray.calculateHash(algorithm: String): String {
+    val md = MessageDigest.getInstance(algorithm)
+    md.update(this)
+    return md.digest().toHex()
+}
+
+fun ByteArray.hashSHA256() = calculateHash("SHA-256")
 
 inline fun String.isUrl(block: (URL) -> Unit = {}): Boolean {
     val urlPattern =
@@ -207,7 +226,6 @@ fun genRandomString(length: Int = 32): String {
         .map(charPool::get)
         .joinToString("")
 }
-
 
 
 fun isValidUri(uriString: String): Boolean {

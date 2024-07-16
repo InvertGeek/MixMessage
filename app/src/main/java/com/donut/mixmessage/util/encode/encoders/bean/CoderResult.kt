@@ -19,7 +19,7 @@ data class CoderResult(
     val isSimple: Boolean = false,
     var isTimeLock: Boolean = false,
     val prefix: String = textCoder.generatePrefix(),
-    var textWithPrefix: String = ""
+    var textWithPrefix: String = text
 ) {
 
     companion object {

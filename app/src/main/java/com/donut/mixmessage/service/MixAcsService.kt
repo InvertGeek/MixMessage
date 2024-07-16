@@ -20,7 +20,6 @@ import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 import com.donut.mixmessage.util.common.isEqual
 import com.donut.mixmessage.util.common.isNotNullAnd
 import com.donut.mixmessage.util.common.isTrue
-import com.donut.mixmessage.util.common.removeBrackets
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.hjq.window.EasyWindow
@@ -89,7 +88,8 @@ class MixAccessibilityService : AccessibilityApi() {
         }
         val type = event.eventType
         val source = event.source
-        val text = source?.text ?: event.text.toString().removeBrackets()
+        val text = source?.text ?: event.text.toString().removeSurrounding("[", "]")
+
         var shouldOpen = false
         type.isEqual(AccessibilityEvent.TYPE_VIEW_CLICKED) {
             checkDialogOpenTextValue(text.toString()).isTrue {

@@ -110,7 +110,7 @@ fun saveFileToStorage(
     return fileUri
 }
 
-fun genDecodeInterceptor(password: String): Interceptor {
+fun genDecodeInterceptor(password: ByteArray, size: Int): Interceptor {
     return Interceptor { chain ->
         val originalResponse = chain.proceed(
             chain.request()
@@ -118,7 +118,7 @@ fun genDecodeInterceptor(password: String): Interceptor {
         val maxFileSize = 25 * 1024 * 1024L
         val body = originalResponse.peekBody(maxFileSize)
         val originalBytes = body.bytes()
-        val data = splitArray(originalBytes).second
+        val data = originalBytes.copyOfRange(originalBytes.size - size, originalBytes.size)
         val fileData = decryptAES(
             data,
             password
@@ -180,40 +180,6 @@ fun ByteArray.toBitmap(): Bitmap {
     return BitmapFactory.decodeByteArray(this, 0, this.size)
 }
 
-fun Int.toByteArray(): ByteArray {
-    return byteArrayOf(
-        (this shr 24).toByte(),
-        (this shr 16).toByte(),
-        (this shr 8).toByte(),
-        this.toByte()
-    )
-}
-
-fun ByteArray.endToInt(): Int {
-    require(this.size >= 4) { "ByteArray must have at least 4 bytes" }
-    return (this[size - 1].toInt() and 0xFF) or
-            (this[size - 2].toInt() and 0xFF shl 8) or
-            (this[size - 3].toInt() and 0xFF shl 16) or
-            (this[size - 4].toInt() and 0xFF shl 24)
-}
-
-fun combineArray(array1: ByteArray, array2: ByteArray): ByteArray {
-    return array1 + array2 + array1.size.toByteArray()
-}
-
-fun splitArray(array: ByteArray): Pair<ByteArray, ByteArray> {
-    if (array.size < 4) {
-        return Pair(byteArrayOf(), byteArrayOf())
-    }
-    val delimiterIndex = array.endToInt()
-    if (delimiterIndex > array.size - 4 || delimiterIndex < 0) {
-        return Pair(byteArrayOf(), byteArrayOf())
-    }
-    return Pair(
-        array.copyOfRange(0, delimiterIndex),
-        array.copyOfRange(delimiterIndex, array.size - 4)
-    )
-}
 
 fun fileFormHeaders(
     suffix: String = ".webp",

@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +43,7 @@ import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.password.LOCK_CACHE
 import com.donut.mixmessage.ui.component.routes.password.Unlock
 import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
+import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.performHapticFeedBack
@@ -120,21 +122,44 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
             AssistChip(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    MixDialogBuilder("原文").apply {
+                    MixDialogBuilder("信息").apply {
                         setContent {
-                            Column {
-                                SelectionContainer {
-                                    Text(text = decodeResult.originText)
+                            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                Column {
+                                    Text(
+                                        text = "原文: ",
+                                        color = colorScheme.primary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
+                                    )
+                                    SelectionContainer {
+                                        Text(text = decodeResult.originText)
+                                    }
+                                }
+                                Column {
+                                    Text(
+                                        text = "密文: ",
+                                        color = colorScheme.primary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
+                                    )
+                                    SelectionContainer {
+                                        Text(text = decodeResult.text)
+                                    }
                                 }
                                 Text(
                                     text = decodeResult.getInfo(true),
-                                    fontSize = 10.sp,
+                                    fontSize = 12.sp,
                                     color = Color.Gray
                                 )
                             }
                         }
-                        setPositiveButton("一键复制") {
+                        setPositiveButton("复制原文") {
                             decodeResult.originText.copyToClipboard()
+                            closeDialog()
+                        }
+                        setNegativeButton("复制密文") {
+                            decodeResult.text.copyToClipboard()
                             closeDialog()
                         }
                         show()

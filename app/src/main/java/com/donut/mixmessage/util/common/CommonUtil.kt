@@ -124,6 +124,9 @@ fun ByteArray.encodeToBase64() = Base64.encode(this)
 @OptIn(ExperimentalEncodingApi::class)
 fun String.decodeBase64() = Base64.decode(this)
 
+@OptIn(ExperimentalEncodingApi::class)
+fun String.decodeBase64String() = Base64.decode(this).decodeToString()
+
 fun String.encodeToBase64() = this.toByteArray().encodeToBase64()
 
 fun getClipBoard(context: Context = app.applicationContext): ClipboardManager {

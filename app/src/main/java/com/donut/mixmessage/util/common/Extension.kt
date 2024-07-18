@@ -127,9 +127,6 @@ inline fun Boolean?.isFalseAnd(condition: Boolean, block: UnitBlock): Boolean {
     return isFalse() && condition
 }
 
-fun <T> Boolean?.ternary(trueValue: T, falseValue: T) =
-    if (this == true) trueValue else falseValue
-
 fun String.subCodePoint(start: Int, end: Int): String {
     return this.substring(this.codePointOffset(start), this.codePointOffset(end))
 }

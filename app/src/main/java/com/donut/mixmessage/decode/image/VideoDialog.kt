@@ -39,7 +39,7 @@ import io.sanghun.compose.video.uri.VideoPlayerMediaItem
 
 
 @Composable
-fun VideoContent(url: String, password: String, fileName: String) {
+fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) {
     val progress = remember {
         ProgressContent(tip = "视频加载中")
     }
@@ -57,6 +57,7 @@ fun VideoContent(url: String, password: String, fileName: String) {
         fileData = ImageAPI.downloadEncryptedData(
             url,
             password,
+            size,
             progress.interceptor
         )
         fileData.isNull {

@@ -21,7 +21,8 @@ import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
-import com.donut.mixmessage.util.encode.getCurrentPassword
+import com.donut.mixmessage.util.encode.encryptAES
+import com.donut.mixmessage.util.encode.generateRandomByteArray
 import com.donut.mixmessage.util.image.startUploadImage
 import com.donut.mixmessage.util.image.toImageData
 import com.donut.mixmessage.util.objects.MixFileSelector
@@ -88,10 +89,10 @@ fun selectImage(
                     progressContent.LoadingContent()
                 }
                 UseEffect {
-                    val password = getCurrentPassword()
+                    val password = generateRandomByteArray(16)
+                    val encryptedFileData = encryptAES(block(data), password)
                     val url = startUploadImage(
-                        block(data),
-                        password,
+                        encryptedFileData,
                         progressContent
                     )
                     url.isNull {
@@ -102,9 +103,17 @@ fun selectImage(
                     showToast("上传成功!")
                     withContext(Dispatchers.Main) {
                         encoderText =
-                            TextFieldValue(CoderResult.media(url!!, fileName, identifier))
+                            TextFieldValue(
+                                CoderResult.media(
+                                    url!!,
+                                    fileName,
+                                    password,
+                                    encryptedFileData.size,
+                                    identifier,
+                                )
+                            )
                         doSend.isTrue {
-                            sendResult(encodeText(encoderText.text, password))
+                            sendResult(encodeText(encoderText.text))
                         }
                     }
                     closeDialog()

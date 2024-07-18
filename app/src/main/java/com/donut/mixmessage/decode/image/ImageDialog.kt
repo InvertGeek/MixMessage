@@ -55,7 +55,7 @@ fun ErrorMessage(msg: String) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImageContent(imageUrl: String, password: String, fileName: String) {
+fun ImageContent(imageUrl: String, password: ByteArray, fileName: String, size: Int) {
     val progress = remember {
         ProgressContent(tip = "图片加载中")
     }
@@ -79,7 +79,7 @@ fun ImageContent(imageUrl: String, password: String, fileName: String) {
                 OkHttpClient.Builder()
                     .addNetworkInterceptor(progress.interceptor)
                     .addNetworkInterceptor(forceCacheInterceptor)
-                    .addNetworkInterceptor(genDecodeInterceptor(password))
+                    .addNetworkInterceptor(genDecodeInterceptor(password, size))
                     .build()
             }),
         loading = {

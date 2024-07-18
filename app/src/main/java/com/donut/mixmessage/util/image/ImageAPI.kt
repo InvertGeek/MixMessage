@@ -6,8 +6,6 @@ import com.donut.mixmessage.decode.image.ProgressInterceptor
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.toInt
-import com.donut.mixmessage.util.encode.encryptAES
-import com.donut.mixmessage.util.encode.getCurrentPassword
 import com.donut.mixmessage.util.image.apis.FreeImageHost
 import com.donut.mixmessage.util.image.apis.bb.BB
 import com.donut.mixmessage.util.image.apis.bfs.BFS
@@ -43,18 +41,15 @@ val IMAGE_APIS = listOf(
 
 suspend fun startUploadImage(
     fileData: ByteArray,
-    password: String = getCurrentPassword(),
     progressContent: ProgressContent
 ): String? {
     val currentUploader = IMAGE_APIS.maxByOrNull {
         (CURRENT_IMAGE_API == it.name).toInt()
     }!!
-    val encryptedFileData = encryptAES(fileData, password)
     val blankImage = createBlankBitmap(50, 50)
     val useGif = CURRENT_IMAGE_API.contentEquals(BFS.name)
     val blankImageData = blankImage.compressToByteArray(webpQuality = 0, gifHeader = useGif)
-    val byteArray = combineArray(blankImageData, encryptedFileData)
-
+    val byteArray = blankImageData + fileData
     return currentUploader.uploadImage(byteArray, progressContent)
 }
 
@@ -114,7 +109,8 @@ abstract class ImageAPI(baseUrl: String, val name: String) {
 
         suspend fun downloadEncryptedData(
             url: String,
-            password: String,
+            password: ByteArray,
+            size: Int,
             progressListener: ProgressInterceptor
         ): ByteArray? {
             catchError {
@@ -123,7 +119,7 @@ abstract class ImageAPI(baseUrl: String, val name: String) {
                 val cache = Cache(cacheDirectory, cacheSize.toLong())
                 return createRetrofitClient("http://127.0.0.1") {
                     addNetworkInterceptor(forceCacheInterceptor)
-                    addNetworkInterceptor(genDecodeInterceptor(password))
+                    addNetworkInterceptor(genDecodeInterceptor(password, size))
                     cache(cache)
                     addNetworkInterceptor(progressListener)
                 }.create(DownloadService::class.java).download(url).body()?.bytes()

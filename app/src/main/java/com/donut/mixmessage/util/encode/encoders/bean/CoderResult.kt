@@ -1,6 +1,7 @@
 package com.donut.mixmessage.util.encode.encoders.bean
 
 import com.donut.mixmessage.util.common.decodeBase64
+import com.donut.mixmessage.util.common.decodeBase64String
 import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.ignoreError
 import com.donut.mixmessage.util.common.isTrue
@@ -23,14 +24,21 @@ data class CoderResult(
 ) {
 
     companion object {
-        fun media(url: String, fileName: String, identifier: String = IMAGE_IDENTIFIER): String {
-            return "$identifier${url.encodeToBase64()}|${fileName.encodeToBase64()}"
+        fun media(
+            url: String,
+            fileName: String,
+            password: ByteArray,
+            size: Int,
+            identifier: String = IMAGE_IDENTIFIER
+        ): String {
+            return "$identifier${url.encodeToBase64()}|${fileName.encodeToBase64()}|${password.encodeToBase64()}|$size"
         }
 
         val Failed = CoderResult("", "", getDefaultEncoder(), "", isFail = true, prefix = "")
-        const val IMAGE_IDENTIFIER = "__image:"
-        const val VIDEO_IDENTIFIER = "__video:"
-        const val FILE_IDENTIFIER = "__file:"
+        private const val VERSION = "v2"
+        const val IMAGE_IDENTIFIER = "__image_$VERSION:"
+        const val VIDEO_IDENTIFIER = "__video_$VERSION:"
+        const val FILE_IDENTIFIER = "__file_$VERSION:"
         const val PUBLIC_KEY_IDENTIFIER = "__public_key:"
         const val PRIVATE_MESSAGE_IDENTIFIER = "__private_message:"
 
@@ -40,25 +48,31 @@ data class CoderResult(
 
     inline fun isMedia(
         identifier: String,
-        block: (url: String, filename: String) -> Unit = { _, _ -> }
+        block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }
     ): Boolean {
         val result = text.startsWith(identifier) && text.contains("|")
 
         return result.isTrue {
             ignoreError {
-                val (url, fileName) = text.substring(identifier.length).split("|")
-                block(url.decodeBase64().decodeToString(), fileName.decodeBase64().decodeToString())
+                val (url, fileName, password, size) = text.substring(identifier.length).split("|")
+
+                block(
+                    url.decodeBase64String(),
+                    fileName.decodeBase64String(),
+                    password.decodeBase64(),
+                    size.toInt()
+                )
             }
         }
     }
 
-    inline fun isImage(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
+    inline fun isImage(block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }) =
         isMedia(IMAGE_IDENTIFIER, block)
 
-    inline fun isVideo(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
+    inline fun isVideo(block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }) =
         isMedia(VIDEO_IDENTIFIER, block)
 
-    inline fun isFile(block: (url: String, fileName: String) -> Unit = { _, _ -> }) =
+    inline fun isFile(block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }) =
         isMedia(FILE_IDENTIFIER, block)
 
     inline fun isPublicKey(block: (publicKey: PublicKey) -> Unit = { _ -> }): Boolean {

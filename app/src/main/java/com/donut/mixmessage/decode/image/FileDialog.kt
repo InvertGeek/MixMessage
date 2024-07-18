@@ -31,7 +31,7 @@ import com.donut.mixmessage.util.image.ImageAPI
 import com.donut.mixmessage.util.image.saveFileToStorage
 
 @Composable
-fun FileContent(url: String, password: String, fileName: String) {
+fun FileContent(url: String, password: ByteArray, fileName: String, size: Int) {
 
     val progress = remember {
         ProgressContent()
@@ -57,6 +57,7 @@ fun FileContent(url: String, password: String, fileName: String) {
         fileData = ImageAPI.downloadEncryptedData(
             url,
             password,
+            size,
             progress.interceptor
         )
         fileData.isNull {
@@ -97,7 +98,11 @@ fun FileContent(url: String, password: String, fileName: String) {
             error.isNotNull {
                 it.invoke()
             }
-            Text(text = "文件: $fileName")
+
+            Text(text = "文件(${formatFileSize(size.toLong())}): ", color = colorScheme.primary)
+
+            Text(text = fileName)
+
             download.isNotTrue {
                 Button(onClick = {
                     download = true

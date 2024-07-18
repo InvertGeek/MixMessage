@@ -293,22 +293,22 @@ fun DecodeResultContent(decodeResult: CoderResult, noScroll: Boolean = true) {
             block()
         }
     }
-    decodeResult.isImage { url, fileName ->
+    decodeResult.isImage { url, fileName, password, size ->
         Card {
-            ImageContent(imageUrl = url, decodeResult.password, fileName)
+            ImageContent(imageUrl = url, password, fileName, size)
         }
         return
     }
 
-    decodeResult.isVideo { url, fileName ->
+    decodeResult.isVideo { url, fileName, password, size ->
         Card {
-            VideoContent(url, decodeResult.password, fileName)
+            VideoContent(url, password, fileName, size)
         }
         return
     }
-    decodeResult.isFile { url, fileName ->
+    decodeResult.isFile { url, fileName, password, size ->
         Card {
-            FileContent(url, decodeResult.password, fileName)
+            FileContent(url, password, fileName, size)
         }
         return
     }

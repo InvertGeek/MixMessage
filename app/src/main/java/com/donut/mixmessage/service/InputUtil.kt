@@ -12,6 +12,7 @@ import com.donut.mixmessage.decode.reOpenDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.routes.DETECT_TEXT_LENGTH
 import com.donut.mixmessage.util.common.cachedMutableOf
+import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
@@ -88,7 +89,10 @@ suspend fun trySendText(text: String, input: ViewNode?, originalInputText: Strin
     ) {
         return "内容超过字数限制: ${(if (originalInputText.isEmpty()) 0 else originalInputText.length + 1) + text.length}/${currentText.length}"
     }
+//    input.clearFocus()
+//    delay(200)
     val button = findSendButton()
+    debug("button: $button")
     button.isNull {
         return "没有搜索到发送按钮"
     }
@@ -120,7 +124,7 @@ private suspend fun findSendButton(): ViewNode? {
         return SEND_BUTTON_CACHE
     }
     return withTimeoutOrNull(SEARCH_BUTTON_TIMEOUT) {
-        findViews().where { it.checkButtonText() }
+        findViews().where { it.checkButton() }
             .findAll().toList().findSendButton().also {
                 if (it != null) {
                     SEND_BUTTON_CACHE = it
@@ -144,13 +148,21 @@ private suspend fun findInput(): ViewNode? {
 }
 
 fun AcsNode.checkButtonText(): Boolean {
-    return checkSendButtonTextValue(this.text?.toString() ?: "") || checkSendButtonTextValue(
-        this.contentDescription?.toString() ?: ""
+    return checkSendButtonTextValue(
+        this.text?.toString() ?: ""
     )
+}
+
+fun AcsNode.checkButton(): Boolean {
+    return checkButtonText() || checkButtonDesc() || checkButtonID()
 }
 
 fun AcsNode.checkButtonDesc(): Boolean {
     return checkSendButtonTextValue(this.contentDescription?.toString() ?: "")
+}
+
+fun AcsNode.checkButtonID(): Boolean {
+    return (this.viewIdResourceName ?: "").contains("send")
 }
 
 fun List<ViewNode>.otherAppNodes(): List<ViewNode> {
@@ -162,11 +174,13 @@ fun ConditionGroup.otherAppNodes(): ConditionGroup {
 }
 
 fun List<ViewNode>.findSendButton(): ViewNode? {
-    return this.otherAppNodes().filter { it.node.checkButtonText() }.maxByOrNull {
+    return this.otherAppNodes().filter { it.node.checkButton() }.maxByOrNull {
         listOf(
             it.isClickable(),
             it.className.contentEquals(Button::class.java.name),
+            it.node.checkButtonText(),
             it.node.checkButtonDesc(),
+            it.node.checkButtonID(),
             it.node.isEnabled
         ).sumOf { condition -> condition.toInt() }
     }

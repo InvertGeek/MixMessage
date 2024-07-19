@@ -97,7 +97,7 @@ class MixAccessibilityService : AccessibilityApi() {
             }
             source.isNotNullAnd(SCAN_BUTTON_WHEN_CLICK) {
                 it.isEditable.isTrue { INPUT_EDITABLE_CACHE = ViewNode(it) }
-                AcsNode.wrap(it).checkButtonText()
+                AcsNode.wrap(it).checkButton()
                     .isTrue { SEND_BUTTON_CACHE = ViewNode(it) }
             }
             shouldOpen = ENABLE_SINGLE_CLICK

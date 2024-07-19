@@ -42,7 +42,8 @@ object ZeroWidthEncoder : AlphabetCoder(
     var useIdiomPrefix by cachedMutableOf(false, "zero_width_use_idiom_prefix")
 
 
-    fun removeInvisibleChars(text: String) = text.replace(Regex("[\\s\\uFE00-\\uFE0f\\u200b]"), "")
+    fun removeInvisibleChars(text: String) =
+        text.replace(Regex("[\\s\\uFE00-\\uFE0f\\u200b\\u200D]"), "")
 
 
     override fun textWithPrefix(prefixText: String, text: String): String {
@@ -58,7 +59,7 @@ object ZeroWidthEncoder : AlphabetCoder(
 
     private fun getZeroWidthCharPrefix(): String {
         if (ADD_ZERO_WIDTH_PREFIX) {
-            return "\u200b"
+            return "\u200d"
         }
         return ""
     }

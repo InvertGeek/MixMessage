@@ -25,8 +25,7 @@ import coil.request.ImageRequest
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.genImageLoader
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.util.common.PasswordContent
-import com.donut.mixmessage.util.common.encodeToBase64
+import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.image.forceCacheInterceptor
@@ -118,5 +117,7 @@ fun ImageContent(imageUrl: String, password: ByteArray, fileName: String, size: 
             }
 
     )
-    PasswordContent(password = password.encodeToBase64())
+    TipText(
+        "文件大小: ${formatFileSize(size.toLong())}"
+    )
 }

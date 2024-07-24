@@ -141,15 +141,6 @@ fun TipText(content: String, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun PasswordContent(password: String) {
-    TipText(
-        "此文件使用密钥: $password 加密"
-    ) {
-
-    }
-}
-
-@Composable
 @NonRestartableComposable
 fun UseEffect(
     vararg keys: Any?,

@@ -21,10 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.util.common.PasswordContent
+import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.UseEffect
-import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isNullAnd
@@ -78,7 +77,9 @@ fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) 
     uri.isNotNull {
         VideoPlayerContent(uri = uri!!, fileData!!, fileName)
     }
-    PasswordContent(password = password.encodeToBase64())
+    TipText(
+        "文件大小: ${formatFileSize(size.toLong())}"
+    )
 }
 
 @Composable

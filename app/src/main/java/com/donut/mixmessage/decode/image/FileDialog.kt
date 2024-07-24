@@ -19,10 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.colorScheme
-import com.donut.mixmessage.util.common.PasswordContent
+import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.UseEffect
-import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNotTrue
@@ -113,5 +112,7 @@ fun FileContent(url: String, password: ByteArray, fileName: String, size: Int) {
             }
         }
     }
-    PasswordContent(password = password.encodeToBase64())
+    TipText(
+        "文件大小: ${formatFileSize(size.toLong())}"
+    )
 }

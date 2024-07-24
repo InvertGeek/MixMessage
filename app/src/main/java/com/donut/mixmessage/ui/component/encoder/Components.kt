@@ -68,8 +68,7 @@ fun CardTextArea(text: String, tip: String, color: Color = Color.Unspecified) {
     ) {
         Column(modifier = Modifier) {
             SelectionContainer(modifier = Modifier.padding(10.dp)) {
-//                Text(text = text, color = color)
-                HighlightAndClickableUrls(text)
+                HighlightAndClickableUrls(text, color)
             }
             TipText(content = tip) {
                 text.copyWithDialog("内容")
@@ -79,7 +78,7 @@ fun CardTextArea(text: String, tip: String, color: Color = Color.Unspecified) {
 }
 
 @Composable
-fun HighlightAndClickableUrls(text: String) {
+fun HighlightAndClickableUrls(text: String, color: Color) {
     val context = LocalContext.current
     val urIPattern =
         "([a-zA-Z0-9]+)://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\\.)?[a-zA-Z0-9()]{1,6}(\\b)?([-a-zA-Z0-9()@:%_+.~#?&/=]*)".toRegex()
@@ -92,7 +91,7 @@ fun HighlightAndClickableUrls(text: String) {
             val endIndex = matchResult.range.last + 1
 
             // 添加之前的普通文本
-            withStyle(style = SpanStyle(fontSize = 16.sp)) {
+            withStyle(style = SpanStyle(fontSize = 16.sp, color = color)) {
                 append(text.substring(lastIndex, startIndex))
             }
 
@@ -112,7 +111,7 @@ fun HighlightAndClickableUrls(text: String) {
             lastIndex = endIndex
         }
         // 添加剩余的普通文本
-        withStyle(style = SpanStyle(fontSize = 16.sp)) {
+        withStyle(style = SpanStyle(fontSize = 16.sp, color = color)) {
             append(text.substring(lastIndex))
         }
     }

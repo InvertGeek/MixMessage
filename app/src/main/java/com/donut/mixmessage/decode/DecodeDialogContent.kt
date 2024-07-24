@@ -125,7 +125,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                     MixDialogBuilder("信息").apply {
                         setContent {
                             Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                                Column {
+                                Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                                     Text(
                                         text = "原文: ",
                                         color = colorScheme.primary,
@@ -136,7 +136,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                                         Text(text = decodeResult.originText)
                                     }
                                 }
-                                Column {
+                                Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                                     Text(
                                         text = "密文: ",
                                         color = colorScheme.primary,

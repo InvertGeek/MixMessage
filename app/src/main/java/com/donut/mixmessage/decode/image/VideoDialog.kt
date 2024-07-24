@@ -3,7 +3,6 @@ package com.donut.mixmessage.decode.image
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,9 +21,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
+import com.donut.mixmessage.util.common.PasswordContent
 import com.donut.mixmessage.util.common.UnitBlock
-import com.donut.mixmessage.util.common.UrlContent
 import com.donut.mixmessage.util.common.UseEffect
+import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isNullAnd
@@ -78,10 +78,9 @@ fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) 
     uri.isNotNull {
         VideoPlayerContent(uri = uri!!, fileData!!, fileName)
     }
-    UrlContent(url = url)
+    PasswordContent(password = password.encodeToBase64())
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun VideoPlayerContent(uri: Uri, fileData: ByteArray, fileName: String) {
     VideoPlayer(

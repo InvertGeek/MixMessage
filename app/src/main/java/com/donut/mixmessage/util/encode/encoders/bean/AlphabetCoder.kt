@@ -24,6 +24,8 @@ abstract class AlphabetCoder(charList: List<Char>) : TextCoder {
 
     fun encodeRaw(data: ByteArray) = baseN.encode(data)
 
+    fun decodeRaw(data: String) = baseN.decode(data)
+
     override fun encode(input: String, password: String): CoderResult {
         input.trim().isEmpty().isTrue {
             return CoderResult.Failed

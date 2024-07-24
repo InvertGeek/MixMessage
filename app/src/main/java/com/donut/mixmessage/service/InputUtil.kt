@@ -10,7 +10,7 @@ import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
 import com.donut.mixmessage.decode.reOpenDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
-import com.donut.mixmessage.ui.component.routes.settings.routes.DETECT_TEXT_LENGTH
+import com.donut.mixmessage.ui.component.routes.settings.routes.DETECT_TEXT_SEND
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.isFalse
@@ -34,6 +34,10 @@ var SEARCH_BUTTON_TIMEOUT by cachedMutableOf(1000L * 10, "search_button_timeout"
 
 fun setSendButtonIdentifier(value: String) {
     SEND_BUTTON_IDENTIFIER = value
+}
+
+fun ViewNode?.isValid(): Boolean {
+    return this?.parent.isNotNull()
 }
 
 fun checkSendButtonTextValue(value: String) = checkSplitTextValue(value, SEND_BUTTON_IDENTIFIER)
@@ -82,30 +86,33 @@ suspend fun trySendText(text: String, input: ViewNode?, originalInputText: Strin
     } else input.appendText(" $text")
     delay(200)
     val currentText = input.getText()
-    if (DETECT_TEXT_LENGTH
+    if (DETECT_TEXT_SEND
         && !currentText.contains(text)
         && currentText.isNotEmpty()
         && !checkDialogOpenTextValue(currentText)
     ) {
         return "内容超过字数限制: ${(if (originalInputText.isEmpty()) 0 else originalInputText.length + 1) + text.length}/${currentText.length}"
     }
-//    input.clearFocus()
-//    delay(200)
     val button = findSendButton()
     debug("button: $button")
     button.isNull {
         return "没有搜索到发送按钮"
     }
-    withContext(Dispatchers.Main) {
-        encoderText = TextFieldValue()
-    }
     button?.click()
+    if (DETECT_TEXT_SEND) {
+        delay(200)
+        //如果检测到未发送成功则代表发送按钮无效
+        if (input.getText().isNotEmpty()) {
+            SEND_BUTTON_CACHE = null
+            return "发送失败,发送按钮无效!"
+        }
+    }
     return null
 }
 
 
 suspend fun inputAndSendText(text: String) {
-    delay(100)
+    delay(200)
     val input = findInput()
     val originalInputText = input.getText()
     val sendResult = trySendText(text, input, originalInputText)
@@ -116,11 +123,14 @@ suspend fun inputAndSendText(text: String) {
         showToast(sendResult)
         return
     }
+    withContext(Dispatchers.Main) {
+        encoderText = TextFieldValue()
+    }
 }
 
 
 private suspend fun findSendButton(): ViewNode? {
-    SEND_BUTTON_CACHE?.parent.isNotNull {
+    SEND_BUTTON_CACHE.isValid().isTrue {
         return SEND_BUTTON_CACHE
     }
     return withTimeoutOrNull(SEARCH_BUTTON_TIMEOUT) {
@@ -134,7 +144,7 @@ private suspend fun findSendButton(): ViewNode? {
 }
 
 private suspend fun findInput(): ViewNode? {
-    INPUT_EDITABLE_CACHE?.parent.isNotNull {
+    INPUT_EDITABLE_CACHE.isValid().isTrue {
         return INPUT_EDITABLE_CACHE
     }
     return withTimeoutOrNull(SEARCH_BUTTON_TIMEOUT) {

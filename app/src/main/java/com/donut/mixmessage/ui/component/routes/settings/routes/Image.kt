@@ -8,6 +8,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.ui.component.common.CommonSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
@@ -126,4 +127,11 @@ val ImagePage = MixNavPage(
             )
         }
     }
+    Text(
+        color = Color.Gray,
+        text = """
+        文件上传: 所有文件都会以图片的形式上传,无论是视频还是文档还是其他文件，都会将文件以随机的密钥使用aes-gcm算法加密后,
+        封装到一张随机颜色的空白图片中,发送时会将本次随机的密钥和图片地址以及文件大小等信息二次加密后发送给对方
+    """.trimIndent()
+    )
 }

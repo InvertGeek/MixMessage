@@ -18,7 +18,7 @@ import com.donut.mixmessage.ui.component.nav.NavTitle
 import com.donut.mixmessage.util.common.cachedMutableOf
 import okhttp3.internal.toLongOrDefault
 
-var DETECT_TEXT_LENGTH by cachedMutableOf(true, "DETECT_TEXT_LENGTH")
+var DETECT_TEXT_SEND by cachedMutableOf(true, "DETECT_TEXT_LENGTH")
 
 val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
     NavTitle(title = "一键发送设置", showBackIcon = true)
@@ -63,10 +63,10 @@ val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
         setScanButtonWhenClick(it)
     }
     CommonSwitch(
-        checked = DETECT_TEXT_LENGTH,
-        text = "智能识别输入框长度限制:",
-        "开启后检测到超过字数限制将会取消发送",
+        checked = DETECT_TEXT_SEND,
+        text = "智能识别发送结果:",
+        "开启后将智能检测输入框字数限制,是否发送成功等情况,失败则取消发送并重新显示窗口",
     ) {
-        DETECT_TEXT_LENGTH = it
+        DETECT_TEXT_SEND = it
     }
 }

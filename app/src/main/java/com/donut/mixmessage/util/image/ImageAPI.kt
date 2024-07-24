@@ -6,6 +6,7 @@ import com.donut.mixmessage.decode.image.ProgressInterceptor
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.toInt
+import com.donut.mixmessage.util.image.apis.ChatBot
 import com.donut.mixmessage.util.image.apis.FreeImageHost
 import com.donut.mixmessage.util.image.apis.bb.BB
 import com.donut.mixmessage.util.image.apis.bfs.BFS
@@ -36,7 +37,8 @@ val IMAGE_APIS = listOf(
     IMGBB,
     BFS,
     FreeImageHost,
-    BB
+    BB,
+    ChatBot
 )
 
 suspend fun startUploadImage(

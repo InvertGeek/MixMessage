@@ -18,6 +18,7 @@ import com.donut.mixmessage.ui.component.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 import com.donut.mixmessage.util.common.isEqual
+import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNullAnd
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showError
@@ -96,9 +97,15 @@ class MixAccessibilityService : AccessibilityApi() {
                 return openDecodeDialog(result = CoderResult.Failed)
             }
             source.isNotNullAnd(SCAN_BUTTON_WHEN_CLICK) {
-                it.isEditable.isTrue { INPUT_EDITABLE_CACHE = ViewNode(it) }
-                AcsNode.wrap(it).checkButton()
-                    .isTrue { SEND_BUTTON_CACHE = ViewNode(it) }
+                INPUT_EDITABLE_CACHE.isValid().isFalse {
+                    it.isEditable.isTrue { INPUT_EDITABLE_CACHE = ViewNode(it) }
+                }
+                SEND_BUTTON_CACHE.isValid().isFalse {
+                    it.isClickable.isTrue {
+                        AcsNode.wrap(it).checkButton()
+                            .isTrue { SEND_BUTTON_CACHE = ViewNode(it) }
+                    }
+                }
             }
             shouldOpen = ENABLE_SINGLE_CLICK
         }

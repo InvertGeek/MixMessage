@@ -12,7 +12,6 @@ import com.donut.mixmessage.decode.reOpenDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.routes.DETECT_TEXT_SEND
 import com.donut.mixmessage.util.common.cachedMutableOf
-import com.donut.mixmessage.util.common.debug
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
@@ -94,7 +93,6 @@ suspend fun trySendText(text: String, input: ViewNode?, originalInputText: Strin
         return "内容超过字数限制: ${(if (originalInputText.isEmpty()) 0 else originalInputText.length + 1) + text.length}/${currentText.length}"
     }
     val button = findSendButton()
-    debug("button: $button")
     button.isNull {
         return "没有搜索到发送按钮"
     }

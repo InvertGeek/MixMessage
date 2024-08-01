@@ -13,8 +13,8 @@ android {
         applicationId = "com.donut.mixmessage"
         minSdk = 24
         targetSdk = 34
-        versionCode = 81
-        versionName = "1.9.1"
+        versionCode = 82
+        versionName = "1.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -67,7 +67,7 @@ android {
 }
 
 dependencies {
-    val ktor_version = "2.3.11"
+    val ktor_version = "2.3.12"
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
@@ -81,9 +81,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics:22.0.2")
     implementation("com.tencent:mmkv:1.3.5")
     implementation("io.sanghun:compose-video:1.2.0")
-    implementation("androidx.media3:media3-exoplayer:1.3.1") // [Required] androidx.media3 ExoPlayer dependency
-    implementation("androidx.media3:media3-session:1.3.1") // [Required] MediaSession Extension dependency
-    implementation("androidx.media3:media3-ui:1.3.1") // [Required] Base Player UI
+    implementation("androidx.media3:media3-exoplayer:1.4.0") // [Required] androidx.media3 ExoPlayer dependency
+    implementation("androidx.media3:media3-session:1.4.0") // [Required] MediaSession Extension dependency
+    implementation("androidx.media3:media3-ui:1.4.0") // [Required] Base Player UI
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("io.coil-kt:coil:2.6.0")
@@ -94,8 +94,8 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
     implementation("com.github.Krosxx:Android-Auto-Api:4.1.2")
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("androidx.activity:activity-compose:1.9.1")
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

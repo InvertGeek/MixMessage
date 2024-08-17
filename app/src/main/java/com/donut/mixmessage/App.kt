@@ -96,7 +96,7 @@ class App : Application(), ImageLoaderFactory {
 fun genImageLoader(
     context: Context,
     initializer: () -> OkHttpClient = { OkHttpClient() },
-    sourceListener: (ByteArray) -> Unit = {}
+    sourceListener: (ByteArray) -> Unit = {},
 ): ImageLoader {
     return ImageLoader.Builder(context).components {
         add { result, _, _ ->

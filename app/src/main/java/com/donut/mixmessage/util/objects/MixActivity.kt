@@ -11,6 +11,7 @@ import com.donut.mixmessage.ui.component.routes.settings.routes.ALLOW_SCREENSHOT
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
+import com.donut.mixmessage.util.encode.updateRoundKeys
 
 open class MixActivity(private val id: String) : ComponentActivity() {
 
@@ -75,6 +76,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
             }
         }
         refreshAllowScreenShot()
+        updateRoundKeys()
         super.onResume()
     }
 

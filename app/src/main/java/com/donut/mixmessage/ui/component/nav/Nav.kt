@@ -21,7 +21,6 @@ import com.donut.mixmessage.ui.component.routes.Home
 import com.donut.mixmessage.ui.component.routes.password.Passwords
 import com.donut.mixmessage.ui.component.routes.settings.Settings
 import com.donut.mixmessage.util.common.OnDispose
-import com.donut.mixmessage.util.common.performHapticFeedBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +47,6 @@ fun NavComponent() {
                         NavigationBarItem(
                             selected = jumpTo == currentRoute,
                             onClick = {
-                                performHapticFeedBack()
                                 controller.navigate(jumpTo) {
                                     launchSingleTop = true
                                 }

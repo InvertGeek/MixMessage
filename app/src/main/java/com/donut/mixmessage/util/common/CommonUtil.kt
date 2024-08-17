@@ -185,7 +185,7 @@ fun readClipBoardText(): String {
     val clip = clipboard.primaryClip
     if (clip != null && clip.itemCount > 0) {
         val text = clip.getItemAt(0).text
-        return text.toString()
+        return text?.toString() ?: ""
     }
     return ""
 }
@@ -214,6 +214,11 @@ inline fun ignoreError(tag: String = "", block: () -> Unit) {
 fun getCurrentDate(reverseDays: Long = 0): String {
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     return formatter.format(Date(System.currentTimeMillis() - (reverseDays * 86400 * 1000)))
+}
+
+fun formatTime(date: Date): String {
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+    return formatter.format(date)
 }
 
 fun getCurrentTime(): String {

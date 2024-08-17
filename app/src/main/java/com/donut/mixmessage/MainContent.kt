@@ -30,7 +30,6 @@ import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.OnDispose
 import com.donut.mixmessage.util.common.isFalseAnd
 import com.donut.mixmessage.util.common.isTrue
-import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.teamb.calculator.CalculatorContent
 
@@ -112,7 +111,6 @@ fun ScaleLock() {
                 detectTransformGestures { _, pan, zoom, _ ->
                     if (zoom > 1 && !visible) {
                         visible = true
-                        performHapticFeedBack()
                         showToast("解锁成功")
                     }
                 }

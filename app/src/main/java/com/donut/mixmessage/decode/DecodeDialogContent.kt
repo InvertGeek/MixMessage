@@ -22,7 +22,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -46,7 +45,6 @@ import com.donut.mixmessage.ui.component.routes.settings.useDefaultPrefix
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isFalse
-import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.RSAUtil
@@ -89,7 +87,6 @@ suspend fun selectPrefix(): String = suspendCoroutine {
 }
 
 fun sendResult(encodeResult: CoderResult) {
-    performHapticFeedBack()
     appScope.launch(Dispatchers.IO) {
         var prefix = encodeResult.prefix
         if (encodeResult.textCoder == ZeroWidthEncoder && !useDefaultPrefix) {
@@ -111,9 +108,6 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
     lastDecodeResult = decodeResult
 
     DialogContainer {
-        LaunchedEffect(true) {
-            performHapticFeedBack()
-        }
         if (LOCK_CACHE.isNotEmpty()) {
             Unlock()
             return@DialogContainer
@@ -222,7 +216,6 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
 
                 OutlinedButton(
                     onClick = {
-                        performHapticFeedBack()
                         DecodeActivity.LAST_FORCE_CLOSE = System.currentTimeMillis()
                         showToast("3秒内不会再显示此窗口")
                         currentActivity.finish()
@@ -236,7 +229,6 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                 }
                 ElevatedButton(
                     onClick = {
-                        performHapticFeedBack()
                         encoderText = TextFieldValue()
                         currentActivity.finish()
                     },

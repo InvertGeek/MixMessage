@@ -21,7 +21,6 @@ import com.donut.mixmessage.ui.theme.Theme
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.ui.theme.currentTheme
 import com.donut.mixmessage.ui.theme.enableAutoDarkMode
-import com.donut.mixmessage.util.common.ENABLE_HAPTIC_FEEDBACK
 import com.donut.mixmessage.util.common.LogoUtil
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
@@ -73,13 +72,6 @@ val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = t
             showToast("输入66/66后点击等号解锁")
         }
         CALCULATOR_LOCK = it
-    }
-    CommonSwitch(
-        checked = ENABLE_HAPTIC_FEEDBACK,
-        text = "触觉反馈:",
-        "点击等操作时提供触觉反馈",
-    ) {
-        ENABLE_HAPTIC_FEEDBACK = it
     }
     CommonSwitch(
         checked = ALLOW_SCREENSHOT,

@@ -1,13 +1,10 @@
 package com.donut.mixmessage.util.encode
 
 import com.donut.mixmessage.util.common.cachedMutableOf
-import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.default
-import com.donut.mixmessage.util.common.getCurrentDate
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.isTrueAnd
-import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.encode.encoders.AlphaNumEncoder
 import com.donut.mixmessage.util.encode.encoders.BuddhaEncoder
 import com.donut.mixmessage.util.encode.encoders.ChineseEncoder
@@ -36,8 +33,6 @@ val ENCODERS = listOf(
 )
 
 
-var PASSWORDS by cachedMutableOf(setOf("123"), "encoder_passwords")
-
 var DEFAULT_ENCODER by cachedMutableOf(ZeroWidthEncoder.name, "default_encoder")
 
 var DEFAULT_PASSWORD by cachedMutableOf("123", "default_password")
@@ -55,6 +50,8 @@ var ENCODE_COUNT by cachedMutableOf(0L, "static_encode_count")
 var USE_TIME_LOCK by cachedMutableOf(false, "use_time_lock_encode")
 
 var TIME_LOCK_REVERSE by cachedMutableOf(0, "time_lock_reverse")
+
+fun getPassStringList() = PASSWORDS.map { it.value }
 
 
 fun getDefaultEncoder() =
@@ -85,123 +82,68 @@ fun setUseRandomEncoder(useRandomEncoder: Boolean) {
     USE_RANDOM_ENCODER = useRandomEncoder
 }
 
-fun modifyPasswords(action: MutableSet<String>.() -> Unit) {
-    PASSWORDS = HashSet(PASSWORDS.toMutableSet().apply(action))
-}
-
-fun addPassword(password: String) {
-    if (password.isEmpty()) return
-    modifyPasswords {
-        add(password)
-    }
-}
-
-fun getPasswordIndex(password: String, isTimeLock: Boolean = false): Int {
-    password.isEmpty().isTrue {
-        return -1
-    }
-    isTimeLock.isTrue {
-        return PASSWORDS.indexOf(password.substring(0, password.length - getCurrentDate().length))
-    }
-    return PASSWORDS.indexOf(password)
-}
-
-fun setDefaultPassword(password: String) {
-    DEFAULT_PASSWORD = password
-}
-
-fun setDefaultEncoder(encoder: String) {
-    DEFAULT_ENCODER = encoder
-}
-
-fun removePassword(password: String) {
-    if (password == "123") {
-        return
-    }
-//    PASSWORDS.remove(password)
-    modifyPasswords {
-        remove(password)
-    }
-}
-
-fun exportAllPassword() {
-    val clipBoardStr = PASSWORDS.joinToString("\n")
-    clipBoardStr.copyToClipboard()
-}
-
-fun importPasswords(): Int {
-    val clipBoard = readClipBoardText()
-    val origSize = PASSWORDS.size
-    modifyPasswords {
-        addAll(clipBoard.split("\n"))
-    }
-    return PASSWORDS.size - origSize
-}
-
-fun clearAllPassword() {
-    modifyPasswords {
-        clear()
-        add("123")
-    }
-    setDefaultPassword("123")
-}
-
 fun decodeText(text: String): CoderResult {
     var result: CoderResult = CoderResult.Failed
     if (text.trim().isEmpty()) {
         return result
     }
+
+    val passwordInfoList = PASSWORDS.toMutableList().map {
+        KeyInfo(it.value, false)
+    }.toMutableList()
+
+    val passwordList = mutableListOf<KeyInfo>()
+
+    passwordInfoList.forEach {
+        if (it.isRoundKey()) {
+            passwordList.add(KeyInfo(it.roundKey?.lastKey ?: it.pass, false, it.roundKey))
+            passwordList.add(KeyInfo(it.roundKey?.getNextKeyHash() ?: it.pass, false, it.roundKey))
+        }
+        passwordList.add(it.getUsingPass())
+        passwordList.addAll(it.getTimeLockPass())
+    }
+
     ENCODERS.any { coder ->
         coder.isEnabled().isTrueAnd(result.isFail) {
-            return@any PASSWORDS.any { password ->
-                (0..TIME_LOCK_REVERSE).map { num -> password + getCurrentDate(num) to true }
-                    .toMutableList().apply {
-                        add(0, password to false)
-                    }.any {
-                        result = coder.decode(text, it.first)
-                        result.isTimeLock = it.second
-                        val isSuccess = !result.isFail
-                        isSuccess.apply {
-                            isTrue {
-                                increaseSuccessDecodeCount()
-                            }
-                            isFalse {
-                                result.isTimeLock = false
-                            }
-                        }
+            return@any passwordList.any {
+                result = coder.decode(text, it.pass)
+                result.isTimeLock = it.isTimeLock
+                result.roundKey = it.roundKey
+                val isSuccess = !result.isFail
+                isSuccess.apply {
+                    isTrue {
+                        increaseSuccessDecodeCount()
                     }
+                    isFalse {
+                        result.isTimeLock = false
+                    }
+                }
             }
         }
-        return@any false
     }
     return result
-}
-
-fun getCurrentPassword(): String {
-    var password = if (USE_RANDOM_PASSWORD) {
-        PASSWORDS.filter { !it.contentEquals("123") }.randomOrNull() ?: "123"
-    } else {
-        DEFAULT_PASSWORD
-    }
-    if (USE_TIME_LOCK) password += getCurrentDate()
-    return password
 }
 
 fun encodeText(text: String, password: String = getCurrentPassword()): CoderResult {
     if (text.trim().isEmpty()) {
         return CoderResult.Failed
     }
+    if (PASSWORDS.firstOrNull { it.value.contentEquals(DEFAULT_PASSWORD) } == null) {
+        setDefaultPassword(PASSWORDS.firstOrNull()?.value ?: "123")
+    }
     var encoder = getDefaultEncoder()
     USE_RANDOM_ENCODER.isTrue { encoder = ENCODERS.random() }
+    val keyInfo = KeyInfo(password)
     return encoder.encode(
-        text.trim(), password
+        text.trim(), keyInfo.getUsingPass().pass
     ).also {
         if (!it.isFail) {
             increaseEncodeCount()
         }
     }.apply {
-        isTimeLock = USE_TIME_LOCK
+        isTimeLock = if (keyInfo.isRoundKey()) false else USE_TIME_LOCK
         isEncrypt = true
+        roundKey = keyInfo.roundKey
         textWithPrefix = textCoder.textWithPrefix(prefix, this.text)
     }
 }

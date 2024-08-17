@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.donut.mixmessage.util.common.addComposeView
-import com.donut.mixmessage.util.common.performHapticFeedBack
 
 class MixDialogBuilder(
     private var title: String,
@@ -102,7 +101,6 @@ fun showAlertDialog(
     neutralButton: @Composable () -> Unit = {},
     properties: DialogProperties = DialogProperties()
 ): () -> Unit {
-    performHapticFeedBack()
     return addComposeView { removeView ->
         val mixedDismissButton = @Composable {
             neutralButton()

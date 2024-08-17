@@ -23,6 +23,7 @@ import com.donut.mixmessage.util.common.isNotNullAnd
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+import com.donut.mixmessage.util.encode.updateRoundKeys
 import com.hjq.window.EasyWindow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -130,6 +131,7 @@ class MixAccessibilityService : AccessibilityApi() {
         appScope.launch {
             try {
                 startLock()
+                updateRoundKeys()
                 delay(1000 * 10)
             } catch (e: Exception) {
                 showError(e)

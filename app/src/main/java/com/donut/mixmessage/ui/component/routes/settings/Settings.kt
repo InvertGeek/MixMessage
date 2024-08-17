@@ -47,7 +47,6 @@ import com.donut.mixmessage.ui.component.routes.settings.routes.PrefixPage
 import com.donut.mixmessage.ui.component.routes.settings.routes.RSAPage
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
-import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.ENCODERS
@@ -100,7 +99,6 @@ fun selectDefaultEncoder() {
                             }
                             setDefaultNegative()
                             setPositiveButton("确定") {
-                                performHapticFeedBack()
                                 USE_SIMPLE_MODE = true
                                 closeDialog()
                             }
@@ -108,7 +106,6 @@ fun selectDefaultEncoder() {
                         }
                         return@LabelSwitch
                     }
-                    performHapticFeedBack()
                     USE_SIMPLE_MODE = false
                 }
             }

@@ -51,9 +51,9 @@ import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.RSAUtil
-import com.donut.mixmessage.util.encode.addPassword
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
+import com.donut.mixmessage.util.encode.manualAddPassword
 import com.donut.mixmessage.util.encode.setDefaultPassword
 import java.security.PublicKey
 
@@ -295,15 +295,15 @@ fun RSADecryptComponent(decodeResult: CoderResult) {
                                 horizontalArrangement = Arrangement.End
                             ) {
                                 Button(onClick = {
-                                    addPassword(password)
-                                    setDefault.isTrue {
-                                        setDefaultPassword(password)
+                                    manualAddPassword(password).isTrue {
+                                        setDefault.isTrue {
+                                            setDefaultPassword(password)
+                                        }
+                                        refreshRSA.isTrue {
+                                            RSAUtil.regenerateKeyPair()
+                                        }
+                                        closeDialog()
                                     }
-                                    refreshRSA.isTrue {
-                                        RSAUtil.regenerateKeyPair()
-                                    }
-                                    showToast("添加成功!")
-                                    closeDialog()
                                 }) {
                                     Text(text = "确认")
                                 }

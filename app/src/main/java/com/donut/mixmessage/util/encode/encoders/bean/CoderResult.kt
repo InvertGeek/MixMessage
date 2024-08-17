@@ -4,8 +4,10 @@ import com.donut.mixmessage.util.common.decodeBase64
 import com.donut.mixmessage.util.common.decodeBase64String
 import com.donut.mixmessage.util.common.encodeToBase64
 import com.donut.mixmessage.util.common.ignoreError
+import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.encode.RSAUtil
+import com.donut.mixmessage.util.encode.RoundKey
 import com.donut.mixmessage.util.encode.getDefaultEncoder
 import com.donut.mixmessage.util.encode.getPasswordIndex
 import java.security.PublicKey
@@ -15,6 +17,7 @@ data class CoderResult(
     val password: String,
     val textCoder: TextCoder,
     var originText: String,
+    var roundKey: RoundKey? = null,
     var isEncrypt: Boolean = false,
     val isFail: Boolean = false,
     val isSimple: Boolean = false,
@@ -100,15 +103,19 @@ data class CoderResult(
     private fun Boolean.trueText(trueText: String, falseText: String = "") =
         if (this) trueText else falseText
 
-    fun getInfo(full: Boolean = false) = """
+    fun getInfo(full: Boolean = false): String {
+        val indexPass = roundKey?.key?.value?: password
+        return """
                     ${full.trueText("使用的密钥: $password")}
-                    ${(!full).trueText("密钥编号: #${getPasswordIndex(password, isTimeLock)}")}
+                    ${(!full).trueText("密钥编号: #${getPasswordIndex(indexPass, isTimeLock)}")}
                     加密方法: ${textCoder.name}
                     长度: ${textWithPrefix.length}
                     原始长度: ${originText.length}
                     ${isSimple.trueText("精简模式")}
                     ${isTimeLock.trueText("时间锁")}
+                    ${roundKey.isNotNull().trueText("轮换: ${roundKey?.name}")}
                 """.trimIndent().replace("\n", " ")
+    }
 
 
     fun textWithPrefix(prefixText: String = prefix): String {

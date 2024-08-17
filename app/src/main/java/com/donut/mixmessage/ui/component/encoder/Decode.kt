@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.ClearableTextField
 import com.donut.mixmessage.util.common.copyToClipboard
-import com.donut.mixmessage.util.common.performHapticFeedBack
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.decodeText
@@ -54,7 +53,6 @@ fun DecodeTextResultComponent(noScroll: Boolean = false, decodeResult: CoderResu
 
     Button(
         onClick = {
-            performHapticFeedBack()
             decodeResultText.copyToClipboard()
             showToast("复制结果成功")
         },
@@ -93,7 +91,6 @@ fun DecodeComponent() {
         OutlinedButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                performHapticFeedBack()
                 inputText = TextFieldValue(readClipBoardText())
             }) {
             Text(text = "解码剪贴板")

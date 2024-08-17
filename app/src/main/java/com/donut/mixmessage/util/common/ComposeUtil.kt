@@ -1,7 +1,6 @@
 package com.donut.mixmessage.util.common
 
 import android.annotation.SuppressLint
-import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
@@ -107,20 +106,6 @@ fun ZoomableView(
             })
     ) {
         content()
-    }
-}
-
-var ENABLE_HAPTIC_FEEDBACK by cachedMutableOf(true, "enable_haptic_feedback")
-fun performHapticFeedBack(cd: Long = 400L) {
-    ENABLE_HAPTIC_FEEDBACK.isFalse {
-        return
-    }
-    withCd("haptic_feedback", cd) {
-        val view = ComposeView(currentActivity)
-        addContentView(view).also {
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            it()
-        }
     }
 }
 

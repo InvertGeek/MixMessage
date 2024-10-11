@@ -13,8 +13,8 @@ android {
         applicationId = "com.donut.mixmessage"
         minSdk = 24
         targetSdk = 34
-        versionCode = 84
-        versionName = "1.11.1"
+        versionCode = 85
+        versionName = "1.12.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -78,7 +78,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.aliyun.dpa:oss-android-sdk:2.9.13")
     implementation("com.github.getActivity:EasyWindow:10.6")
-    implementation("com.google.firebase:firebase-analytics:22.0.2")
+    implementation("com.google.firebase:firebase-analytics:22.1.0")
     implementation("com.tencent:mmkv:1.3.5")
     implementation("io.sanghun:compose-video:1.2.0")
     implementation("androidx.media3:media3-exoplayer:1.4.0") // [Required] androidx.media3 ExoPlayer dependency
@@ -96,7 +96,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
     implementation("androidx.activity:activity-compose:1.9.1")
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -105,7 +105,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.12.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

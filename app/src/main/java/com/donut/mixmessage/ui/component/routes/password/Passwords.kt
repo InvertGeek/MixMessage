@@ -59,6 +59,7 @@ var LOCK_CACHE by cachedMutableOf("", "lock_cache")
 var LOCK_TIMEOUT by cachedMutableOf(600L, "lock_timeout")
 
 var ENABLE_AUTO_LOCK by cachedMutableOf(false, "lock_enable")
+var DEFAULT_PASS_CACHE by cachedMutableOf(DEFAULT_PASSWORD, "default_pass_lock_cache")
 
 fun startLock(force: Boolean = false) {
     if (LOCK_PASSWORD.isEmpty()) {
@@ -72,7 +73,9 @@ fun startLock(force: Boolean = false) {
         return
     }
 
-    DEFAULT_PASSWORD = encryptAESBase64(DEFAULT_PASSWORD, LOCK_PASSWORD)
+    DEFAULT_PASS_CACHE = encryptAESBase64(DEFAULT_PASSWORD, LOCK_PASSWORD)
+
+    DEFAULT_PASSWORD = "123"
 
     PASSWORDS.forEach {
         if (it.value.contentEquals("123")) {
@@ -102,7 +105,7 @@ fun tryUnlock(password: String) {
         it.updateValue(decryptAESBase64(it.value, password))
     }
 
-    DEFAULT_PASSWORD = decryptAESBase64(DEFAULT_PASSWORD, password)
+    DEFAULT_PASSWORD = decryptAESBase64(DEFAULT_PASS_CACHE, password)
 
     showToast("解锁成功")
 }
@@ -368,7 +371,7 @@ val Passwords = MixNavPage(gap = 20.dp) {
                                 showToast("备注不能为空")
                                 return@setPositiveButton
                             }
-                            if (manualAddPassword("_r:${name}:s:${genRandomString(13)}:${Date().time / 1000}:${hour}:0")){
+                            if (manualAddPassword("_r:${name}:s:${genRandomString(13)}:${Date().time / 1000}:${hour}:0")) {
                                 closeDialog()
                                 showPasswordsDialog()
                             }

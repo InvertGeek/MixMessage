@@ -79,14 +79,14 @@ val AboutPage = MixNavPage(
     }
     Text(
         color = colorScheme.primary,
-        text = "项目地址: https://gitlab.com/ivgeek/MixMessage",
+        text = "项目地址: https://github.com/invertgeek/MixMessage",
         modifier = Modifier.clickable {
             MixDialogBuilder("确定打开?").apply {
                 setPositiveButton("确定") {
                     val intent =
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://gitlab.com/ivgeek/MixMessage")
+                            Uri.parse("https://github.com/invertgeek/MixMessage")
                         )
                     currentActivity.startActivity(intent)
                     closeDialog()

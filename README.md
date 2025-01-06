@@ -3,9 +3,9 @@
 ![1](image.png)\
 安卓平台全自动信息编码解码软件\
 已发布版本: \
-https://gitlab.com/ivgeek/MixMessage/-/releases \
+https://github.com/InvertGeek/MixMessage/releases \
 使用帮助: \
-https://gitlab.com/ivgeek/MixMessage/-/wikis/%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9
+https://github.com/InvertGeek/MixMessage/wiki
 ## 特点
 基于无障碍服务,需要授权无障碍权限和悬浮窗权限,建议关闭省电模式并开启自启动\
 能自动解码基本所有软件中的文本信息,并弹出快捷编码对话窗口\

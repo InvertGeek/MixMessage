@@ -98,6 +98,7 @@ val AboutPage = MixNavPage(
     )
     Text(
         color = Color.Gray,
+        modifier = Modifier,
         text = """
         加密算法: 默认使用的是aes-gcm算法(移位编码除外),通用标准，目前国际上无人破解,会填充16字节的随机偏移,相同内容使用相同密钥加密会每次都将产生唯一的结果，永远不会重复
         文件上传: 上传的所有文件都会用aes算法加密后隐藏到一张空白图片中作为图片上传

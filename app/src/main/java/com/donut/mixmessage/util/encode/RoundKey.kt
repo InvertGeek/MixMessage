@@ -104,7 +104,7 @@ class RoundKey(var key: PassKey) {
 
 
         private fun hashKey(value: String) =
-            value.hashSHA256().encodeToBase64().substring(0, 13)
+            value.hashSHA256().encodeToBase64()
 
     }
 }

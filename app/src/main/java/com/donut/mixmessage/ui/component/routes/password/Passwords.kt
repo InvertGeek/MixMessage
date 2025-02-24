@@ -371,7 +371,7 @@ val Passwords = MixNavPage(gap = 20.dp) {
                                 showToast("备注不能为空")
                                 return@setPositiveButton
                             }
-                            if (manualAddPassword("_r:${name}:s:${genRandomString(13)}:${Date().time / 1000}:${hour}:0")) {
+                            if (manualAddPassword("_r:${name}:s:${genRandomString(44)}:${Date().time / 1000}:${hour}:0")) {
                                 closeDialog()
                                 showPasswordsDialog()
                             }

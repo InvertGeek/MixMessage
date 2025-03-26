@@ -53,7 +53,7 @@
             android:configChanges="uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MixMessage"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
@@ -68,7 +68,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MixMessageDialog"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />

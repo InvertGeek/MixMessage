@@ -42,7 +42,7 @@ fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) 
     val progress = remember {
         ProgressContent(tip = "视频加载中")
     }
-    var error: @Composable UnitBlock? by remember {
+    var error: @Composable  (() -> Unit)? by remember {
         mutableStateOf(null)
     }
     var uri: Uri? by remember {

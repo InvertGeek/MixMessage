@@ -1,0 +1,122 @@
+[versions]
+agp = "8.7.3"
+androidAutoApi = "4.1.2"
+androidGifDrawable = "1.2.29"
+appcompat = "1.7.0"
+coil = "2.6.0"
+composeVideo = "1.2.0"
+constraintlayout = "2.2.1"
+converterGson = "2.11.0"
+dec = "0.1.2"
+dkplayerJava = "3.3.7"
+easywindow = "10.6"
+fastjson2Kotlin = "2.0.56"
+firebaseAnalytics = "22.4.0"
+fontAwesome = "1.1.0"
+gifencoder = "0.10.1"
+giffle = "1.2.0"
+jvmbrotli = "0.2.0"
+kotlin = "2.1.20"
+coreKtx = "1.15.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.10.1"
+composeBom = "2024.08.00"
+ktorClientCio = "3.1.1"
+lz4Java = "1.8.0"
+materialIconsExtended = "1.7.8"
+media3Exoplayer = "1.5.1"
+media3Session = "1.5.1"
+mimetypes = "0.0.3"
+mmkv = "2.1.0"
+navigationCompose = "2.8.9"
+ossAndroidSdk = "2.9.21"
+pinyin = "0.4.0"
+retrofit = "2.11.0"
+robolectric = "4.12.2"
+zoomable = "1.6.1"
+googleServices = "4.4.2"
+
+[libraries]
+android-auto-api = { module = "com.github.Krosxx:Android-Auto-Api", version.ref = "androidAutoApi" }
+android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+fastjson2-kotlin = { module = "com.alibaba.fastjson2:fastjson2-kotlin", version.ref = "fastjson2Kotlin" }
+font-awesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "fontAwesome" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3Session" }
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
+androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Exoplayer" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
+coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
+compose-video = { module = "io.sanghun:compose-video", version.ref = "composeVideo" }
+dec = { module = "org.brotli:dec", version.ref = "dec" }
+dkplayer-java = { module = "xyz.doikki.android.dkplayer:dkplayer-java", version.ref = "dkplayerJava" }
+dkplayer-ui = { module = "xyz.doikki.android.dkplayer:dkplayer-ui", version.ref = "dkplayerJava" }
+easywindow = { module = "com.github.getActivity:EasyWindow", version.ref = "easywindow" }
+enc = { module = "org.brotli:enc", version.ref = "dec" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
+gifencoder = { module = "com.squareup:gifencoder", version.ref = "gifencoder" }
+giffle = { module = "com.madgag:giffle", version.ref = "giffle" }
+jvmbrotli = { module = "com.nixxcode.jvmbrotli:jvmbrotli", version.ref = "jvmbrotli" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientCio" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCio" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientCio" }
+ktor-network = { module = "io.ktor:ktor-network", version.ref = "ktorClientCio" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+ktor-serialization-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktorClientCio" }
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktorClientCio" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorClientCio" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktorClientCio" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktorClientCio" }
+ktor-server-default-headers = { module = "io.ktor:ktor-server-default-headers", version.ref = "ktorClientCio" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktorClientCio" }
+ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktorClientCio" }
+lz4-java = { module = "org.lz4:lz4-java", version.ref = "lz4Java" }
+material3 = { module = "androidx.compose.material3:material3" }
+mimetypes = { module = "com.github.amr:mimetypes", version.ref = "mimetypes" }
+mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
+oss-android-sdk = { module = "com.aliyun.dpa:oss-android-sdk", version.ref = "ossAndroidSdk" }
+pinyin = { module = "com.github.houbb:pinyin", version.ref = "pinyin" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+ui = { module = "androidx.compose.ui:ui" }
+zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+
+

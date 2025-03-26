@@ -71,10 +71,8 @@ fun MainContent() {
     MixMessageTheme {
         Surface(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxSize()
         ) {
-
             AnimatedVisibility(
                 visible = !visible,
                 enter = slideInVertically { it },

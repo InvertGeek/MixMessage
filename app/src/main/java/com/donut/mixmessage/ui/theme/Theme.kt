@@ -94,7 +94,11 @@ fun MixMessageTheme(
             }
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.surface.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+            window.navigationBarColor = colorScheme.surface.toArgb()
+            WindowCompat.getInsetsController(window, view).apply {
+                isAppearanceLightNavigationBars = true
+                isAppearanceLightNavigationBars = false
+            }
         }
     }
 

@@ -96,7 +96,7 @@ fun MixMessageTheme(
             window.statusBarColor = colorScheme.surface.toArgb()
             window.navigationBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightNavigationBars = true
+                isAppearanceLightStatusBars = true
                 isAppearanceLightNavigationBars = false
             }
         }

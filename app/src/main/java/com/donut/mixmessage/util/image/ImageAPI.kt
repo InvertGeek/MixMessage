@@ -93,19 +93,20 @@ abstract class ImageAPI(baseUrl: String, val name: String) {
             return Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient.Builder()
-                    .apply(client)
-                    .writeTimeout(120, TimeUnit.SECONDS)
-                    .addNetworkInterceptor { chain ->
-                        val requestBuilder = chain.request().newBuilder().apply {
-                            header(
-                                "User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-                            )
+                .client(
+                    OkHttpClient.Builder()
+                        .apply(client)
+                        .writeTimeout(120, TimeUnit.SECONDS)
+                        .addNetworkInterceptor { chain ->
+                            val requestBuilder = chain.request().newBuilder().apply {
+                                header(
+                                    "User-Agent",
+                                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+                                )
+                            }
+                            chain.proceed(requestBuilder.build())
                         }
-                        chain.proceed(requestBuilder.build())
-                    }
-                    .build())
+                        .build())
                 .build()
         }
 

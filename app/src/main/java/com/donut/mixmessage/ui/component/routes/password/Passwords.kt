@@ -191,12 +191,13 @@ fun LockSettings() {
             enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )
-        OutlinedTextField(value = LOCK_PASSWORD, onValueChange = {
-            ENABLE_AUTO_LOCK = false
-            LOCK_PASSWORD = it
-        }, label = {
-            Text(text = "解锁密码${if (ENABLE_AUTO_LOCK) "(已哈希)" else ""}")
-        },
+        OutlinedTextField(
+            value = LOCK_PASSWORD, onValueChange = {
+                ENABLE_AUTO_LOCK = false
+                LOCK_PASSWORD = it
+            }, label = {
+                Text(text = "解锁密码${if (ENABLE_AUTO_LOCK) "(已哈希)" else ""}")
+            },
             enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )

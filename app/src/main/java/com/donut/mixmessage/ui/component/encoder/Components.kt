@@ -1,7 +1,6 @@
 package com.donut.mixmessage.ui.component.encoder
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -35,6 +34,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.donut.mixmessage.decode.image.FileContent
 import com.donut.mixmessage.decode.image.ImageContent
 import com.donut.mixmessage.decode.image.VideoContent
@@ -134,7 +134,7 @@ fun HighlightAndClickableUrls(text: String, color: Color) {
                             closeDialog()
                             try {
                                 val intent =
-                                    Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
+                                    Intent(Intent.ACTION_VIEW, annotation.item.toUri())
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 showToast("没有可以处理此URI的应用")

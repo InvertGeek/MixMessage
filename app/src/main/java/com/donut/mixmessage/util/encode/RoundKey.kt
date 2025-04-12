@@ -26,7 +26,7 @@ class RoundKey(var key: PassKey) {
 
     private fun updateAttributes() {
         val splits = key.value.split(":")
-        val (r, name, last, current, date) = splits
+        val (_, name, last, current, date) = splits
         hour = splits[5].toLongOrDefault(hour).coerceAtLeast(1)
         round = splits[6].toLongOrDefault(0).coerceAtLeast(0)
         lastKey = last

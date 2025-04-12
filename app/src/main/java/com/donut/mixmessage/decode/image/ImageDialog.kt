@@ -71,7 +71,8 @@ fun ImageContent(imageUrl: String, password: ByteArray, fileName: String, size: 
         error = {
             ErrorMessage(msg = "图片加载失败")
         },
-        imageLoader = genImageLoader(LocalContext.current,
+        imageLoader = genImageLoader(
+            LocalContext.current,
             sourceListener = {
                 imageData = it
             },

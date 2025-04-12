@@ -50,11 +50,10 @@
 
         <activity
             android:name=".MainActivity"
-            android:configChanges="uiMode"
+            android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/MixMessage"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
@@ -64,12 +63,11 @@
         </activity>
         <activity
             android:name=".decode.DecodeActivity"
-            android:configChanges="uiMode"
+            android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:excludeFromRecents="true"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/MixMessageDialog"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 

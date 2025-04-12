@@ -2,7 +2,6 @@ package com.donut.mixmessage.decode
 
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -24,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.graphics.drawable.toDrawable
 import com.donut.mixmessage.app
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.decode.DecodeActivity.Companion.LAST_FORCE_CLOSE
@@ -93,7 +93,7 @@ class DecodeActivity : MixActivity("decode") {
     override fun onCreate(savedInstanceState: Bundle?) {
         mixFileSelector = MixFileSelector(this)
         super.onCreate(savedInstanceState)
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         decodeResult.isNull {
             return

@@ -30,11 +30,11 @@ interface TextCoder {
         return input.split(" ", "\n", "\t", "\r")
     }
 
-    fun enable(): Unit {
+    fun enable() {
         kv.encode("enable_encoder_$name", true)
     }
 
-    fun disable(): Unit {
+    fun disable() {
         kv.encode("enable_encoder_$name", false)
     }
 

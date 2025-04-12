@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.TipText
-import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
@@ -42,7 +41,7 @@ fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) 
     val progress = remember {
         ProgressContent(tip = "视频加载中")
     }
-    var error: @Composable  (() -> Unit)? by remember {
+    var error: @Composable (() -> Unit)? by remember {
         mutableStateOf(null)
     }
     var uri: Uri? by remember {

@@ -68,7 +68,7 @@ class ProgressContent(
     }
 
     val ktorListener: suspend (bytesWritten: Long, bytesTotal: Long?) -> Unit = { bytes, length ->
-        updateProgress(bytes, length ?: 0L)
+        updateProgress(bytes, length ?: 1L)
     }
 
     fun updateProgress(written: Long = bytesWritten, total: Long = contentLength) {

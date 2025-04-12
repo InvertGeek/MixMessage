@@ -104,7 +104,7 @@ data class CoderResult(
         if (this) trueText else falseText
 
     fun getInfo(full: Boolean = false): String {
-        val indexPass = roundKey?.key?.value?: password
+        val indexPass = roundKey?.key?.value ?: password
         return """
                     ${full.trueText("使用的密钥: $password")}
                     ${(!full).trueText("密钥编号: #${getPasswordIndex(indexPass, isTimeLock)}")}

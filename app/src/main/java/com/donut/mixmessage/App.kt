@@ -26,11 +26,13 @@ import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.objects.MixActivity
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 
 
-val appScope by lazy { MainScope() }
+val appScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
 lateinit var kv: MMKV
 

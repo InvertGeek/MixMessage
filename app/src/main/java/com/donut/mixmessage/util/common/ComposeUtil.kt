@@ -33,6 +33,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.MixMessageTheme
+import com.donut.mixmessage.util.objects.MixActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,6 +72,9 @@ fun OnDispose(block: () -> Unit) {
 }
 
 fun addComposeView(content: @Composable (removeView: () -> Unit) -> Unit): () -> Unit {
+    if (MixActivity.firstActiveActivity() == null) {
+        return {}
+    }
     return addContentView(
         ComposeView(currentActivity).apply {
             setContent {

@@ -87,6 +87,20 @@ val forceCacheInterceptor = Interceptor { chain ->
         .build()
 }
 
+fun String.sanitizeFileName(): String {
+    // 定义非法字符的正则表达式
+    val illegalChars = "[/\\\\:*?\"<>|]".toRegex()
+
+
+    return this
+        .replace(illegalChars, " ")
+        .trim()
+        .replace("\\s+".toRegex(), "_")
+        .takeLast(255)
+        .ifEmpty { "unnamed_file" }
+}
+
+
 fun saveFileToStorage(
     activity: Activity,
     file: ByteArray,
@@ -96,7 +110,7 @@ fun saveFileToStorage(
 ): Uri? {
     val resolver = activity.contentResolver
     val contentValues = ContentValues().apply {
-        put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+        put(MediaStore.MediaColumns.DISPLAY_NAME, displayName.sanitizeFileName())
 //        put(MediaStore.MediaColumns.MIME_TYPE, "image/gif")
         put(MediaStore.MediaColumns.RELATIVE_PATH, directory)
     }

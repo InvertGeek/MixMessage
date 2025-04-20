@@ -23,6 +23,7 @@ import coil.decode.VideoFrameDecoder
 import com.donut.mixmessage.service.MixAccessibilityService
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
+import com.donut.mixmessage.util.common.loopTask
 import com.donut.mixmessage.util.common.showError
 import com.donut.mixmessage.util.objects.MixActivity
 import com.tencent.mmkv.MMKV
@@ -88,6 +89,10 @@ class App : Application(), ImageLoaderFactory {
         innerApp = this
         MMKV.initialize(this)
         kv = MMKV.defaultMMKV()
+        appScope.loopTask(1000 * 60 * 10) {
+            kv.clearMemoryCache()
+            kv.trim()
+        }
     }
 
     override fun newImageLoader(): ImageLoader {

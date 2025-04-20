@@ -21,8 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
+import com.donut.mixmessage.util.common.AsyncEffect
 import com.donut.mixmessage.util.common.TipText
-import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isNullAnd
@@ -51,7 +51,7 @@ fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) 
         mutableStateOf(null)
     }
 
-    UseEffect {
+    AsyncEffect {
         fileData = ImageAPI.downloadEncryptedData(
             url,
             password,
@@ -60,7 +60,7 @@ fun VideoContent(url: String, password: ByteArray, fileName: String, size: Int) 
         )
         fileData.isNull {
             error = { ErrorMessage(msg = "视频加载失败") }
-            return@UseEffect
+            return@AsyncEffect
         }
         uri = fileData?.toURI("video")
     }

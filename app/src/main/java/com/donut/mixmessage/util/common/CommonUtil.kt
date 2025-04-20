@@ -7,9 +7,15 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.provider.Settings
 import android.util.Log
+import androidx.core.net.toUri
 import com.donut.mixmessage.app
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.net.URL
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
@@ -35,6 +41,19 @@ fun String.copyWithDialog(description: String = "") {
             closeDialog()
         }
         show()
+    }
+}
+
+fun CoroutineScope.loopTask(
+    delay: Long,
+    initDelay: Long = 0,
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    block: suspend () -> Unit
+) = launch(dispatcher) {
+    delay(initDelay)
+    while (true) {
+        block()
+        delay(delay)
     }
 }
 
@@ -238,8 +257,8 @@ fun genRandomString(length: Int = 32): String {
 
 fun isValidUri(uriString: String): Boolean {
     try {
-        val uri = Uri.parse(uriString)
-        return uri != null && uri.scheme != null
+        val uri = uriString.toUri()
+        return uri.scheme != null
     } catch (e: Exception) {
         return false
     }

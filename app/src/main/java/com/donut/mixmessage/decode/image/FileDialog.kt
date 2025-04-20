@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.colorScheme
+import com.donut.mixmessage.util.common.AsyncEffect
 import com.donut.mixmessage.util.common.TipText
-import com.donut.mixmessage.util.common.UseEffect
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull
 import com.donut.mixmessage.util.common.isNotTrue
@@ -49,9 +49,9 @@ fun FileContent(url: String, password: ByteArray, fileName: String, size: Int) {
     }
 
 
-    UseEffect(download) {
+    AsyncEffect(download) {
         download.isFalse {
-            return@UseEffect
+            return@AsyncEffect
         }
         fileData = ImageAPI.downloadEncryptedData(
             url,
@@ -61,7 +61,7 @@ fun FileContent(url: String, password: ByteArray, fileName: String, size: Int) {
         )
         fileData.isNull {
             error = { ErrorMessage(msg = "文件下载失败") }
-            return@UseEffect
+            return@AsyncEffect
         }
         saveFileToStorage(
             currentActivity,

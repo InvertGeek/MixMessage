@@ -15,7 +15,7 @@ import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.component.routes.settings.routes.ENABLE_IMAGE_COMPRESS
 import com.donut.mixmessage.ui.component.routes.settings.routes.selectImageAPI
-import com.donut.mixmessage.util.common.UseEffect
+import com.donut.mixmessage.util.common.AsyncEffect
 import com.donut.mixmessage.util.common.isNull
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
@@ -88,7 +88,7 @@ fun selectImage(
                 ) {
                     progressContent.LoadingContent()
                 }
-                UseEffect {
+                AsyncEffect {
                     val password = generateRandomByteArray(16)
                     val encryptedFileData = encryptAES(block(data), password)
                     val url = startUploadImage(
@@ -98,7 +98,7 @@ fun selectImage(
                     url.isNull {
                         closeDialog()
                         showToast("上传失败")
-                        return@UseEffect
+                        return@AsyncEffect
                     }
                     showToast("上传成功!")
                     withContext(Dispatchers.Main) {

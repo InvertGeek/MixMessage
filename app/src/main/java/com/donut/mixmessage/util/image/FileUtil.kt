@@ -88,15 +88,30 @@ val forceCacheInterceptor = Interceptor { chain ->
 }
 
 fun String.sanitizeFileName(): String {
-    // 定义非法字符的正则表达式
-    val illegalChars = "[/\\\\:*?\"<>|]".toRegex()
+    // 定义非法字符，包括控制字符、文件系统非法字符、路径遍历等
+    val illegalChars = "[\\x00-\\x1F\\x7F/\\\\:*?\"<>|]".toRegex()
+    // Windows 保留文件名（大小写不敏感）
+    val reservedNames = setOf(
+        "CON", "PRN", "AUX", "NUL",
+        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+    )
 
-
-    return this
-        .replace(illegalChars, " ")
+    // 处理文件名
+    var sanitized = this
+        // 替换非法字符为下划线
+        .replace(illegalChars, "_")
+        // 移除路径遍历序列
+        .replace("..", "_")
         .trim()
-        .takeLast(255)
-        .ifEmpty { "unnamed_file" }
+
+    // 检查是否为 Windows 保留文件名
+    val baseName = sanitized.substringBeforeLast(".").uppercase()
+    if (baseName in reservedNames) {
+        sanitized = "_$sanitized"
+    }
+
+    return sanitized.takeLast(255).ifEmpty { "unnamed_file" }
 }
 
 

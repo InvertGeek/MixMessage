@@ -129,14 +129,6 @@ fun getUrlHost(url: String): String? {
     return null
 }
 
-fun String.truncate(maxLength: Int): String {
-    return if (this.length > maxLength) {
-        this.substring(0, maxLength) + "..."
-    } else {
-        this
-    }
-}
-
 @OptIn(ExperimentalEncodingApi::class)
 fun ByteArray.encodeToBase64() = Base64.encode(this)
 

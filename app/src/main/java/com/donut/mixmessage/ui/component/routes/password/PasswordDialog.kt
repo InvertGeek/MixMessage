@@ -115,11 +115,18 @@ fun openAddPasswordDialog() {
     MixDialogBuilder("添加密钥").apply {
         var passValue by mutableStateOf(TextFieldValue())
         setContent {
-            OutlinedTextField(value = passValue, onValueChange = {
-                passValue = it
-            }, label = {
-                Text(text = "输入密钥")
-            }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(
+                maxLines = 1,
+                value = passValue,
+                onValueChange = {
+                    passValue = it
+                },
+                label = {
+                    Text(text = "输入密钥")
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
         }
         setNegativeButton("取消") {
             closeDialog()

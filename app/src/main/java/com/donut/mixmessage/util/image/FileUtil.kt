@@ -12,6 +12,7 @@ import android.graphics.drawable.AnimatedImageDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
 import com.donut.mixmessage.app
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -62,7 +63,7 @@ fun Bitmap.compressToByteArray(
 }
 
 fun createBlankBitmap(width: Int, height: Int): Bitmap {
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val bitmap = createBitmap(width, height)
     val canvas = Canvas(bitmap)
     canvas.drawColor(Color.rgb(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255)))
     return bitmap

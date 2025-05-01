@@ -188,6 +188,7 @@ fun LockSettings() {
             label = {
                 Text(text = "自动锁定时间(秒)")
             },
+            maxLines = 1,
             enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )
@@ -195,9 +196,11 @@ fun LockSettings() {
             value = LOCK_PASSWORD, onValueChange = {
                 ENABLE_AUTO_LOCK = false
                 LOCK_PASSWORD = it
-            }, label = {
+            },
+            label = {
                 Text(text = "解锁密码${if (ENABLE_AUTO_LOCK) "(已哈希)" else ""}")
             },
+            maxLines = 1,
             enabled = !ENABLE_AUTO_LOCK,
             modifier = Modifier.fillMaxWidth()
         )
@@ -278,11 +281,17 @@ fun Unlock() {
                 var inputValue by mutableStateOf("")
                 MixDialogBuilder("输入密码").apply {
                     setContent {
-                        OutlinedTextField(value = inputValue, onValueChange = {
-                            inputValue = it
-                        }, label = {
-                            Text(text = "输入解锁密码")
-                        }, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(
+                            value = inputValue,
+                            onValueChange = {
+                                inputValue = it
+                            },
+                            label = {
+                                Text(text = "输入解锁密码")
+                            },
+                            maxLines = 1,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                     setPositiveButton("确认") {
                         tryUnlock(inputValue.hashToMD5String(100))
@@ -338,16 +347,28 @@ val Passwords = MixNavPage(gap = 20.dp) {
                         var hour by mutableLongStateOf(12)
                         setContent {
                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                OutlinedTextField(value = name, onValueChange = {
-                                    name = it
-                                }, label = {
-                                    Text(text = "密钥备注")
-                                }, modifier = Modifier.fillMaxWidth())
-                                OutlinedTextField(value = hour.toString(), onValueChange = {
-                                    hour = it.toLongOrDefault(1).coerceAtLeast(1)
-                                }, label = {
-                                    Text(text = "轮换周期(小时)")
-                                }, modifier = Modifier.fillMaxWidth())
+                                OutlinedTextField(
+                                    maxLines = 1,
+                                    value = name,
+                                    onValueChange = {
+                                        name = it
+                                    },
+                                    label = {
+                                        Text(text = "密钥备注")
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                OutlinedTextField(
+                                    value = hour.toString(),
+                                    onValueChange = {
+                                        hour = it.toLongOrDefault(1).coerceAtLeast(1)
+                                    },
+                                    label = {
+                                        Text(text = "轮换周期(小时)")
+                                    },
+                                    maxLines = 1,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                                 Text(
                                     color = Color.Gray,
                                     text = """

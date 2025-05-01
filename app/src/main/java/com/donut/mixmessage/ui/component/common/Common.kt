@@ -25,10 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.theme.colorScheme
-import com.donut.mixmessage.util.common.truncate
 
 @Composable
 fun CommonColumn(
@@ -178,7 +178,13 @@ fun <T> SingleSelectItemList(
             val currentItem = items[item]
             val selected = currentOption == currentItem
             FilterChip(
-                label = { Text(text = getLabel(currentItem).truncate(20)) },
+                label = {
+                    Text(
+                        text = getLabel(currentItem),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 onClick = {
                     onSelect(currentItem)
                 },

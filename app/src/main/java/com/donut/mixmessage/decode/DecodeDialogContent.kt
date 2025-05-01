@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.appScope
@@ -46,7 +47,6 @@ import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.showToast
-import com.donut.mixmessage.util.common.truncate
 import com.donut.mixmessage.util.encode.RSAUtil
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
@@ -160,7 +160,11 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                     }
                 },
                 label = {
-                    Text(text = decodeResult.originText.truncate(10))
+                    Text(
+                        text = decodeResult.originText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 },
                 leadingIcon = {
                     Icon(

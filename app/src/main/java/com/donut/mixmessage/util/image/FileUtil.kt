@@ -102,13 +102,13 @@ fun String.sanitizeFileName(): String {
     var sanitized = this
         // 替换非法字符为下划线
         .replace(illegalChars, "_")
-        // 移除路径遍历序列
-        .replace("..", "_")
         .trim()
 
-    // 检查是否为 Windows 保留文件名
-    val baseName = sanitized.substringBeforeLast(".").uppercase()
-    if (baseName in reservedNames) {
+    if (sanitized.all { it == '.' }) {
+        sanitized = "unnamed_file"
+    }
+
+    if (sanitized.uppercase() in reservedNames) {
         sanitized = "_$sanitized"
     }
 

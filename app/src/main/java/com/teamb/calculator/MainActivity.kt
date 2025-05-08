@@ -1,5 +1,6 @@
 package com.teamb.calculator
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.donut.mixmessage.util.common.LockScreenOrientation
 import com.teamb.calculator.components.Calculator
 import com.teamb.calculator.ui.theme.CalculatorTheme
 
@@ -21,6 +23,7 @@ fun CalculatorContent(callBack: (String) -> Unit = {}) {
         CalculatorViewModel(callBack)
     }
     val state = viewModel.state
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background

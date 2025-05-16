@@ -73,9 +73,8 @@ fun selectImage(
 ) {
     selector.openSelect(arrayOf(type)) { data, fileName ->
         MixDialogBuilder(
-            "上传中", properties = DialogProperties(
-                dismissOnClickOutside = false
-            )
+            "上传中",
+            autoClose = false
         ).apply {
             setContent {
                 val progressContent = remember {

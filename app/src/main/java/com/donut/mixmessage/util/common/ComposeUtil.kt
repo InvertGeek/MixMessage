@@ -41,6 +41,7 @@ import com.donut.mixmessage.util.objects.MixActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.toggleScale
 import net.engawapg.lib.zoomable.zoomable
@@ -139,9 +140,8 @@ fun AsyncEffect(
     vararg keys: Any?,
     block: suspend CoroutineScope.() -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     LaunchedEffect(*keys) {
-        scope.launch(Dispatchers.IO, block = block)
+        withContext(Dispatchers.IO, block)
     }
 }
 

@@ -25,14 +25,14 @@
         android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:requestLegacyExternalStorage="true"
         android:fullBackupContent="@xml/backup_rules"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/MixMessage"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <service
             android:name=".service.MixAccessibilityService"
@@ -52,10 +52,8 @@
             android:name=".MainActivity"
             android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:exported="true"
-            android:hardwareAccelerated="true"
             android:launchMode="singleTask"
-            android:theme="@style/MixMessage"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            android:theme="@style/MixMessage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -66,10 +64,8 @@
             android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:hardwareAccelerated="true"
             android:launchMode="singleTask"
-            android:theme="@style/MixMessageDialog"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:theme="@style/MixMessageDialog" />
 
         <activity-alias
             android:name="com.donut.mixmessage.tiktok"

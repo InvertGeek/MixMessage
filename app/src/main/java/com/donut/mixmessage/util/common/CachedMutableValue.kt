@@ -106,12 +106,14 @@ abstract class CachedMutableValue<T>(
         }
         stateValue++
         this.value = value
-        saveTask?.cancel()
-        saveTask = appScope.launch(Dispatchers.Main) {
-            mutex.withLock {
-                delay(100)
-                withContext(Dispatchers.IO) {
-                    writeCachedValue(this@CachedMutableValue.value)
+        synchronized(this) {
+            saveTask?.cancel()
+            saveTask = appScope.launch(Dispatchers.Main) {
+                mutex.withLock {
+                    delay(100)
+                    withContext(Dispatchers.IO) {
+                        writeCachedValue(this@CachedMutableValue.value)
+                    }
                 }
             }
         }

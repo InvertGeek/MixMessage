@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.window.DialogProperties
 import com.donut.mixmessage.decode.DecodeActivity
 import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder

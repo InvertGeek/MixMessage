@@ -27,9 +27,17 @@ object RSAUtil {
     }
 
 
-    val publicKey by CachedDelegate({ arrayOf(publicKeyStr) }) { publicKeyFromString(publicKeyStr) }
+    val publicKey by CachedDelegate({ arrayOf(publicKeyStr) }) {
+        if (publicKeyStr.isEmpty()) {
+            regenerateKeyPair()
+        }
+        publicKeyFromString(publicKeyStr)
+    }
 
     val privateKey by CachedDelegate({ arrayOf(privateKeyStr) }) {
+        if (privateKeyStr.isEmpty()) {
+            regenerateKeyPair()
+        }
         privateKeyFromString(
             privateKeyStr
         )
@@ -42,7 +50,11 @@ object RSAUtil {
         privateKeyStr = keyPair.private.encoded.encodeToBase64()
     }
 
-    private val keyFactory = KeyFactory.getInstance("RSA")
+
+    //采用getter获取，应用启动时此方法可能返回null
+    private val keyFactory get() = KeyFactory.getInstance("RSA")
+
+
     private fun String.publicKeySpec(): X509EncodedKeySpec {
         val keyBytes = this.decodeBase64()
         return X509EncodedKeySpec(keyBytes)

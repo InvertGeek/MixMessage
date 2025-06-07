@@ -28,16 +28,10 @@ object RSAUtil {
 
 
     val publicKey by CachedDelegate({ arrayOf(publicKeyStr) }) {
-        if (publicKeyStr.isEmpty()) {
-            regenerateKeyPair()
-        }
         publicKeyFromString(publicKeyStr)
     }
 
     val privateKey by CachedDelegate({ arrayOf(privateKeyStr) }) {
-        if (privateKeyStr.isEmpty()) {
-            regenerateKeyPair()
-        }
         privateKeyFromString(
             privateKeyStr
         )

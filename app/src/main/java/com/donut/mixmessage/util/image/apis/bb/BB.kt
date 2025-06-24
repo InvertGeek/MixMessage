@@ -7,7 +7,6 @@ import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider
 import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask
-import com.alibaba.sdk.android.oss.model.ObjectMetadata
 import com.alibaba.sdk.android.oss.model.PutObjectRequest
 import com.alibaba.sdk.android.oss.model.PutObjectResult
 import com.donut.mixmessage.app
@@ -63,11 +62,7 @@ object BB : ImageAPI("疴析鼞逴歷婩蕃礱隄://赛磀哹.瞔茓電乌悍.�
 
             val ossClient = OSSClient(app, env.publicEndpoint, credentialProvider)
 
-            val meta = ObjectMetadata()
-
-            meta.setHeader("x-oss-acl", "public-read")
-
-            val key = resList[0] + genRandomString(32).hashToMD5String()
+            val key = resList[0] + genRandomString(32).hashToMD5String() + ".jpg"
 
             return suspendCancellableCoroutine { continuation ->
                 var task: OSSAsyncTask<PutObjectResult>? = null

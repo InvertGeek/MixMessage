@@ -1,6 +1,5 @@
 package com.donut.mixmessage.util.encode
 
-import com.donut.mixmessage.util.common.CachedDelegate
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.decodeBase64
@@ -14,28 +13,28 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
 
-@Suppress("MemberVisibilityCanBePrivate")
+
 object RSAUtil {
     var publicKeyStr by cachedMutableOf("", "rsa_public_key")
 
-    var privateKeyStr by cachedMutableOf("", "rsa_private_key")
+    private var privateKeyStr by cachedMutableOf("", "rsa_private_key")
 
-    init {
-        if (publicKeyStr.isEmpty() || privateKeyStr.isEmpty()) {
-            regenerateKeyPair()
+
+    val publicKey: PublicKey
+        get() {
+            if (publicKeyStr.isEmpty()) {
+                regenerateKeyPair()
+            }
+            return publicKeyFromString(publicKeyStr)
         }
-    }
 
-
-    val publicKey by CachedDelegate({ arrayOf(publicKeyStr) }) {
-        publicKeyFromString(publicKeyStr)
-    }
-
-    val privateKey by CachedDelegate({ arrayOf(privateKeyStr) }) {
-        privateKeyFromString(
-            privateKeyStr
-        )
-    }
+    private val privateKey: PrivateKey
+        get() {
+            if (privateKeyStr.isEmpty()) {
+                regenerateKeyPair()
+            }
+            return privateKeyFromString(privateKeyStr)
+        }
 
 
     fun regenerateKeyPair() {
@@ -63,13 +62,13 @@ object RSAUtil {
         return keyFactory.generatePublic(string.publicKeySpec())
     }
 
-    fun privateKeyFromString(string: String): PrivateKey {
+    private fun privateKeyFromString(string: String): PrivateKey {
         return keyFactory.generatePrivate(string.privateKeySpec())
     }
 
-    fun getCipher(): Cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
+    private fun getCipher(): Cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
 
-    fun generateKeyPair(): KeyPair {
+    private fun generateKeyPair(): KeyPair {
         val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
         keyPairGenerator.initialize(2048)
         return keyPairGenerator.genKeyPair()

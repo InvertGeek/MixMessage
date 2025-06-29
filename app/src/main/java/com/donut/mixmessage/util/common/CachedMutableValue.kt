@@ -77,6 +77,7 @@ fun cachedMutableOf(value: Set<String>, key: String) =
 
 
 abstract class CachedMutableValue<T>(
+    @Volatile
     private var value: T,
 ) {
     private var loaded = false
@@ -101,12 +102,12 @@ abstract class CachedMutableValue<T>(
 
 
     operator fun setValue(thisRef: Any?, property: Any?, value: T) {
-        if (this.value == value) {
-            return
-        }
-        stateValue++
-        this.value = value
         synchronized(this) {
+            if (this.value == value) {
+                return
+            }
+            stateValue++
+            this.value = value
             saveTask?.cancel()
             saveTask = appScope.launch(Dispatchers.Main) {
                 mutex.withLock {

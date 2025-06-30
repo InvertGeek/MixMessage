@@ -9,7 +9,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.net.toUri
 import com.donut.mixmessage.app
-import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -179,7 +178,7 @@ infix fun <T> List<T>.elementEquals(other: List<T>): Boolean {
 
 fun Uri.getFileName(): String {
     var fileName = ""
-    currentActivity.contentResolver.query(this, null, null, null, null)?.use {
+    app.contentResolver.query(this, null, null, null, null)?.use {
         val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         it.moveToFirst()
         fileName = it.getString(nameIndex)

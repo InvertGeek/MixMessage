@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.donut.mixmessage.currentActivity
+import com.donut.mixmessage.app
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.AsyncEffect
 import com.donut.mixmessage.util.common.TipText
@@ -120,7 +120,7 @@ fun VideoPlayerContent(uri: Uri, fileData: ByteArray, fileName: String) {
             setPositiveButton("确定") {
                 closeDialog()
                 saveFileToStorage(
-                    currentActivity,
+                    app,
                     fileData,
                     fileName,
                     Environment.DIRECTORY_MOVIES,

@@ -41,7 +41,7 @@ fun DialogContainer(content: @Composable () -> Unit) {
 
     Dialog(
         onDismissRequest = {
-            currentActivity.finish()
+            currentActivity?.finish()
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {

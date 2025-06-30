@@ -60,7 +60,7 @@ fun MainContent() {
                 }
                 setDefaultNegative()
                 setPositiveButton("确定") {
-                    currentActivity.checkAccessibilityPermission()
+                    currentActivity?.checkAccessibilityPermission()
                     closeDialog()
                 }
                 show()

@@ -94,7 +94,7 @@ fun sendResult(encodeResult: CoderResult) {
                 prefix = selectPrefix()
             }
         }
-        currentActivity.finish()
+        currentActivity?.finish()
         inputAndSendText(encodeResult.textWithPrefix(prefix))
     }
 }
@@ -222,7 +222,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                     onClick = {
                         DecodeActivity.LAST_FORCE_CLOSE = System.currentTimeMillis()
                         showToast("3秒内不会再显示此窗口")
-                        currentActivity.finish()
+                        currentActivity?.finish()
                     },
                     modifier = Modifier.weight(1f)
 
@@ -234,7 +234,7 @@ fun DecodeTextDialog(decodeResult: CoderResult) {
                 ElevatedButton(
                     onClick = {
                         encoderText = TextFieldValue()
-                        currentActivity.finish()
+                        currentActivity?.finish()
                     },
                     modifier = Modifier.weight(1f)
 

@@ -1,7 +1,6 @@
 package com.donut.mixmessage.ui.component.routes.settings.routes
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -15,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.nav.MixNavPage
@@ -86,9 +86,9 @@ val AboutPage = MixNavPage(
                     val intent =
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://github.com/invertgeek/MixMessage")
+                            "https://github.com/invertgeek/MixMessage".toUri()
                         )
-                    currentActivity.startActivity(intent)
+                    currentActivity?.startActivity(intent)
                     closeDialog()
                 }
                 setDefaultNegative()

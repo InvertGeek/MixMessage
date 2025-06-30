@@ -36,7 +36,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.theme.MixMessageTheme
-import com.donut.mixmessage.util.objects.MixActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,7 +45,7 @@ import net.engawapg.lib.zoomable.toggleScale
 import net.engawapg.lib.zoomable.zoomable
 
 fun addContentView(view: View): () -> Unit {
-    currentActivity.addContentView(
+    currentActivity?.addContentView(
         view,
         ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -76,11 +75,9 @@ fun OnDispose(block: () -> Unit) {
 }
 
 fun addComposeView(content: @Composable (removeView: () -> Unit) -> Unit): () -> Unit {
-    if (MixActivity.firstActiveActivity() == null) {
-        return {}
-    }
+    val context = currentActivity ?: return {}
     return addContentView(
-        ComposeView(currentActivity).apply {
+        ComposeView(context).apply {
             setContent {
                 MixMessageTheme {
                     content {

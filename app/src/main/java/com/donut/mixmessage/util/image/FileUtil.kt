@@ -1,7 +1,7 @@
 package com.donut.mixmessage.util.image
 
-import android.app.Activity
 import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -117,13 +117,13 @@ fun String.sanitizeFileName(): String {
 
 
 fun saveFileToStorage(
-    activity: Activity,
+    context: Context = app,
     file: ByteArray,
     displayName: String,
     directory: String,
     storeUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 ): Uri? {
-    val resolver = activity.contentResolver
+    val resolver = context.contentResolver
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, displayName.sanitizeFileName())
 //        put(MediaStore.MediaColumns.MIME_TYPE, "image/gif")

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.donut.mixmessage.currentActivity
+import com.donut.mixmessage.app
 import com.donut.mixmessage.genImageLoader
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.TipText
@@ -103,7 +103,7 @@ fun ImageContent(imageUrl: String, password: ByteArray, fileName: String, size: 
                         setPositiveButton("确定") {
                             closeDialog()
                             saveFileToStorage(
-                                currentActivity,
+                                app,
                                 imageData!!,
                                 fileName,
                                 Environment.DIRECTORY_PICTURES

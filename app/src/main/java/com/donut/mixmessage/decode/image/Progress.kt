@@ -42,15 +42,21 @@ class ProgressInterceptor(private val progressListener: ProgressListener) : Inte
     }
 }
 
-fun formatFileSize(bytes: Long): String {
+fun formatFileSize(bytes: Long, forceMB: Boolean = false): String {
     if (bytes <= 0) return "0 B"
-
-    val units = arrayOf("B", "KB", "MB", "GB", "TB")
-    val digitGroups = (log10(bytes.toDouble()) / log10(1024.0)).toInt()
+    if (forceMB && bytes > 1024 * 1024) {
+        return String.format(
+            Locale.US,
+            "%.2f MB",
+            bytes / 1024.0 / 1024.0
+        )
+    }
+    val units = arrayOf("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    val digitGroups = (log10(bytes.toDouble()) / log10(1024.0)).toInt().coerceAtMost(units.size - 1)
 
     return String.format(
         Locale.US,
-        "%.1f %s",
+        "%.2f %s",
         bytes / 1024.0.pow(digitGroups.toDouble()),
         units[digitGroups]
     )
@@ -68,13 +74,13 @@ class ProgressContent(
     }
 
     val ktorListener: suspend (bytesWritten: Long, bytesTotal: Long?) -> Unit = { bytes, length ->
-        updateProgress(bytes, length ?: 1L)
+        updateProgress(bytes, length ?: 0L)
     }
 
     fun updateProgress(written: Long = bytesWritten, total: Long = contentLength) {
         bytesWritten = written
-        contentLength = total.coerceAtLeast(1)
-        progress = bytesWritten.toFloat() / contentLength.toFloat()
+        contentLength = total
+        progress = bytesWritten.toFloat() / contentLength.coerceAtLeast(1).toFloat()
     }
 
     @Composable
@@ -90,7 +96,7 @@ class ProgressContent(
 
     fun increaseBytesWritten(bytes: Long, total: Long) {
         bytesWritten += bytes
-        contentLength = total.coerceAtLeast(1)
+        contentLength = total
         updateProgress()
     }
 

@@ -89,6 +89,7 @@ class App : Application(), ImageLoaderFactory {
         innerApp = this
         MMKV.initialize(this)
         kv = MMKV.defaultMMKV()
+        kv.enableCompareBeforeSet()
         appScope.loopTask(1000 * 60 * 10) {
             kv.clearMemoryCache()
             kv.trim()

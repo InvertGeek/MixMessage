@@ -25,10 +25,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.MainActivity
-import com.donut.mixmessage.decode.image.selectFile
+import com.donut.mixmessage.decode.file.selectFile
 import com.donut.mixmessage.ui.component.common.ClearableTextField
-import com.donut.mixmessage.ui.component.routes.password.showPasswordsDialog
-import com.donut.mixmessage.ui.component.routes.settings.selectDefaultEncoder
+import com.donut.mixmessage.ui.routes.password.showPasswordsDialog
+import com.donut.mixmessage.ui.routes.settings.selectDefaultEncoder
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.readClipBoardText

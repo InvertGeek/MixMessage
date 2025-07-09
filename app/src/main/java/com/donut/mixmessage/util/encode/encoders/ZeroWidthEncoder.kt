@@ -1,7 +1,7 @@
 package com.donut.mixmessage.util.encode.encoders
 
 import com.donut.mixmessage.decode.lastDecodeResult
-import com.donut.mixmessage.ui.component.routes.settings.routes.ADD_ZERO_WIDTH_PREFIX
+import com.donut.mixmessage.ui.routes.settings.routes.ADD_ZERO_WIDTH_PREFIX
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.codePointsString
 import com.donut.mixmessage.util.common.isTrue

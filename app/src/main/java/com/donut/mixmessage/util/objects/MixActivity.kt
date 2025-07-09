@@ -7,7 +7,7 @@ import android.net.Uri
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
-import com.donut.mixmessage.ui.component.routes.settings.routes.ALLOW_SCREENSHOT
+import com.donut.mixmessage.ui.routes.settings.routes.ALLOW_SCREENSHOT
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue

@@ -25,6 +25,7 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.loopTask
 import com.donut.mixmessage.util.common.showError
+import com.donut.mixmessage.util.mixfile.server
 import com.donut.mixmessage.util.objects.MixActivity
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.CoroutineScope
@@ -89,6 +90,7 @@ class App : Application(), ImageLoaderFactory {
         innerApp = this
         MMKV.initialize(this)
         kv = MMKV.defaultMMKV()
+        server.start(false)
         kv.enableCompareBeforeSet()
         appScope.loopTask(1000 * 60 * 10) {
             kv.clearMemoryCache()
@@ -104,14 +106,8 @@ class App : Application(), ImageLoaderFactory {
 fun genImageLoader(
     context: Context,
     initializer: () -> OkHttpClient = { OkHttpClient() },
-    sourceListener: (ByteArray) -> Unit = {},
 ): ImageLoader {
     return ImageLoader.Builder(context).components {
-        add { result, _, _ ->
-            val source = result.source.source()
-            sourceListener(source.peek().readByteArray())
-            null
-        }
         if (SDK_INT >= 28) {
             add(ImageDecoderDecoder.Factory())
         } else {

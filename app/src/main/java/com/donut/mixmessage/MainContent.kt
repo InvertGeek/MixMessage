@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.ui.component.common.CommonColumn
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.ui.component.nav.NavComponent
-import com.donut.mixmessage.ui.component.routes.password.LOCK_CACHE
-import com.donut.mixmessage.ui.component.routes.password.Unlock
-import com.donut.mixmessage.ui.component.routes.settings.CALCULATOR_LOCK
-import com.donut.mixmessage.ui.component.routes.settings.START_BLANK_SCREEN
+import com.donut.mixmessage.ui.nav.NavComponent
+import com.donut.mixmessage.ui.routes.password.LOCK_CACHE
+import com.donut.mixmessage.ui.routes.password.Unlock
+import com.donut.mixmessage.ui.routes.settings.CALCULATOR_LOCK
+import com.donut.mixmessage.ui.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.theme.MixMessageTheme
 import com.donut.mixmessage.util.common.OnDispose
 import com.donut.mixmessage.util.common.isFalseAnd

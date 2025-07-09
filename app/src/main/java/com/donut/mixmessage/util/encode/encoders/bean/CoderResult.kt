@@ -69,15 +69,6 @@ data class CoderResult(
         }
     }
 
-    inline fun isImage(block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }) =
-        isMedia(IMAGE_IDENTIFIER, block)
-
-    inline fun isVideo(block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }) =
-        isMedia(VIDEO_IDENTIFIER, block)
-
-    inline fun isFile(block: (url: String, filename: String, password: ByteArray, size: Int) -> Unit = { _, _, _, _ -> }) =
-        isMedia(FILE_IDENTIFIER, block)
-
     inline fun isPublicKey(block: (publicKey: PublicKey) -> Unit = { _ -> }): Boolean {
         val isPublicKey = text.startsWith(PUBLIC_KEY_IDENTIFIER)
         isPublicKey.isTrue {

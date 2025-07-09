@@ -61,17 +61,22 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-//            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/*"
         }
     }
 }
 
 dependencies {
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.gson)
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.status.pages)
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.server.default.headers)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.netty)
     implementation(libs.fastjson2.kotlin)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)

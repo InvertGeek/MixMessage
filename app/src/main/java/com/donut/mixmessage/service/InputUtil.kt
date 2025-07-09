@@ -10,7 +10,7 @@ import cn.vove7.auto.core.viewnode.ViewNode
 import com.donut.mixmessage.app
 import com.donut.mixmessage.decode.reOpenDecodeDialog
 import com.donut.mixmessage.ui.component.encoder.encoderText
-import com.donut.mixmessage.ui.component.routes.settings.routes.DETECT_TEXT_SEND
+import com.donut.mixmessage.ui.routes.settings.routes.DETECT_TEXT_SEND
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNull

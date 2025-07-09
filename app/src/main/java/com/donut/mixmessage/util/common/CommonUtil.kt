@@ -7,19 +7,31 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.provider.Settings
 import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.donut.mixmessage.app
+import com.donut.mixmessage.appScope
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.EOFException
 import java.net.URL
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -186,6 +198,9 @@ fun Uri.getFileName(): String {
     return fileName
 }
 
+fun Uri.getFileSize() =
+    app.contentResolver.openAssetFileDescriptor(this, "r")?.use { it.length } ?: 0
+
 fun readRawText(id: Int) = app.resources.openRawResource(id).readBytes().decodeToString()
 
 typealias UnitBlock = () -> Unit
@@ -252,6 +267,49 @@ fun isValidUri(uriString: String): Boolean {
         return uri.scheme != null
     } catch (e: Exception) {
         return false
+    }
+}
+
+inline fun <T> errorDialog(title: String, onError: (Exception) -> Unit = {}, block: () -> T): T? {
+    try {
+        return block()
+    } catch (e: Exception) {
+        onError(e)
+        when (e) {
+            is CancellationException,
+            is EOFException,
+                -> return null
+        }
+        appScope.launch(Dispatchers.Main) {
+            showErrorDialog(e, title)
+        }
+    }
+    return null
+}
+
+fun showErrorDialog(e: Throwable, title: String = "发生错误") {
+    MixDialogBuilder(title).apply {
+        setContent {
+            Column(
+                modifier = Modifier
+                    .heightIn(0.dp, 400.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = e.message ?: "未知错误",
+                    color = Color.Red,
+                    fontSize = 20.sp
+                )
+                Text(text = e.stackTraceToString())
+            }
+        }
+        setPositiveButton("复制错误信息") {
+            e.stackTraceToString().copyToClipboard()
+        }
+        setNegativeButton("关闭") {
+            closeDialog()
+        }
+        show()
     }
 }
 

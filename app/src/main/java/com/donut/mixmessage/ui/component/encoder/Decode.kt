@@ -18,6 +18,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donut.mixmessage.ui.component.common.ClearableTextField
+import com.donut.mixmessage.ui.component.encoder.components.DecodeResultContent
+import com.donut.mixmessage.ui.component.encoder.components.TextCoderResultContent
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.readClipBoardText
 import com.donut.mixmessage.util.common.showToast

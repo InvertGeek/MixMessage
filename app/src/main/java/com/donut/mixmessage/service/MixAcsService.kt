@@ -13,8 +13,8 @@ import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
 import com.donut.mixmessage.decode.DecodeActivity
 import com.donut.mixmessage.decode.openDecodeDialog
-import com.donut.mixmessage.ui.component.routes.password.startLock
-import com.donut.mixmessage.ui.component.routes.settings.enableFloat
+import com.donut.mixmessage.ui.routes.password.startLock
+import com.donut.mixmessage.ui.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
 import com.donut.mixmessage.util.common.isEqual

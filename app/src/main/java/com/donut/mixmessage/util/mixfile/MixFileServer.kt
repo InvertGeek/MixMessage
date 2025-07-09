@@ -1,12 +1,10 @@
 package com.donut.mixmessage.util.mixfile
 
-import com.alibaba.fastjson2.toJSONString
 import com.donut.mixfile.server.core.MixFileServer
 import com.donut.mixfile.server.core.Uploader
 import com.donut.mixfile.server.core.uploaders.A1Uploader
 import com.donut.mixfile.server.core.uploaders.A2Uploader
 import com.donut.mixfile.server.core.uploaders.A3Uploader
-import com.donut.mixfile.util.file.uploadLogs
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -55,15 +53,12 @@ val server = object : MixFileServer(
 
     }
 
-
     override fun getUploader(): Uploader {
         return getCurrentUploader()
     }
 
     override suspend fun getStaticFile(path: String): InputStream? {
-        val classLoader = object {}.javaClass.classLoader
-        // 加载资源文件，路径相对于 resources 目录
-        return classLoader?.getResourceAsStream("files/${path}")
+       return null
     }
 
     override suspend fun genDefaultImage(): ByteArray {
@@ -71,8 +66,7 @@ val server = object : MixFileServer(
     }
 
     override suspend fun getFileHistory(): String {
-        return uploadLogs.asReversed().toJSONString()
+        return ""
     }
-
 
 }

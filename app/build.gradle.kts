@@ -14,8 +14,8 @@ android {
         applicationId = "com.donut.mixmessage"
         minSdk = 26
         targetSdk = 35
-        versionCode = 105
-        versionName = "1.14.16"
+        versionCode = 106
+        versionName = "1.15.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -76,7 +76,6 @@ dependencies {
     implementation(libs.pinyin)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.oss.android.sdk)
     implementation(libs.easywindow)
     implementation(libs.firebase.analytics)
     implementation(libs.mmkv)
@@ -84,8 +83,6 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer) // [Required] androidx.media3 ExoPlayer dependency
     implementation(libs.androidx.media3.session) // [Required] MediaSession Extension dependency
     implementation(libs.androidx.media3.ui) // [Required] Base Player UI
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
     implementation(libs.coil)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)

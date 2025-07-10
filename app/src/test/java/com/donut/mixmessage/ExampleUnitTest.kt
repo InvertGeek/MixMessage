@@ -9,8 +9,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 
-@RunWith(RobolectricTestRunner::class)
-@Config(manifest = Config.NONE)
+
 class ExampleUnitTest {
 
     private val encodeMap = run {
@@ -63,16 +62,7 @@ class ExampleUnitTest {
 
     @Test
     fun test() {
-        val alphabet: Alphabet = Alphabet.fromCharList((0xfe00..0xfe0f).map { it.toChar() })
-        val baseN = BigIntBaseN(alphabet)
-        val alphabet2: Alphabet = Alphabet.fromCharList(('0'..'9') + ('a'..'f'))
-        val baseN2 = BigIntBaseN(alphabet2)
-        println(baseN.decode(encodeHex("0009".decodeHex())).toHex())
-        println(
-            baseN.decode("︀︀︀︉︌︀︁︁︀︁︌︀︅︊️︄︆︋︇︎︃︂︀︉︄︆︁︂︉︌︃︍︉︅︋︀︉︌︁️︆︍︀︂︌︉︀︉︆︂︈︃︅︋︌︉︁️︂︇︅︄︎︋︋︁︍︀︉︉︂︄︍︃︉︆︊︎︍︊︁︆︀︇︎︋︆︈︇︃︆︉︇︎︅︆︊︃︉︌︉︄︀︁︀︅️︂")
-                .toHex()
-        )
-        println(baseN2.encode("000009".decodeHex()))
+
     }
 
 

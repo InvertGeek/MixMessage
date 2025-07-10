@@ -23,6 +23,7 @@
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -keep class xyz.doikki.videoplayer.** { *; }
 -keep class com.donut.** { *; }
+-keep class com.github.houbb.pinyin.** { *; }
 -keep class com.tencent.mmkv.** {*;}
 -keep class io.netty.** {*;}
 -keep class com.alibaba.** {*;}

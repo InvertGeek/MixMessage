@@ -10,7 +10,6 @@ import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.mixfile.image.createBlankBitmap
 import com.donut.mixmessage.util.mixfile.image.toGif
-import java.io.InputStream
 
 val UPLOADERS = listOf(A1Uploader, A2Uploader, A3Uploader)
 
@@ -57,9 +56,6 @@ val server = object : MixFileServer(
         return getCurrentUploader()
     }
 
-    override suspend fun getStaticFile(path: String): InputStream? {
-       return null
-    }
 
     override suspend fun genDefaultImage(): ByteArray {
         return createBlankBitmap().toGif()

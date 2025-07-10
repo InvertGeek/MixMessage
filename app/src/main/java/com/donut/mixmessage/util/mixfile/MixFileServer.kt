@@ -66,7 +66,7 @@ val server = object : MixFileServer(
     }
 
     override suspend fun getFileHistory(): String {
-        return ""
+        return "[]"
     }
 
 }

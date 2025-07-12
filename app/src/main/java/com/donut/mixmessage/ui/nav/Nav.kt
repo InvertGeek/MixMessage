@@ -44,11 +44,14 @@ fun NavComponent() {
                 NavigationBar {
                     @Composable
                     fun NavButton(text: String, icon: ImageVector, jumpTo: String) {
+                        val selected = jumpTo == currentRoute
                         NavigationBarItem(
-                            selected = jumpTo == currentRoute,
+                            selected = selected,
                             onClick = {
-                                controller.navigate(jumpTo) {
-                                    launchSingleTop = true
+                                if (!selected) {
+                                    controller.navigate(jumpTo) {
+                                        launchSingleTop = true
+                                    }
                                 }
                             },
                             label = {

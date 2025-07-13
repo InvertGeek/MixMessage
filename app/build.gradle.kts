@@ -71,7 +71,6 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.gson)
     implementation(libs.zoomable)
     implementation(libs.pinyin)
     implementation(libs.androidx.constraintlayout)

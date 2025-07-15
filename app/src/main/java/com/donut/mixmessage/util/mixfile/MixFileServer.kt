@@ -61,8 +61,4 @@ val server = object : MixFileServer(
         return createBlankBitmap().toGif()
     }
 
-    override suspend fun getFileHistory(): String {
-        return "[]"
-    }
-
 }

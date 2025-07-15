@@ -33,7 +33,6 @@ fun NavComponent() {
     val currentRoute = getCurrentRoute()
     val controller = getNavController()
 
-
     Scaffold(
         bottomBar = {
             AnimatedVisibility(

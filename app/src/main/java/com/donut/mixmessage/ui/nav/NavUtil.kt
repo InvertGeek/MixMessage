@@ -32,7 +32,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.donut.mixmessage.util.common.genRandomString
-import com.donut.mixmessage.util.common.isNotNull
 import java.lang.ref.WeakReference
 
 @Suppress("MemberVisibilityCanBePrivate")

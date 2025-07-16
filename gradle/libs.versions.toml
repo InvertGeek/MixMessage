@@ -2,7 +2,7 @@
 agp = "8.10.1"
 androidAutoApi = "4.1.2"
 androidGifDrawable = "1.2.29"
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 coil = "2.6.0"
 composeVideo = "1.2.0"
 constraintlayout = "2.2.1"
@@ -10,21 +10,20 @@ converterGson = "2.11.0"
 dec = "0.1.2"
 dkplayerJava = "3.3.7"
 easywindow = "10.6"
-fastjson2Kotlin = "2.0.56"
 firebaseAnalytics = "22.4.0"
 fontAwesome = "1.1.0"
 gifencoder = "0.10.1"
 giffle = "1.2.0"
 jvmbrotli = "0.2.0"
-kotlin = "2.1.20"
+kotlin = "2.2.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.0"
+lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2024.08.00"
-ktorClientCio = "3.1.2"
+ktorClientCio = "3.2.2"
 lz4Java = "1.8.0"
 materialIconsExtended = "1.7.8"
 media3Exoplayer = "1.7.1"
@@ -32,13 +31,13 @@ media3Session = "1.7.1"
 mimetypes = "0.0.3"
 mixfileCore = "29649ca8f5"
 mmkv = "1.3.14"
-navigationCompose = "2.9.0"
+navigationCompose = "2.9.1"
 ossAndroidSdk = "2.9.21"
 pinyin = "0.4.0"
 retrofit = "2.11.0"
 robolectric = "4.12.2"
 zoomable = "1.6.1"
-googleServices = "4.4.2"
+googleServices = "4.4.3"
 
 [libraries]
 android-auto-api = { module = "com.github.Krosxx:Android-Auto-Api", version.ref = "androidAutoApi" }
@@ -47,7 +46,6 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
-fastjson2-kotlin = { module = "com.alibaba.fastjson2:fastjson2-kotlin", version.ref = "fastjson2Kotlin" }
 font-awesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "fontAwesome" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3Session" }

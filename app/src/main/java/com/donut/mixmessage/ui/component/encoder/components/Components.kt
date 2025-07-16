@@ -144,8 +144,9 @@ fun TextCoderResultContent(
 
 @Composable
 fun DecodeResultContent(decodeResult: CoderResult, noScroll: Boolean = true) {
+
     @Composable
-    fun Card(block: @Composable UnitBlock) {
+    fun Card(block: @Composable () -> Unit) {
         ElevatedCard(
             colors = CardDefaults.cardColors(),
             modifier = Modifier

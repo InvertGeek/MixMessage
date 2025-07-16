@@ -33,10 +33,6 @@ data class PassKey(
         get() = passValue
 
 
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
-
     @Synchronized
     fun updateValue(newValue: String) {
         modifyPasswords {
@@ -52,6 +48,10 @@ data class PassKey(
         }
         passValue = newValue
         fixDefaultPassword()
+    }
+
+    override fun hashCode(): Int {
+        return value.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {

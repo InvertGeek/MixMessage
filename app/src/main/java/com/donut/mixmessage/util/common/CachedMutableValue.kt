@@ -51,6 +51,9 @@ inline fun <reified T : Parcelable> cachedMutableOf(value: List<T>, key: String)
         value,
         { kv.encode(key, ParcelableItemList(it)) },
         getter@{
+            if (!kv.containsKey(key)){
+                return@getter value
+            }
             val data =
                 kv.decodeParcelable(key, ParcelableItemList::class.java) ?: return@getter value
             @Suppress("UNCHECKED_CAST")

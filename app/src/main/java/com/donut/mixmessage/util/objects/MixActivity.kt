@@ -12,6 +12,7 @@ import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.encode.updateRoundKeys
+import androidx.core.net.toUri
 
 open class MixActivity(private val id: String) : ComponentActivity() {
 
@@ -83,7 +84,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
     fun checkOverlayPermission() {
         Settings.canDrawOverlays(this).isFalse {
             val intent =
-                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, "package:$packageName".toUri())
             startActivity(intent)
         }
     }

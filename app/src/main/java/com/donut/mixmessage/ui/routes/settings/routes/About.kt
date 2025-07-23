@@ -15,12 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.nav.MixNavPage
 import com.donut.mixmessage.ui.nav.NavTitle
 import com.donut.mixmessage.ui.routes.settings.SettingBox
 import com.donut.mixmessage.ui.theme.colorScheme
+import com.donut.mixmessage.util.common.startActivity
 import com.donut.mixmessage.util.encode.ENCODE_COUNT
 import com.donut.mixmessage.util.encode.SUCCESS_DECODE_COUNT
 import com.donut.mixmessage.util.encode.resetStaticCount
@@ -88,7 +88,7 @@ val AboutPage = MixNavPage(
                             Intent.ACTION_VIEW,
                             "https://github.com/invertgeek/MixMessage".toUri()
                         )
-                    currentActivity?.startActivity(intent)
+                    startActivity(intent)
                     closeDialog()
                 }
                 setDefaultNegative()

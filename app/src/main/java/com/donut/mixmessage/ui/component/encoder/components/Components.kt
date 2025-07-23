@@ -30,7 +30,6 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.encoder.DecodeTextResultComponent
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.TipText
-import com.donut.mixmessage.util.common.UnitBlock
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.copyWithDialog
 import com.donut.mixmessage.util.common.showToast

@@ -43,8 +43,12 @@
 -dontwarn com.google.android.exoplayer2.**
 # mixfile
 -keep class io.netty.** {*;}
+-keep class org.mozilla.javascript.** {*;}
 -dontwarn io.netty.**
 -dontwarn java.beans.**
+-dontwarn java.awt.**
+-dontwarn javax.swing.**
+
 
 # 保留实现了 android.os.Parcelable 的类
 -keep class * implements android.os.Parcelable {

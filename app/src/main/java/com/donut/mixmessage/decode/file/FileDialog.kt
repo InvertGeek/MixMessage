@@ -22,10 +22,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.donut.mixfile.server.core.utils.parseFileMimeType
-import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.TipText
+import com.donut.mixmessage.util.common.startActivity
 import com.donut.mixmessage.util.file.saveFile
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -73,7 +73,7 @@ fun FileContent(url: String, fileName: String, size: Long) {
                         Intent.ACTION_VIEW,
                         url.toUri()
                     )
-                currentActivity?.startActivity(intent)
+                startActivity(intent)
             }) {
                 Text(text = "在浏览器打开")
             }

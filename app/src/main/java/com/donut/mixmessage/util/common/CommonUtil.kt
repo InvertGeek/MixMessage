@@ -1,8 +1,10 @@
 package com.donut.mixmessage.util.common
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.provider.Settings
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.donut.mixmessage.app
 import com.donut.mixmessage.appScope
+import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -213,6 +216,14 @@ fun readClipBoardText(): String {
         return text?.toString() ?: ""
     }
     return ""
+}
+
+fun startActivity(intent: Intent) {
+    val context = currentActivity ?: app
+    if (context !is Activity) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    context.startActivity(intent)
 }
 
 fun debug(text: String, tag: String = "test") {

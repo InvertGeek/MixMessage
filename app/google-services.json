@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182321394286",
+    "project_id": "mix-4fxs",
+    "storage_bucket": "mix-4fxs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182321394286:android:eac7941edadd9efe04ec7f",
+        "android_client_info": {
+          "package_name": "com.donut.mixmessage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhZ-bEidqrsPeepGGtVW6V8GnPtcV0AQM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

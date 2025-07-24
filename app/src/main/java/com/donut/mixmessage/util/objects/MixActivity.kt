@@ -3,16 +3,15 @@
 package com.donut.mixmessage.util.objects
 
 import android.content.Intent
-import android.net.Uri
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.core.net.toUri
 import com.donut.mixmessage.ui.routes.settings.routes.ALLOW_SCREENSHOT
 import com.donut.mixmessage.util.common.catchError
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.encode.updateRoundKeys
-import androidx.core.net.toUri
 
 open class MixActivity(private val id: String) : ComponentActivity() {
 

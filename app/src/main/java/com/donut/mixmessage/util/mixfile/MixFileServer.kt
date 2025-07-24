@@ -9,7 +9,7 @@ import com.donut.mixfile.server.core.Uploader
 import com.donut.mixfile.server.core.uploaders.A1Uploader
 import com.donut.mixfile.server.core.uploaders.A2Uploader
 import com.donut.mixfile.server.core.uploaders.A3Uploader
-import com.donut.mixfile.server.core.uploaders.js.JSUploader
+import com.donut.mixfile.server.core.uploaders.base.js.JSUploader
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.util.common.cachedMutableOf
@@ -19,11 +19,12 @@ import com.donut.mixmessage.util.mixfile.image.toGif
 val DEFAULT_UPLOADER = A2Uploader
 var JAVASCRIPT_UPLOADER_CODE by cachedMutableOf("", "JAVASCRIPT_UPLOADER_CODE")
 
-val JavaScriptUploader
-    get() = JSUploader(
-        "JS自定义线路",
-        scriptCode = JAVASCRIPT_UPLOADER_CODE
-    )
+val JavaScriptUploader = object : JSUploader("JS自定义线路") {
+    override val scriptCode: String
+        get() = JAVASCRIPT_UPLOADER_CODE
+
+}
+
 
 fun showJSDocWindow() {
     MixDialogBuilder("JS自定义线路教程").apply {
@@ -124,7 +125,7 @@ fun openJavaScriptUploaderWindow() {
     }
 }
 
-val UPLOADERS get() = listOf(A1Uploader, A2Uploader, A3Uploader, JavaScriptUploader)
+val UPLOADERS = listOf(A1Uploader, A2Uploader, A3Uploader, JavaScriptUploader)
 
 var MIXFILE_UPLOADER by cachedMutableOf(DEFAULT_UPLOADER.name, "mixfile_uploader")
 

@@ -80,8 +80,11 @@ abstract class CachedMutableValue<T>(
     @Volatile
     private var value: T,
 ) {
+    @Volatile
     private var loaded = false
+    private val lock = Any()
     private val mutex = Mutex()
+
     private var stateValue by mutableLongStateOf(0)
 
     abstract fun readCachedValue(): T
@@ -89,7 +92,7 @@ abstract class CachedMutableValue<T>(
     abstract fun writeCachedValue(value: T)
 
     operator fun getValue(thisRef: Any?, property: Any?): T {
-        synchronized(this) {
+        synchronized(lock) {
             if (!loaded) {
                 value = readCachedValue()
                 loaded = true
@@ -101,7 +104,7 @@ abstract class CachedMutableValue<T>(
 
 
     operator fun setValue(thisRef: Any?, property: Any?, value: T) {
-        synchronized(this) {
+        synchronized(lock) {
             if (this.value == value) {
                 return
             }

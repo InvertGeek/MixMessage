@@ -89,7 +89,7 @@ class App : Application(), ImageLoaderFactory {
         }
         innerApp = this
         MMKV.initialize(this)
-        kv = MMKV.defaultMMKV(MMKV.MULTI_PROCESS_MODE, null)
+        kv = MMKV.defaultMMKV()
         server.start(false)
         kv.enableCompareBeforeSet()
         appScope.loopTask(1000 * 60 * 10) {

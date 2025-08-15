@@ -1,13 +1,13 @@
 package com.donut.mixmessage.ui.routes.settings.routes
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.nav.MixNavPage
 import com.donut.mixmessage.ui.nav.NavTitle
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.copyWithDialog
 import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.showToast

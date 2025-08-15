@@ -3,6 +3,7 @@ package com.donut.mixmessage.ui.routes.settings.routes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
@@ -18,7 +19,6 @@ import com.donut.mixmessage.ui.routes.settings.CALCULATOR_LOCK
 import com.donut.mixmessage.ui.routes.settings.START_BLANK_SCREEN
 import com.donut.mixmessage.ui.routes.settings.SettingButton
 import com.donut.mixmessage.ui.theme.Theme
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.ui.theme.currentTheme
 import com.donut.mixmessage.ui.theme.enableAutoDarkMode
 import com.donut.mixmessage.util.common.LogoUtil

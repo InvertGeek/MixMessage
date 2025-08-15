@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
@@ -19,7 +20,6 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.nav.MixNavPage
 import com.donut.mixmessage.ui.nav.NavTitle
 import com.donut.mixmessage.ui.routes.settings.SettingBox
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.startActivity
 import com.donut.mixmessage.util.encode.ENCODE_COUNT
 import com.donut.mixmessage.util.encode.SUCCESS_DECODE_COUNT

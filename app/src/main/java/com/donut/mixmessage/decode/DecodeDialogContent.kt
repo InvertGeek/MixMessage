@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -43,7 +44,6 @@ import com.donut.mixmessage.ui.component.encoder.encoderText
 import com.donut.mixmessage.ui.routes.password.LOCK_CACHE
 import com.donut.mixmessage.ui.routes.password.Unlock
 import com.donut.mixmessage.ui.routes.settings.useDefaultPrefix
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.showToast

@@ -6,6 +6,7 @@ import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,7 +15,6 @@ import androidx.core.net.toUri
 import com.donut.mixmessage.ui.nav.MixNavPage
 import com.donut.mixmessage.ui.nav.NavTitle
 import com.donut.mixmessage.ui.routes.settings.SettingButton
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.startActivity
 import com.donut.mixmessage.util.mixfile.JavaScriptUploader
 import com.donut.mixmessage.util.mixfile.MIXFILE_UPLOADER

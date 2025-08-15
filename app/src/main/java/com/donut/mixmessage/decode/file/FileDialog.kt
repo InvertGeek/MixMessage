@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.donut.mixfile.server.core.utils.parseFileMimeType
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.startActivity
 import com.donut.mixmessage.util.file.saveFile

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +25,6 @@ import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.ClearableTextField
 import com.donut.mixmessage.ui.component.common.LabelSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.hashSHA256
 import com.donut.mixmessage.util.common.isTrue

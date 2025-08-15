@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -45,7 +46,6 @@ import com.donut.mixmessage.ui.routes.settings.routes.FileUploadPage
 import com.donut.mixmessage.ui.routes.settings.routes.OtherPage
 import com.donut.mixmessage.ui.routes.settings.routes.PrefixPage
 import com.donut.mixmessage.ui.routes.settings.routes.RSAPage
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER

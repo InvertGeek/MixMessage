@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -29,7 +30,6 @@ import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.nav.MixNavPage
 import com.donut.mixmessage.ui.routes.settings.SettingBox
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.genRandomString
 import com.donut.mixmessage.util.common.hashToMD5String

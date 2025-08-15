@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,6 @@ import com.donut.mixfile.server.core.utils.resolveMixShareInfo
 import com.donut.mixmessage.decode.file.FileContent
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.encoder.DecodeTextResultComponent
-import com.donut.mixmessage.ui.theme.colorScheme
 import com.donut.mixmessage.util.common.TipText
 import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.common.copyWithDialog

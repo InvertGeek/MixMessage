@@ -15,9 +15,15 @@ import javax.crypto.Cipher
 
 
 object RSAUtil {
-    var publicKeyStr by cachedMutableOf("", "rsa_public_key")
+    private var publicKeyStr by cachedMutableOf("", "rsa_public_key")
 
     private var privateKeyStr by cachedMutableOf("", "rsa_private_key")
+
+    val publicKeyBase64: String
+        get() {
+            publicKey
+            return publicKeyStr
+        }
 
 
     val publicKey: PublicKey

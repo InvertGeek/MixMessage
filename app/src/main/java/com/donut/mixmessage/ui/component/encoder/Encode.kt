@@ -160,7 +160,7 @@ fun EncodeInputComponent(
             Button(
                 onClick = {
                     encodeText(
-                        CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKeyStr,
+                        CoderResult.PUBLIC_KEY_IDENTIFIER + RSAUtil.publicKeyBase64,
                         "123"
                     ).also {
                         it.textWithPrefix.copyToClipboard()

@@ -40,7 +40,7 @@ val RSAPage = MixNavPage(
             fingerPrint.copyWithDialog()
         })
     Text(
-        text = "当前密钥对公钥(点击重新生成): ${RSAUtil.publicKeyStr}",
+        text = "当前密钥对公钥(点击重新生成): ${RSAUtil.publicKeyBase64}",
         color = colorScheme.primary,
         modifier = Modifier.clickable {
             MixDialogBuilder("确定重新生成密钥对?").apply {

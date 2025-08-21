@@ -17,7 +17,6 @@ import com.donut.mixmessage.ui.routes.password.startLock
 import com.donut.mixmessage.ui.routes.settings.enableFloat
 import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.isAccessibilityServiceEnabled
-import com.donut.mixmessage.util.common.isEqual
 import com.donut.mixmessage.util.common.isFalse
 import com.donut.mixmessage.util.common.isNotNullAnd
 import com.donut.mixmessage.util.common.isTrue
@@ -79,49 +78,66 @@ class MixAccessibilityService : AccessibilityApi() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         super.onAccessibilityEvent(event)
+
         if (event == null) {
             return
         }
+
         if (event.packageName == app.packageName) {
             return
         }
+
         if (DecodeActivity.IS_ACTIVE) {
             return
         }
+
         val type = event.eventType
         val source = event.source
         val text = source?.text ?: event.text.toString().removeSurrounding("[", "]")
 
-        var shouldOpen = false
-        type.isEqual(AccessibilityEvent.TYPE_VIEW_CLICKED) {
-            checkDialogOpenTextValue(text.toString()).isTrue {
-                return openDecodeDialog(result = CoderResult.Failed)
-            }
-            source.isNotNullAnd(SCAN_BUTTON_WHEN_CLICK) {
-                INPUT_EDITABLE_CACHE.isValid().isFalse {
-                    it.isEditable.isTrue { INPUT_EDITABLE_CACHE = ViewNode(it) }
+        val open = when (type) {
+            AccessibilityEvent.TYPE_VIEW_CLICKED -> {
+
+                checkDialogOpenTextValue(text.toString()).isTrue {
+                    return openDecodeDialog(result = CoderResult.Failed)
                 }
-                SEND_BUTTON_CACHE.isValid().isFalse {
-                    it.isClickable.isTrue {
-                        AcsNode.wrap(it).checkButton()
-                            .isTrue { SEND_BUTTON_CACHE = ViewNode(it) }
+
+                source.isNotNullAnd(SCAN_BUTTON_WHEN_CLICK) {
+
+                    INPUT_EDITABLE_CACHE.isValid().isFalse {
+                        it.isEditable.isTrue { INPUT_EDITABLE_CACHE = ViewNode(it) }
                     }
+
+                    SEND_BUTTON_CACHE.isValid().isFalse {
+                        it.isClickable.isTrue {
+                            AcsNode.wrap(it).checkButton()
+                                .isTrue { SEND_BUTTON_CACHE = ViewNode(it) }
+                        }
+                    }
+
                 }
+
+                ENABLE_SINGLE_CLICK
             }
-            shouldOpen = ENABLE_SINGLE_CLICK
-        }
-        type.isEqual(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED) {
-            shouldOpen = ENABLE_LONG_CLICK
-        }
-        type.isEqual(AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
-            shouldOpen = ENABLE_SELECT_TEXT
+
+            AccessibilityEvent.TYPE_VIEW_LONG_CLICKED -> {
+                ENABLE_LONG_CLICK
+            }
+
+            AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED -> {
+                ENABLE_SELECT_TEXT
+            }
+
+            else -> {
+                false
+            }
         }
 
         if (text.trim().isEmpty() || source?.isEditable == true) {
             return
         }
 
-        shouldOpen.isTrue {
+        open.isTrue {
             openDecodeDialog(text.toString())
         }
     }

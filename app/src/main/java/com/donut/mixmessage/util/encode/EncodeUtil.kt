@@ -13,13 +13,11 @@ import com.donut.mixmessage.util.encode.encoders.EgyptEncoder
 import com.donut.mixmessage.util.encode.encoders.EmojiEncoder
 import com.donut.mixmessage.util.encode.encoders.HangulEncoder
 import com.donut.mixmessage.util.encode.encoders.SCVEncoder
-import com.donut.mixmessage.util.encode.encoders.ShiftEncoder
 import com.donut.mixmessage.util.encode.encoders.YiEncoder
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 
 val ENCODERS = listOf(
-    ShiftEncoder,
     ZeroWidthEncoder,
     BuddhaEncoder,
     SCVEncoder,
@@ -36,10 +34,6 @@ val ENCODERS = listOf(
 var DEFAULT_ENCODER by cachedMutableOf(ZeroWidthEncoder.name, "default_encoder")
 
 var DEFAULT_PASSWORD by cachedMutableOf("123", "default_password")
-
-var USE_RANDOM_PASSWORD by cachedMutableOf(false, "use_random_password")
-
-var USE_RANDOM_ENCODER by cachedMutableOf(false, "use_random_encoder")
 
 var LAST_DECODE = System.currentTimeMillis()
 
@@ -73,14 +67,6 @@ fun resetStaticCount() {
     ENCODE_COUNT = 0
 }
 
-
-fun setUseRandomPassword(useRandomPassword: Boolean) {
-    USE_RANDOM_PASSWORD = useRandomPassword
-}
-
-fun setUseRandomEncoder(useRandomEncoder: Boolean) {
-    USE_RANDOM_ENCODER = useRandomEncoder
-}
 
 fun decodeText(text: String): CoderResult {
     var result: CoderResult = CoderResult.Failed
@@ -131,8 +117,7 @@ fun encodeText(text: String, password: String = getCurrentPassword()): CoderResu
     if (PASSWORDS.firstOrNull { it.value.contentEquals(DEFAULT_PASSWORD) } == null) {
         setDefaultPassword(PASSWORDS.firstOrNull()?.value ?: "123")
     }
-    var encoder = getDefaultEncoder()
-    USE_RANDOM_ENCODER.isTrue { encoder = ENCODERS.random() }
+    val encoder = getDefaultEncoder()
     val keyInfo = KeyInfo(password)
     return encoder.encode(
         text.trim(), keyInfo.getUsingPass().pass

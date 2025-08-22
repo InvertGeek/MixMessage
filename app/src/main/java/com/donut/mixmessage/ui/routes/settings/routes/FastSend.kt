@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.donut.mixmessage.service.DIALOG_OPEN_IDENTIFIER
+import com.donut.mixmessage.service.DOUBLE_CLICK_OPEN_DIALOG
 import com.donut.mixmessage.service.SCAN_BUTTON_WHEN_CLICK
 import com.donut.mixmessage.service.SEARCH_BUTTON_TIMEOUT
 import com.donut.mixmessage.service.SEND_BUTTON_IDENTIFIER
@@ -20,7 +21,10 @@ import okhttp3.internal.toLongOrDefault
 
 var DETECT_TEXT_SEND by cachedMutableOf(true, "DETECT_TEXT_LENGTH")
 
-val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
+val FastSend = MixNavPage(
+    displayNavBar = false,
+    useTransition = true
+) {
     NavTitle(title = "一键发送设置", showBackIcon = true)
     OutlinedTextField(
         value = SEND_BUTTON_IDENTIFIER,
@@ -55,6 +59,13 @@ val FastSend = MixNavPage(displayNavBar = false, useTransition = true) {
             .padding(0.dp, 10.dp),
         label = { Text("搜索按钮超时时间(毫秒)") }
     )
+    CommonSwitch(
+        checked = DOUBLE_CLICK_OPEN_DIALOG,
+        text = "双击空内容输入框打开加密窗口:",
+        "双击空内容时输入框自动打开加密窗口",
+    ) {
+        DOUBLE_CLICK_OPEN_DIALOG = it
+    }
     CommonSwitch(
         checked = SCAN_BUTTON_WHEN_CLICK,
         text = "点击发送和输入自动更新:",

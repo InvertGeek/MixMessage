@@ -228,16 +228,14 @@ data class KeyInfo(
 
 
 fun getCurrentPassword(): String {
-    var password = if (USE_RANDOM_PASSWORD) {
-        getPassStringList().filter { !it.contentEquals("123") }.randomOrNull() ?: "123"
-    } else {
-        DEFAULT_PASSWORD
-    }
+    val password = DEFAULT_PASSWORD
     val keyInfo = KeyInfo(password)
     if (keyInfo.isRoundKey()) {
         return password
     }
-    if (USE_TIME_LOCK) password += getCurrentDate()
+    if (USE_TIME_LOCK) {
+        return password + getCurrentDate()
+    }
     return password
 }
 

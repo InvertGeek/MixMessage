@@ -6,6 +6,7 @@ import com.donut.mixmessage.util.encode.transformNumber
 import kotlin.math.abs
 import kotlin.random.Random
 
+@Deprecated("deprecated")
 object ByteShiftEncoder {
 
     private val PREFIX = byteArrayOf(*((1..8).map { (0).toByte() }.toByteArray()))

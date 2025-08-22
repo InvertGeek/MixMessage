@@ -31,7 +31,6 @@ import com.donut.mixmessage.service.IS_ACS_ENABLED
 import com.donut.mixmessage.service.startFloat
 import com.donut.mixmessage.service.stopFloat
 import com.donut.mixmessage.ui.component.common.CommonSwitch
-import com.donut.mixmessage.ui.component.common.LabelSwitch
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.common.SingleSelectItemList
 import com.donut.mixmessage.ui.component.encoder.copyWhenRefresh
@@ -50,13 +49,7 @@ import com.donut.mixmessage.util.common.cachedMutableOf
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.DEFAULT_ENCODER
 import com.donut.mixmessage.util.encode.ENCODERS
-import com.donut.mixmessage.util.encode.USE_RANDOM_ENCODER
-import com.donut.mixmessage.util.encode.USE_RANDOM_PASSWORD
-import com.donut.mixmessage.util.encode.encoders.bean.USE_SIMPLE_MODE
-import com.donut.mixmessage.util.encode.encoders.bean.setUseStrictEncode
 import com.donut.mixmessage.util.encode.setDefaultEncoder
-import com.donut.mixmessage.util.encode.setUseRandomEncoder
-import com.donut.mixmessage.util.encode.setUseRandomPassword
 
 
 var enableFloat by cachedMutableOf(false, "enable_float")
@@ -78,36 +71,6 @@ fun selectDefaultEncoder() {
             ) {
                 setDefaultEncoder(it)
                 closeDialog()
-            }
-        }
-        setBottomContent {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                LabelSwitch(checked = USE_SIMPLE_MODE, label = "精简模式: ") {
-                    if (it) {
-                        MixDialogBuilder("确定开启?").apply {
-                            setContent {
-                                Text(
-                                    text = """
-                                            开启后将会使用精简模式,输出结果字数更短
-                                            占用更少的字数,安全性较低,容易被暴力破解
-                                        """.trimIndent().replace("\n", " ")
-                                )
-                            }
-                            setDefaultNegative()
-                            setPositiveButton("确定") {
-                                USE_SIMPLE_MODE = true
-                                closeDialog()
-                            }
-                            show()
-                        }
-                        return@LabelSwitch
-                    }
-                    USE_SIMPLE_MODE = false
-                }
             }
         }
         show()
@@ -158,27 +121,6 @@ val Settings = MixNavPage {
         startFloat()
     })
 
-    CommonSwitch(
-        checked = USE_RANDOM_PASSWORD,
-        text = "启用随机密码:",
-        "启用后加密时将随机选择已有的密钥",
-    ) {
-        setUseRandomPassword(it)
-    }
-    CommonSwitch(
-        checked = USE_RANDOM_ENCODER,
-        text = "启用随机编码:",
-        "启用后加密时将使用随机编码方法",
-    ) {
-        setUseRandomEncoder(it)
-    }
-    CommonSwitch(
-        checked = USE_SIMPLE_MODE,
-        text = "启用精简模式:",
-        "启用后输出结果字数将会更短,安全性降低,容易被暴力破解",
-    ) {
-        setUseStrictEncode(it)
-    }
     CommonSwitch(
         checked = copyWhenRefresh,
         text = "刷新时自动复制:",

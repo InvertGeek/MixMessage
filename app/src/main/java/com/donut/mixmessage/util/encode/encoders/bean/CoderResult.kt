@@ -17,7 +17,6 @@ data class CoderResult(
     var roundKey: RoundKey? = null,
     var isEncrypt: Boolean = false,
     val isFail: Boolean = false,
-    val isSimple: Boolean = false,
     var isTimeLock: Boolean = false,
     val prefix: String = textCoder.generatePrefix(),
     var textWithPrefix: String = text
@@ -66,7 +65,6 @@ data class CoderResult(
                     加密方法: ${textCoder.name}
                     长度: ${textWithPrefix.length}
                     原始长度: ${originText.length}
-                    ${isSimple.trueText("精简模式")}
                     ${isTimeLock.trueText("时间锁")}
                     ${roundKey.isNotNull().trueText("轮换: ${roundKey?.name}")}
                 """.trimIndent().replace("\n", " ")

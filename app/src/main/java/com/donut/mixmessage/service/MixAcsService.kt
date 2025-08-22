@@ -76,6 +76,8 @@ class MixAccessibilityService : AccessibilityApi() {
         var ENABLE_SELECT_TEXT by cachedMutableOf(true, "AUTO_DECODE_ENABLE_SELECT_TEXT")
     }
 
+    var lastInputClickTime = 0L
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         super.onAccessibilityEvent(event)
 
@@ -97,6 +99,14 @@ class MixAccessibilityService : AccessibilityApi() {
 
         val open = when (type) {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> {
+
+                if (DOUBLE_CLICK_OPEN_DIALOG && text.isBlank()) {
+                    val passed = System.currentTimeMillis() - lastInputClickTime
+                    if (passed < 250) {
+                        return openDecodeDialog(result = CoderResult.Failed)
+                    }
+                    lastInputClickTime = System.currentTimeMillis()
+                }
 
                 checkDialogOpenTextValue(text.toString()).isTrue {
                     return openDecodeDialog(result = CoderResult.Failed)

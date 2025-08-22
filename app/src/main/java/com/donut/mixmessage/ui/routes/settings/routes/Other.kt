@@ -30,7 +30,11 @@ import com.donut.mixmessage.visible
 
 var ALLOW_SCREENSHOT by cachedMutableOf(false, "allow_screenshot")
 
-val OtherPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
+val OtherPage = MixNavPage(
+    displayNavBar = false,
+    gap = 10.dp,
+    useTransition = true
+) {
     NavTitle(title = "其他设置", showBackIcon = true)
     Column {
         Text(

@@ -15,7 +15,11 @@ import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 
 var ADD_ZERO_WIDTH_PREFIX by cachedMutableOf(true, "add_zero_width_prefix")
 
-val PrefixPage = MixNavPage(displayNavBar = false, gap = 10.dp, useTransition = true) {
+val PrefixPage = MixNavPage(
+    displayNavBar = false,
+    gap = 10.dp,
+    useTransition = true
+) {
     NavTitle(title = "空位加密前缀(伪装文本)设置", showBackIcon = true)
     OutlinedTextField(
         value = ZeroWidthEncoder.encodePrefix,

@@ -29,6 +29,7 @@ var SEND_BUTTON_CACHE: ViewNode? = null
 var SEND_BUTTON_IDENTIFIER by cachedMutableOf("发送 send", "send_button_identifier")
 var DIALOG_OPEN_IDENTIFIER by cachedMutableOf("mix mx", "dialog_open_identifier")
 var SEARCH_BUTTON_TIMEOUT by cachedMutableOf(1000L * 10, "search_button_timeout")
+var DOUBLE_CLICK_OPEN_DIALOG by cachedMutableOf(true, "DOUBLE_CLICK_OPEN_DIALOG")
 
 
 fun setSendButtonIdentifier(value: String) {
@@ -42,6 +43,9 @@ fun ViewNode?.isValid(): Boolean {
 fun checkSendButtonTextValue(value: String) = checkSplitTextValue(value, SEND_BUTTON_IDENTIFIER)
 
 fun checkSplitTextValue(value: String, identifier: String): Boolean {
+    if (identifier.isBlank()) {
+        return false
+    }
     val matchValues = identifier.split(" ")
     for (matchValue in matchValues) {
         value.replace(" ", "").contentEquals(matchValue, true).isTrue {

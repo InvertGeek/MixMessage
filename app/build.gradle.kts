@@ -68,9 +68,6 @@ android {
 
 dependencies {
     implementation(libs.mixfile.core)
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.content.negotiation)
     implementation(libs.zoomable)
     implementation(libs.pinyin)
     implementation(libs.androidx.constraintlayout)

@@ -31,7 +31,7 @@ media3Exoplayer = "1.8.0"
 media3Session = "1.8.0"
 mimetypes = "0.0.3"
 #noinspection GradleDependency
-mixfileCore = "1.1.3"
+mixfileCore = "2.0.0"
 #noinspection GradleDependency
 mmkv = "1.3.14"
 navigationCompose = "2.9.3"

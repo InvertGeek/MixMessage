@@ -40,7 +40,6 @@ import com.donut.mixmessage.util.encode.USE_TIME_LOCK
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.encode.encoders.ZeroWidthEncoder
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
-import com.donut.mixmessage.util.encode.encoders.bean.USE_SIMPLE_MODE
 
 
 var encoderText by mutableStateOf(TextFieldValue())
@@ -84,7 +83,6 @@ fun EncodeInputComponent(
     var encodeResult by remember(
         encoderText,
         DEFAULT_ENCODER,
-        USE_SIMPLE_MODE,
         ZeroWidthEncoder.encodePrefix,
         DEFAULT_PASSWORD,
         USE_TIME_LOCK

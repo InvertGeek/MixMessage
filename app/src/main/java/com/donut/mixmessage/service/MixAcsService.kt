@@ -100,7 +100,7 @@ class MixAccessibilityService : AccessibilityApi() {
         val open = when (type) {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> {
 
-                if (DOUBLE_CLICK_OPEN_DIALOG && text.isBlank()) {
+                if (DOUBLE_CLICK_OPEN_DIALOG && source?.isEditable.isTrue() && text.isBlank()) {
                     val passed = System.currentTimeMillis() - lastInputClickTime
                     if (passed < 250) {
                         return openDecodeDialog(result = CoderResult.Failed)

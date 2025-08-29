@@ -1,6 +1,5 @@
 package com.donut.mixmessage.decode.file
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,11 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import com.donut.mixfile.server.core.utils.parseFileMimeType
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.util.common.TipText
-import com.donut.mixmessage.util.common.startActivity
+import com.donut.mixmessage.util.common.copyToClipboard
 import com.donut.mixmessage.util.file.saveFile
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -68,14 +66,9 @@ fun FileContent(url: String, fileName: String, size: Long) {
             modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedButton(onClick = {
-                val intent =
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        url.toUri()
-                    )
-                startActivity(intent)
+                url.copyToClipboard()
             }) {
-                Text(text = "在浏览器打开")
+                Text(text = "复制局域网地址")
             }
 
             Button(onClick = {

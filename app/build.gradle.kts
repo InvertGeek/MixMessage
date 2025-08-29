@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.donut.mixmessage"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.donut.mixmessage"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 109
-        versionName = "1.15.3"
+        targetSdk = 36
+        versionCode = 110
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -1,7 +1,8 @@
 
 # 介绍
 ![1](image.png)\
-安卓平台全自动信息编码解码软件\
+安卓平台全自动信息编码解码软件 \
+TG交流群: https://t.me/ivgeek \
 已发布版本: \
 https://github.com/InvertGeek/MixMessage/releases \
 使用帮助: \

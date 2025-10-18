@@ -67,7 +67,7 @@ android {
 }
 
 dependencies {
-    implementation("com.github.InvertGeek:mixfile-core:2.0.1")
+    implementation("com.github.InvertGeek:mixfile-core:2.0.2")
     implementation("net.engawapg.lib:zoomable:1.6.1")
     implementation("com.github.houbb:pinyin:0.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")

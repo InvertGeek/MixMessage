@@ -54,13 +54,14 @@ fun showJSDocWindow() {
                 
                 print(a,b,c) 在控制台输出内容
                 
-                submitForm(url,formData,headers) 提交表单
-                使用 [文件数据(base64),文件名,mime类型] 代表文件
-                返回base64格式响应体
-                
-                http(方法,url,body,headers) 发送http请求
-                body需要为base64格式
-                返回base64格式响应体
+                request(方法,url,body,headers) 发送http请求
+                body支持字符串,对象,数组
+                对象会自动转为formData,
+                对象中使用 [文件数据(base64),文件名,mime类型] 代表文件
+                数组包裹base64为二进制格式请求体,格式为: [base64]
+ 
+                返回{statusCode,headers,rawData,text} 响应信息
+                rawData为base64格式响应体
                 
                 setReferer(字符串) 设置下载时的referer请求头
                 
@@ -87,9 +88,9 @@ fun showJSDocWindow() {
                     referer,
                     cookie,
                 };
-                const responseBase64 = submitForm("https://example.com/api/upload", formData, headers);
+                const {text,statusCode} = request("POST","https://example.com/api/upload", formData, headers);
 
-                const data = JSON.parse(atob(responseBase64));
+                const data = JSON.parse(text);
                 const result = data.url.split('?')[0];
                 print("上传成功,图片地址: ",result)
                 //在最后一行填写图片地址表达式

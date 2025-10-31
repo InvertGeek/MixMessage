@@ -15,18 +15,8 @@ class MainActivity : MixActivity(MAIN_ID) {
         super.onResume()
     }
 
-    companion object {
-        lateinit var mixFileSelector: MixFileSelector
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mixFileSelector.unregister()
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mixFileSelector = MixFileSelector(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {

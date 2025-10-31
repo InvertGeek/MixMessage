@@ -34,7 +34,6 @@ import com.donut.mixmessage.util.common.isTrueAnd
 import com.donut.mixmessage.util.encode.decodeText
 import com.donut.mixmessage.util.encode.encoders.bean.CoderResult
 import com.donut.mixmessage.util.objects.MixActivity
-import com.donut.mixmessage.util.objects.MixFileSelector
 
 @Composable
 fun DialogContainer(content: @Composable () -> Unit) {
@@ -71,7 +70,6 @@ class DecodeActivity : MixActivity("decode") {
         var decodeResult: CoderResult? by mutableStateOf(null)
         var LAST_FORCE_CLOSE = 0L
         var IS_ACTIVE by mutableStateOf(false)
-        lateinit var mixFileSelector: MixFileSelector
     }
 
     override fun onPause() {
@@ -86,12 +84,10 @@ class DecodeActivity : MixActivity("decode") {
 
     override fun onDestroy() {
         super.onDestroy()
-        mixFileSelector.unregister()
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mixFileSelector = MixFileSelector(this)
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)

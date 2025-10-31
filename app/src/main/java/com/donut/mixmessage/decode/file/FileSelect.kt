@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import com.donut.mixfile.server.core.utils.StreamContent
 import com.donut.mixmessage.app
-import com.donut.mixmessage.decode.DecodeActivity
+import com.donut.mixmessage.currentActivity
 import com.donut.mixmessage.decode.sendResult
 import com.donut.mixmessage.ui.component.common.MixDialogBuilder
 import com.donut.mixmessage.ui.component.encoder.encoderText
@@ -20,7 +20,6 @@ import com.donut.mixmessage.util.common.isTrue
 import com.donut.mixmessage.util.common.showToast
 import com.donut.mixmessage.util.encode.encodeText
 import com.donut.mixmessage.util.mixfile.server
-import com.donut.mixmessage.util.objects.MixFileSelector
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -32,8 +31,8 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 
-fun selectFile(doSend: Boolean = true, selector: MixFileSelector = DecodeActivity.mixFileSelector) {
-    selector.openSelect(arrayOf("*/*")) { uri, fileName ->
+fun selectFile(doSend: Boolean = true) {
+    currentActivity?.fileSelector?.openSelect(arrayOf("*/*")) { uri, fileName ->
         MixDialogBuilder(
             "上传中",
             autoClose = false

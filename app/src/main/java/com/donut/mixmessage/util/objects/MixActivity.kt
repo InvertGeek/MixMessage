@@ -3,6 +3,7 @@
 package com.donut.mixmessage.util.objects
 
 import android.content.Intent
+import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -21,6 +22,7 @@ open class MixActivity(private val id: String) : ComponentActivity() {
 
     var isActive = false
     var lastPause = System.currentTimeMillis()
+    lateinit var fileSelector: MixFileSelector
 
     companion object {
         const val MAIN_ID = "main"
@@ -36,8 +38,14 @@ open class MixActivity(private val id: String) : ComponentActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fileSelector = MixFileSelector(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        fileSelector.unregister()
         referenceCache[id]?.remove(this)
     }
 

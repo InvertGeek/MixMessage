@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.donut.mixmessage.MainActivity
 import com.donut.mixmessage.decode.file.selectFile
 import com.donut.mixmessage.ui.component.common.ClearableTextField
 import com.donut.mixmessage.ui.routes.password.showPasswordsDialog
@@ -144,7 +143,7 @@ fun EncodeInputComponent(
                 encoderText = TextFieldValue(readClipBoardText())
             }
             EncodeButton("选择文件", useTextButton = useTextButton) {
-                selectFile(false, MainActivity.mixFileSelector)
+                selectFile(false)
             }
         }
         extra?.invoke(encodeResult)

@@ -150,7 +150,7 @@ fun saveFile(url: String, name: String) {
                 ProgressContent()
             }
             AsyncEffect {
-                saveFileToStorage(url, "${name}.mp4", progress)
+                saveFileToStorage(url, name, progress)
                 showToast("文件已保存到下载目录")
                 closeDialog()
             }

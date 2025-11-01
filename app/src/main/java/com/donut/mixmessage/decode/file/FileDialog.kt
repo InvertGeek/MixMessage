@@ -68,7 +68,7 @@ fun FileContent(url: String, fileName: String, size: Long) {
             OutlinedButton(onClick = {
                 url.copyToClipboard()
             }) {
-                Text(text = "复制局域网地址")
+                Text(text = "复制内网地址")
             }
 
             Button(onClick = {

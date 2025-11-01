@@ -56,12 +56,14 @@ fun selectFile(doSend: Boolean = true) {
                     val fileStream = resolver.openInputStream(uri)
                     if (fileStream == null) {
                         showToast("打开文件失败")
+                        closeDialog()
                         return@AsyncEffect
                     }
                     val stream = StreamContent(fileStream, fileSize)
                     val fileCode = putUploadFile(stream, fileName, false, progressContent)
                     if (fileCode.isEmpty()) {
                         showToast("上传失败")
+                        closeDialog()
                         return@AsyncEffect
                     }
                     encoderText = TextFieldValue("mf://$fileCode")

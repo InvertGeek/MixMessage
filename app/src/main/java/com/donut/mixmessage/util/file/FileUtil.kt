@@ -39,6 +39,7 @@ import io.ktor.http.contentLength
 import io.ktor.http.isSuccess
 import io.ktor.utils.io.copyAndClose
 import io.ktor.utils.io.streams.asByteWriteChannel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.job
 import okhttp3.CacheControl
 import okhttp3.Interceptor
@@ -180,7 +181,7 @@ suspend fun saveFileToStorage(
 
 
     val fileUri = resolver.insert(storeUri, contentValues)
-    coroutineContext.job.invokeOnCompletion { throwable ->
+    currentCoroutineContext().job.invokeOnCompletion { throwable ->
         if (throwable !is CancellationException) {
             return@invokeOnCompletion
         }
